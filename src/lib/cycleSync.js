@@ -92,13 +92,12 @@ export async function createSharedCycle({
   let lastError = null;
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = generateCode();
-    const { data, error } = await supabase
-      .from("cycles")
-      .insert({ ...payload, code })
-      .select()
-      .single();
+    const { error } = await supabase.from("cycles").insert({ ...payload, code });
 
-    if (!error) return { code, row: data };
+    // Do not chain `.select()` here. On some Supabase/RLS setups the insert
+    // succeeds but the implicit read-back is blocked, which makes the UI think
+    // code creation failed.
+    if (!error) return { code, row: null };
 
     // 23505 = unique_violation in Postgres. Retry on collision.
     if (error.code === "23505") {
@@ -132,15 +131,13 @@ export async function fetchSharedCycle(code) {
 export async function updateSharedCycle(code, patch) {
   ensureConfigured();
   const normalized = normalizeCode(code);
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("cycles")
     .update(patch)
-    .eq("code", normalized)
-    .select()
-    .single();
+    .eq("code", normalized);
 
   if (error) throw error;
-  return data;
+  return { code: normalized, ...patch };
 }
 
 /**
