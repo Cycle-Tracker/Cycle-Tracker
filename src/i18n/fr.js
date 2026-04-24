@@ -70,10 +70,15 @@ const fr = {
     stepShareSubtitle:
       "Vous aurez la même info en temps réel sur vos deux téléphones.",
 
-    // Step: cycle dates
+    // Step: cycle dates (woman)
     stepCycleTitle: "Ton dernier cycle",
     stepCycleSubtitle:
       "Quand ont commencé tes dernières règles ? Tu pourras ajuster les durées.",
+
+    // Step: cycle dates (man, about his partner)
+    stepCycleTitleMan: "Le cycle de ta partenaire",
+    stepCycleSubtitleMan:
+      "Quand ont commencé ses dernières règles ? Vous pourrez ajuster les durées ensemble.",
 
     // Step: join
     stepJoinTitle: "Rejoindre un cycle",
@@ -172,6 +177,18 @@ const fr = {
     manWhatToAvoidTitle: "À éviter en ce moment",
     manMoodLabel: "Son humeur probable",
     manPartnerMissingName: "ta partenaire",
+    manTabNow: "Maintenant",
+    manTabAll: "Toutes les phases",
+
+    // Phase info popup
+    phaseInfoAria: "En savoir plus sur cette phase",
+    phaseInfoTitle: "À propos de cette phase",
+    phaseInfoClose: "Fermer",
+
+    // Questionnaire re-edit from settings
+    questReEditOpen: "Modifier mes réponses",
+    questReEditSave: "Enregistrer",
+    questReEditReset: "Tout effacer",
   },
 
   questionnaire: {
@@ -228,6 +245,8 @@ const fr = {
     menstrual: {
       name: "Règles",
       mood: "Sensible · Fatiguée · Variable",
+      description:
+        "Les règles : la muqueuse utérine se détache, provoquant des saignements. L'énergie est au plus bas, le corps a besoin de repos. Souvent accompagnées de crampes, fatigue, et hypersensibilité émotionnelle.",
       tips: [
         "Prépare une bouillotte",
         "Vérifie les stocks de produits menstruels",
@@ -252,6 +271,8 @@ const fr = {
     follicular: {
       name: "Folliculaire",
       mood: "Énergique · Créative · Sociable",
+      description:
+        "Phase folliculaire : les œstrogènes montent et préparent l'ovulation. L'énergie revient progressivement, l'humeur s'éclaircit, la motivation et la créativité sont au rendez-vous. C'est souvent le meilleur moment pour lancer des projets.",
       tips: [
         "Planifie des activités ensemble",
         "C'est souvent un bon moment pour échanger",
@@ -269,6 +290,8 @@ const fr = {
     ovulatory: {
       name: "Ovulation",
       mood: "Confiante · Rayonnante · Communicative",
+      description:
+        "Ovulation : l'ovaire libère un ovocyte. Pic d'œstrogènes et de testostérone. Énergie, libido, confiance en soi et sociabilité sont au maximum. Courte fenêtre de fertilité (~24-48h).",
       tips: [
         "Propose un moment sympa à deux",
         "Sois attentif et valorisant",
@@ -284,6 +307,8 @@ const fr = {
     luteal: {
       name: "Phase lutéale",
       mood: "Variable · Sensible · Fatiguée",
+      description:
+        "Phase lutéale : la progestérone domine, l'énergie baisse. Le corps se prépare soit à accueillir une grossesse, soit à déclencher les règles. SPM possible : irritabilité, sensibilité, fatigue, fringales, ballonnements, maux de tête.",
       tips: [
         "Écoute sans chercher à tout régler",
         "Allège sa charge mentale si possible",

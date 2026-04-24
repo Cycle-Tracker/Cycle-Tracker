@@ -1,23 +1,37 @@
+import { useState } from "react";
 import { useLanguage } from "../i18n";
 import EnergyDots from "./EnergyDots";
+import PhaseInfoPopup from "./PhaseInfoPopup";
 
 const MAX_ENERGY = 5;
 
 /**
- * Simplified dashboard the partner (man) sees: current phase,
- * what to do / what to avoid, mood hint. No wheel, no sliders.
+ * Dashboard the partner (man) sees. Two tabs:
+ *   - "Maintenant" (now): what to do / what to avoid for the current phase.
+ *   - "Toutes les phases" (all): overview of the four phases with descriptions.
  *
- * Tips are already personalized (filtered by questionnaire tags)
- * by the parent component.
+ * Tips for the current phase are already personalized (filtered by the
+ * woman's questionnaire tags) by the parent component.
  *
  * Props:
- *  - currentPhase  — already-localized phase ({ name, emoji, accent, color,
- *                    energy, tips, avoid, mood })
+ *  - phases        — all 4 phases, already localized (incl. description)
+ *  - currentPhase  — the current phase object
+ *  - durations     — array of 4 day counts (aligned with PHASE_META order)
+ *  - activeTab, setActiveTab
  *  - name          — the man's own first name (used for greeting)
  *  - partnerName   — the woman's first name (used in "X is in phase Y")
  */
-export default function ManView({ currentPhase, name, partnerName }) {
+export default function ManView({
+  phases,
+  currentPhase,
+  durations,
+  activeTab,
+  setActiveTab,
+  name,
+  partnerName,
+}) {
   const { t } = useLanguage();
+  const [infoPhase, setInfoPhase] = useState(null);
 
   const partnerLabel = partnerName || t.ui.manPartnerMissingName;
   const hello = t.ui.manHelloLabel(name || null);
@@ -45,6 +59,18 @@ export default function ManView({ currentPhase, name, partnerName }) {
               style={{ color: currentPhase.accent }}
             >
               {currentPhase.name}
+              <button
+                type="button"
+                className="phase-info-btn"
+                aria-label={t.ui.phaseInfoAria}
+                onClick={() => setInfoPhase(currentPhase)}
+                style={{
+                  color: currentPhase.accent,
+                  borderColor: `${currentPhase.color}55`,
+                }}
+              >
+                i
+              </button>
             </h2>
           </div>
         </div>
@@ -65,32 +91,122 @@ export default function ManView({ currentPhase, name, partnerName }) {
         </div>
       </div>
 
-      <div className="tips-card man-tips-card">
-        <div
-          className="tips-title"
-          style={{ color: currentPhase.accent }}
-        >
-          {t.ui.manWhatToDoTitle}
-        </div>
-        {currentPhase.tips.map((tip, i) => (
-          <div key={i} className="tip-item">
-            <span style={{ color: currentPhase.accent, flexShrink: 0 }}>
-              →
-            </span>
-            {tip}
-          </div>
+      <div className="tabs-row">
+        {[
+          { key: "now", label: t.ui.manTabNow ?? t.ui.tabTips },
+          { key: "all", label: t.ui.manTabAll ?? t.ui.tabAll },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            className={`tab-btn ${activeTab === tab.key ? "active" : ""}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
         ))}
       </div>
 
-      <div className="avoid-card man-avoid-card">
-        <div className="avoid-title">{t.ui.manWhatToAvoidTitle}</div>
-        {currentPhase.avoid.map((item, i) => (
-          <div key={i} className="tip-item">
-            <span className="danger-mark">×</span>
-            {item}
+      {activeTab === "now" && (
+        <>
+          <div className="tips-card man-tips-card">
+            <div
+              className="tips-title"
+              style={{ color: currentPhase.accent }}
+            >
+              {t.ui.manWhatToDoTitle}
+            </div>
+            {currentPhase.tips.map((tip, i) => (
+              <div key={i} className="tip-item">
+                <span style={{ color: currentPhase.accent, flexShrink: 0 }}>
+                  →
+                </span>
+                {tip}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+
+          <div className="avoid-card man-avoid-card">
+            <div className="avoid-title">{t.ui.manWhatToAvoidTitle}</div>
+            {currentPhase.avoid.map((item, i) => (
+              <div key={i} className="tip-item">
+                <span className="danger-mark">×</span>
+                {item}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {activeTab === "all" && (
+        <div>
+          {phases.map((phase, i) => {
+            const isActive = phase.id === currentPhase.id;
+            return (
+              <div
+                key={phase.id}
+                className="phase-card"
+                style={{
+                  borderColor: isActive
+                    ? `${phase.color}40`
+                    : "rgba(255,255,255,0.65)",
+                  background: isActive
+                    ? `linear-gradient(135deg, ${phase.color}10, rgba(255,255,255,0.88))`
+                    : undefined,
+                }}
+              >
+                <div className="phase-card-top">
+                  <span
+                    className="phase-emoji"
+                    style={{
+                      boxShadow: isActive
+                        ? `0 0 0 2px ${phase.color}25 inset`
+                        : "inset 0 1px 0 rgba(255,255,255,0.7)",
+                    }}
+                  >
+                    {phase.emoji}
+                  </span>
+                  <div className="phase-card-main">
+                    <div
+                      className="phase-card-name"
+                      style={{ color: isActive ? phase.accent : undefined }}
+                    >
+                      {phase.name}
+                      {isActive && (
+                        <span className="now-badge">{t.ui.nowBadge}</span>
+                      )}
+                    </div>
+                    <div className="phase-card-days">
+                      {t.ui.dayShort.toUpperCase()}
+                      {phase.days[0]}–{t.ui.dayShort.toUpperCase()}
+                      {phase.days[1]} · {durations[i]} {t.ui.daysUnit}
+                    </div>
+                  </div>
+                  <div className="phase-card-dots">
+                    <EnergyDots
+                      level={phase.energy}
+                      max={MAX_ENERGY}
+                      activeColor={isActive ? phase.accent : "#a1a1aa"}
+                      inactiveColor="rgba(60,60,67,0.16)"
+                    />
+                  </div>
+                </div>
+                <div className="phase-card-mood">{phase.mood}</div>
+                {phase.description && (
+                  <p className="phase-card-desc">{phase.description}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {infoPhase && (
+        <PhaseInfoPopup
+          phase={infoPhase}
+          description={infoPhase.description}
+          onClose={() => setInfoPhase(null)}
+        />
+      )}
     </div>
   );
 }

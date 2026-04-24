@@ -16,6 +16,7 @@ import WomanView from "./components/WomanView";
 import ManView from "./components/ManView";
 import DisconnectModal from "./components/DisconnectModal";
 import JoinCycle from "./components/JoinCycle";
+import QuestionnaireEditor from "./components/QuestionnaireEditor";
 import { useLanguage } from "./i18n";
 import { isSupabaseConfigured } from "./lib/supabase";
 import {
@@ -132,6 +133,7 @@ export default function CycleTracker() {
   const [syncError, setSyncError] = useState("");
   const [showDisconnectModal, setShowDisconnectModal] = useState(false);
   const [showJoinOverlay, setShowJoinOverlay] = useState(false);
+  const [showQuestEditor, setShowQuestEditor] = useState(false);
 
   // Ref we use to ignore our own writes when the realtime subscription
   // echoes them back to us.
@@ -327,6 +329,7 @@ export default function CycleTracker() {
         tips,
         avoid,
         mood: localized.mood ?? "",
+        description: localized.description ?? "",
       };
     });
   }, [durations, t, userTags]);
@@ -405,7 +408,8 @@ export default function CycleTracker() {
       markOnboarded();
     } catch (err) {
       console.error(err);
-      setSyncError(t.ui.createError);
+      const detail = err?.message || String(err);
+      setSyncError(`${t.ui.createError} (${detail})`);
     } finally {
       setSyncBusy(false);
     }
@@ -507,10 +511,18 @@ export default function CycleTracker() {
       setSharedCode(code);
     } catch (err) {
       console.error(err);
-      window.alert(t.ui.createError);
+      const detail = err?.message || String(err);
+      window.alert(`${t.ui.createError}\n\n${detail}`);
     } finally {
       setSyncBusy(false);
     }
+  }
+
+  // ---- Questionnaire edit ----
+
+  function handleQuestionnaireSave(newAnswers) {
+    setQuestionnaire(newAnswers || {});
+    setShowQuestEditor(false);
   }
 
   // ------------- Render: onboarding -------------
@@ -597,6 +609,9 @@ export default function CycleTracker() {
             role={role}
             myName={myName}
             setMyName={setMyName}
+            onEditQuestionnaire={
+              role === "woman" ? () => setShowQuestEditor(true) : null
+            }
           />
 
           {syncBusy && (
@@ -607,7 +622,11 @@ export default function CycleTracker() {
 
       {role === "man" ? (
         <ManView
+          phases={phases}
           currentPhase={currentPhase}
+          durations={durations}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
           name={myName}
           partnerName={partnerName}
         />
@@ -647,6 +666,14 @@ export default function CycleTracker() {
             onBack={() => setShowJoinOverlay(false)}
           />
         </div>
+      )}
+
+      {showQuestEditor && (
+        <QuestionnaireEditor
+          initialAnswers={questionnaire}
+          onSave={handleQuestionnaireSave}
+          onClose={() => setShowQuestEditor(false)}
+        />
       )}
     </div>
   );

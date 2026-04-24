@@ -71,10 +71,15 @@ const en = {
     stepShareSubtitle:
       "You'll both see the same info in real time on both phones.",
 
-    // Step: cycle dates
+    // Step: cycle dates (woman)
     stepCycleTitle: "Your last cycle",
     stepCycleSubtitle:
       "When did your last period start? You can adjust durations afterwards.",
+
+    // Step: cycle dates (man, about his partner)
+    stepCycleTitleMan: "Your partner's cycle",
+    stepCycleSubtitleMan:
+      "When did her last period start? You can adjust the durations together later.",
 
     // Step: join
     stepJoinTitle: "Join a cycle",
@@ -173,6 +178,18 @@ const en = {
     manWhatToAvoidTitle: "Avoid right now",
     manMoodLabel: "Her likely mood",
     manPartnerMissingName: "your partner",
+    manTabNow: "Right now",
+    manTabAll: "All phases",
+
+    // Phase info popup
+    phaseInfoAria: "Learn more about this phase",
+    phaseInfoTitle: "About this phase",
+    phaseInfoClose: "Close",
+
+    // Questionnaire re-edit from settings
+    questReEditOpen: "Edit my answers",
+    questReEditSave: "Save",
+    questReEditReset: "Clear all",
   },
 
   questionnaire: {
@@ -229,6 +246,8 @@ const en = {
     menstrual: {
       name: "Menstrual",
       mood: "Sensitive · Tired · Variable",
+      description:
+        "Period: the uterine lining sheds, causing bleeding. Energy is at its lowest, the body needs rest. Often accompanied by cramps, fatigue, and emotional sensitivity.",
       tips: [
         "Prepare a hot water bottle",
         "Check the stock of menstrual products",
@@ -253,6 +272,8 @@ const en = {
     follicular: {
       name: "Follicular",
       mood: "Energetic · Creative · Sociable",
+      description:
+        "Follicular phase: estrogen rises and prepares ovulation. Energy gradually returns, mood brightens, motivation and creativity peak. Often the best moment to start new projects.",
       tips: [
         "Plan activities together",
         "Often a good time for meaningful conversations",
@@ -270,6 +291,8 @@ const en = {
     ovulatory: {
       name: "Ovulation",
       mood: "Confident · Radiant · Communicative",
+      description:
+        "Ovulation: an ovary releases an egg. Estrogen and testosterone peak, which often brings confidence, sociability and higher libido. Fertility window.",
       tips: [
         "Suggest a nice moment together",
         "Be attentive and appreciative",
@@ -285,6 +308,8 @@ const en = {
     luteal: {
       name: "Luteal",
       mood: "Variable · Sensitive · Tired",
+      description:
+        "Luteal phase: progesterone dominates, energy slowly decreases. The body prepares either for pregnancy or for the next period. PMS may appear: mood swings, bloating, sensitivity, fatigue.",
       tips: [
         "Listen without trying to fix everything",
         "Lighten her mental load if possible",

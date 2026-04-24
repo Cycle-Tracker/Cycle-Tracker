@@ -489,9 +489,17 @@ export default function StepOnboarding({
 
   if (step === S_CYCLE) {
     const totalDays = durations.reduce((a, b) => a + b, 0);
+    const cycleTitle =
+      role === "man"
+        ? t.ui.stepCycleTitleMan ?? t.ui.stepCycleTitle
+        : t.ui.stepCycleTitle;
+    const cycleSubtitle =
+      role === "man"
+        ? t.ui.stepCycleSubtitleMan ?? t.ui.stepCycleSubtitle
+        : t.ui.stepCycleSubtitle;
     return (
       <div className="onboarding-page step-page">
-        {renderHeader(t.ui.stepCycleTitle, t.ui.stepCycleSubtitle, "📅")}
+        {renderHeader(cycleTitle, cycleSubtitle, "📅")}
 
         <div className="onboarding-card step-cycle-card">
           <div className="settings-row">

@@ -20,6 +20,8 @@ const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
  * Identity props (optional):
  *  - role                "woman" | "man"
  *  - myName, setMyName   (allow editing own first name)
+ *  - onEditQuestionnaire (optional; if provided + role is woman, shows
+ *                         "Edit my answers" button)
  *
  * Sharing props (optional):
  *  - sharedCode
@@ -43,6 +45,7 @@ export default function SettingsBody({
   role = null,
   myName = "",
   setMyName = null,
+  onEditQuestionnaire = null,
   // Sharing
   sharedCode = null,
   onEnableSharing = null,
@@ -183,85 +186,98 @@ export default function SettingsBody({
         </div>
       )}
 
-      {/* Cycle editing controls — only useful on the woman's side. */}
-      {(role === "woman" || role == null) && (
-        <>
-          <div className="settings-row">
-            <label className="section-label">{t.ui.startDateLabel}</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            {showLogPeriod && logPeriodToday && (
-              <button
-                type="button"
-                className="log-period-btn"
-                onClick={logPeriodToday}
-              >
-                🔴 {t.ui.logPeriodButton}
-              </button>
-            )}
-          </div>
+      {/* Cycle editing controls — both roles can adjust them; the
+          man's edits propagate via sync. */}
+      <div className="settings-row">
+        <label className="section-label">{t.ui.startDateLabel}</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        {showLogPeriod && logPeriodToday && role === "woman" && (
+          <button
+            type="button"
+            className="log-period-btn"
+            onClick={logPeriodToday}
+          >
+            🔴 {t.ui.logPeriodButton}
+          </button>
+        )}
+      </div>
 
-          {PHASE_META.map((meta, i) => {
-            const localized = t.phases[meta.id] ?? {};
-            const fillPercent =
-              ((durations[i] - meta.minDays) /
-                (meta.maxDays - meta.minDays)) *
-              100;
+      {PHASE_META.map((meta, i) => {
+        const localized = t.phases[meta.id] ?? {};
+        const fillPercent =
+          ((durations[i] - meta.minDays) /
+            (meta.maxDays - meta.minDays)) *
+          100;
 
-            return (
-              <div key={meta.id} className="settings-row">
-                <div className="settings-row-top">
-                  <div className="settings-phase-name">
-                    <span>{meta.emoji}</span>
-                    <span style={{ color: meta.accent }}>
-                      {localized.name ?? meta.id}
-                    </span>
-                  </div>
-                  <div className="settings-days">
-                    <span style={{ color: meta.accent, fontWeight: 700 }}>
-                      {durations[i]}
-                    </span>
-                    <span className="muted"> {t.ui.dayShort}</span>
-                  </div>
-                </div>
-
-                <input
-                  type="range"
-                  min={meta.minDays}
-                  max={meta.maxDays}
-                  value={durations[i]}
-                  onChange={(e) =>
-                    updateDuration(i, parseInt(e.target.value, 10))
-                  }
-                  style={{
-                    background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
-                  }}
-                />
-
-                <div className="range-hints">
-                  <span>
-                    {meta.minDays}
-                    {t.ui.minSuffix}
-                  </span>
-                  <span>
-                    {meta.maxDays}
-                    {t.ui.maxSuffix}
-                  </span>
-                </div>
+        return (
+          <div key={meta.id} className="settings-row">
+            <div className="settings-row-top">
+              <div className="settings-phase-name">
+                <span>{meta.emoji}</span>
+                <span style={{ color: meta.accent }}>
+                  {localized.name ?? meta.id}
+                </span>
               </div>
-            );
-          })}
+              <div className="settings-days">
+                <span style={{ color: meta.accent, fontWeight: 700 }}>
+                  {durations[i]}
+                </span>
+                <span className="muted"> {t.ui.dayShort}</span>
+              </div>
+            </div>
 
-          {showReset && resetDurations && (
-            <button className="reset-btn" onClick={resetDurations}>
-              {t.ui.resetButton} (
-              {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
-            </button>
-          )}
-        </>
+            <input
+              type="range"
+              min={meta.minDays}
+              max={meta.maxDays}
+              value={durations[i]}
+              onChange={(e) =>
+                updateDuration(i, parseInt(e.target.value, 10))
+              }
+              style={{
+                background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
+              }}
+            />
+
+            <div className="range-hints">
+              <span>
+                {meta.minDays}
+                {t.ui.minSuffix}
+              </span>
+              <span>
+                {meta.maxDays}
+                {t.ui.maxSuffix}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+
+      {showReset && resetDurations && (
+        <button className="reset-btn" onClick={resetDurations}>
+          {t.ui.resetButton} (
+          {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
+        </button>
+      )}
+
+      {role === "woman" && onEditQuestionnaire && (
+        <div className="settings-row quest-edit-row">
+          <label className="section-label">{t.ui.questEditTitle}</label>
+          <p className="settings-hint quest-edit-subtitle">
+            {t.ui.questEditSubtitle}
+          </p>
+          <button
+            type="button"
+            className="quest-edit-btn"
+            onClick={onEditQuestionnaire}
+          >
+            💭 {t.ui.questReEditOpen ?? t.ui.questEditButton}
+          </button>
+        </div>
       )}
     </>
   );

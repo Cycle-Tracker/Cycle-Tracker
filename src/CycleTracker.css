@@ -1496,6 +1496,234 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ==========================================
+   Phase info (i) button + popup
+   ========================================== */
+
+.phase-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 8px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(60, 60, 67, 0.25);
+  background: rgba(255, 255, 255, 0.65);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+  vertical-align: middle;
+}
+
+.phase-info-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.phase-info-btn:active {
+  transform: scale(0.95);
+}
+
+.phase-info-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 25, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 140;
+  animation: fade-in 0.15s ease-out;
+}
+
+.phase-info-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 24px 22px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.phase-info-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.phase-info-emoji {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.phase-info-head {
+  flex: 1;
+  min-width: 0;
+}
+
+.phase-info-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(60, 60, 67, 0.55);
+  margin-bottom: 2px;
+}
+
+.phase-info-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.phase-info-mood {
+  font-size: 13px;
+  color: rgba(60, 60, 67, 0.7);
+  margin-top: 4px;
+}
+
+.phase-info-desc {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(40, 40, 48, 0.88);
+  margin: 0 0 18px;
+}
+
+.phase-info-desc-empty {
+  color: rgba(60, 60, 67, 0.4);
+}
+
+.phase-info-close {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.phase-info-close:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.phase-card-desc {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(60, 60, 67, 0.08);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(40, 40, 48, 0.78);
+}
+
+/* ==========================================
+   Questionnaire editor (re-edit from settings)
+   ========================================== */
+
+.settings-row.quest-edit-row {
+  margin-top: 6px;
+}
+
+.quest-edit-subtitle {
+  margin: 2px 0 10px;
+  font-size: 13px;
+  color: rgba(60, 60, 67, 0.7);
+}
+
+.quest-edit-btn {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(187, 134, 252, 0.12),
+    rgba(255, 182, 193, 0.12)
+  );
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.quest-edit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.quest-editor-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 130;
+  overflow-y: auto;
+  animation: fade-in 0.15s ease-out;
+}
+
+.quest-editor-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 36px 18px 48px;
+}
+
+.quest-editor-hero {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.quest-editor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.quest-editor-block {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 22px;
+  padding: 18px 16px 16px;
+}
+
+.quest-editor-block .quest-question {
+  font-size: 15.5px;
+  margin: 0 0 10px;
+}
+
+.quest-editor-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.quest-editor-reset-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  background: rgba(255, 255, 255, 0.6);
+  color: rgba(60, 60, 67, 0.75);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ==========================================
    Mobile tuning
    ========================================== */
 

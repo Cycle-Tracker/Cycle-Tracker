@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useLanguage } from "../i18n";
 import CycleWheel from "./CycleWheel";
 import EnergyDots from "./EnergyDots";
+import PhaseInfoPopup from "./PhaseInfoPopup";
 
 const MAX_ENERGY = 5;
 
@@ -32,6 +33,7 @@ export default function WomanView({
   durations,
 }) {
   const { t } = useLanguage();
+  const [infoPhase, setInfoPhase] = useState(null);
 
   const anticipateMessage = useMemo(() => {
     if (!currentPhase) return "";
@@ -69,6 +71,18 @@ export default function WomanView({
             style={{ color: currentPhase.accent }}
           >
             {currentPhase.name}
+            <button
+              type="button"
+              className="phase-info-btn"
+              aria-label={t.ui.phaseInfoAria}
+              onClick={() => setInfoPhase(currentPhase)}
+              style={{
+                color: currentPhase.accent,
+                borderColor: `${currentPhase.color}55`,
+              }}
+            >
+              i
+            </button>
           </h2>
           <div className="current-phase-mood">{currentPhase.mood}</div>
 
@@ -213,10 +227,21 @@ export default function WomanView({
                   </div>
                 </div>
                 <div className="phase-card-mood">{phase.mood}</div>
+                {phase.description && (
+                  <p className="phase-card-desc">{phase.description}</p>
+                )}
               </div>
             );
           })}
         </div>
+      )}
+
+      {infoPhase && (
+        <PhaseInfoPopup
+          phase={infoPhase}
+          description={infoPhase.description}
+          onClose={() => setInfoPhase(null)}
+        />
       )}
     </>
   );
