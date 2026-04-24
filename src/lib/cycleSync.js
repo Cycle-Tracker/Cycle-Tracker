@@ -8,6 +8,9 @@ import { supabase, isSupabaseConfigured } from "./supabase";
  *   - start_date (date)             → first day of the current cycle
  *   - durations (jsonb, int[4])     → phase durations
  *   - language (text)               → last language used
+ *   - woman_name (text)             → first name of the cycle owner
+ *   - man_name (text)               → first name of the supporting partner
+ *   - questionnaire (jsonb)         → woman's answers for tip personalization
  *
  * Security: the table uses "public by code" RLS — anyone with the code can
  * read and write. The code itself is the secret, so we generate codes with
@@ -64,21 +67,34 @@ function ensureConfigured() {
 /**
  * Create a new shared cycle with a unique code and return the code.
  * Retries up to 5 times on code collisions.
+ *
+ * Accepted optional fields: womanName, manName, questionnaire.
  */
-export async function createSharedCycle({ startDate, durations, language }) {
+export async function createSharedCycle({
+  startDate,
+  durations,
+  language,
+  womanName,
+  manName,
+  questionnaire,
+}) {
   ensureConfigured();
+
+  const payload = {
+    start_date: startDate,
+    durations,
+    language,
+  };
+  if (womanName !== undefined) payload.woman_name = womanName;
+  if (manName !== undefined) payload.man_name = manName;
+  if (questionnaire !== undefined) payload.questionnaire = questionnaire;
 
   let lastError = null;
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = generateCode();
     const { data, error } = await supabase
       .from("cycles")
-      .insert({
-        code,
-        start_date: startDate,
-        durations,
-        language,
-      })
+      .insert({ ...payload, code })
       .select()
       .single();
 

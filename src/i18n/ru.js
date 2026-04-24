@@ -10,7 +10,7 @@ const ru = {
     appSubtitle: "Элегантное и деликатное отслеживание цикла",
     settingsOpenAria: "Открыть настройки",
     settingsTitle: "Настройки",
-    settingsSectionLabel: "Настройки фаз",
+    settingsSectionLabel: "Настройки",
     totalCycleLabel: "Общий цикл:",
     daysUnit: "дн.",
     dayShort: "д",
@@ -42,28 +42,65 @@ const ru = {
     footerLine2:
       "Самый надёжный способ — просто спросить её, что ей нужно.",
     languageLabel: "Язык",
-    welcomeTitle: "Добро пожаловать",
-    welcomeSubtitle: "Давайте настроим цикл перед началом.",
-    welcomeLangStep: "1. Язык",
-    welcomeDateStep: "2. Начало последнего цикла",
-    welcomePhasesStep: "3. Длительность фаз (необязательно)",
-    welcomePhasesHelp:
-      "Можно оставить значения по умолчанию и изменить позже.",
-    welcomeStartButton: "Начать",
+
+    // ===== Multi-step onboarding =====
+    stepPrev: "← Назад",
+    stepNext: "Далее →",
+    stepFinish: "Завершить",
+    stepSkip: "Пропустить",
+    stepProgress: (current, total) => `${current} / ${total}`,
+
+    // Step: language
+    stepLangTitle: "Выбери язык",
+    stepLangSubtitle: "Можно изменить позже.",
+
+    // Step: name
+    stepNameTitle: "Как тебя зовут?",
+    stepNameSubtitle: "Имя используется только для персонализации приложения.",
+    stepNamePlaceholder: "Твоё имя",
+
+    // Step: role
+    stepRoleTitle: "Ты...",
+    stepRoleSubtitle:
+      "Приложение адаптируется: ты либо переживаешь цикл, либо поддерживаешь.",
+    roleWoman: "Та, кто проживает цикл",
+    roleWomanDesc: "Ты хочешь лучше понимать своё тело и предвидеть.",
+    roleMan: "Партнёр",
+    roleManDesc: "Ты хочешь лучше её понимать и быть рядом.",
+
+    // Step: questionnaire intro
+    stepQuestTitle: "Несколько вопросов о тебе",
+    stepQuestSubtitle:
+      "Ответы помогут персонализировать советы, которые он увидит. Можно пропустить.",
+
+    // Step: partner choice
+    stepShareTitle: "Поделиться с партнёром?",
+    stepShareSubtitle:
+      "У вас будет одна и та же информация в реальном времени на обоих телефонах.",
+
+    // Step: cycle dates
+    stepCycleTitle: "Твой последний цикл",
+    stepCycleSubtitle:
+      "Когда начались последние месячные? Длительность можно потом изменить.",
+
+    // Step: join
+    stepJoinTitle: "Присоединиться к циклу",
+    stepJoinSubtitle:
+      "Введи код, который тебе дал партнёр (например, ROSE-4872).",
 
     // Onboarding choice (solo vs couple)
-    choiceTitle: "Как вы хотите использовать приложение?",
+    choiceTitle: "Как ты хочешь использовать приложение?",
     choiceSubtitle:
-      "Используйте сами или поделитесь с ней, чтобы быть в синхроне.",
+      "Используй сам(а) или поделись с партнёром, чтобы быть в синхроне.",
     choiceCreateTitle: "Создать общий цикл",
     choiceCreateDesc:
-      "Вы получите код, чтобы поделиться с партнёршей. Вы оба будете видеть одни и те же данные в реальном времени.",
+      "Вы получите код для обмена. Вы оба будете видеть одни и те же данные в реальном времени.",
     choiceJoinTitle: "Присоединиться по коду",
     choiceJoinDesc:
-      "Введите код, который вам дала партнёрша, чтобы видеть её цикл.",
-    choiceSoloTitle: "Использовать одному",
+      "Введи код, который дал партнёр, чтобы видеть цикл.",
+    choiceSoloTitle: "Использовать в одиночку",
     choiceSoloDesc:
-      "Данные останутся на вашем устройстве. Вы сможете включить общий доступ позже.",
+      "Данные останутся на твоём устройстве. Общий доступ можно включить позже.",
 
     // Join cycle screen
     joinTitle: "Присоединиться к циклу",
@@ -87,16 +124,112 @@ const ru = {
     shareCopyButton: "Копировать",
     shareCopiedLabel: "Скопировано ✓",
     shareHelp:
-      "Поделитесь этим кодом с ней. Она сможет ввести его в приложении, чтобы видеть и редактировать цикл.",
+      "Поделись этим кодом с партнёром. Он·а сможет ввести его в приложении, чтобы видеть и редактировать цикл.",
     shareDisconnectButton: "Отключиться от общего цикла",
-    shareDisconnectConfirm:
-      "Отключиться от общего цикла? Данные останутся на Supabase и будут доступны по коду.",
+    shareDisconnectTitle: "Отключиться?",
+    shareDisconnectMsg: (name) =>
+      name
+        ? `Ты точно хочешь отключиться от ${name}? 🥺`
+        : "Ты точно хочешь отключиться от общего цикла? 🥺",
+    shareDisconnectHelp:
+      "Данные останутся на Supabase. Можно вернуться по тому же коду.",
+    shareDisconnectConfirm: "Да, отключиться",
+    shareDisconnectCancel: "Отмена",
     shareEnableButton: "Включить общий доступ",
-    shareEnableHelp:
-      "Создайте код, чтобы поделиться этим циклом с партнёршей.",
+    shareEnableHelp: "Создай код, чтобы поделиться этим циклом.",
+    shareJoinButton: "Присоединиться по существующему коду",
+    shareJoinHelp: "Уже есть код? Подключись к нему.",
     shareOfflineLabel: "Офлайн — общий доступ недоступен.",
     syncIndicatorSynced: "Синхронизировано",
     syncIndicatorOffline: "Офлайн",
+
+    // Names
+    myNameLabel: "Твоё имя",
+    partnerNameLabel: "Имя партнёра",
+    yourNameHint: "(необязательно)",
+
+    // Questionnaire management
+    questEditTitle: "Твои предпочтения",
+    questEditSubtitle:
+      "Твои ответы персонализируют то, что видит партнёр.",
+    questEditButton: "Изменить ответы",
+    questSavedLabel: "Настройки сохранены ✓",
+
+    // Role in settings
+    roleSectionLabel: "Твоя роль",
+
+    // Woman dashboard extras
+    womanPeriodInLabel: "Следующие месячные",
+    womanPeriodTodayLabel: "Твои месячные начались",
+    womanCyclePhaseLabel: "Ты в фазе",
+    womanAnticipateTitle: "Что учесть",
+    womanAnticipateMenstrual: "Месячные близко. Подготовь комфорт.",
+    womanAnticipateOvulatory:
+      "Ты на пике энергии. Используй это для важного.",
+    womanAnticipateLuteal:
+      "Тело готовится к месячным. Может наступить усталость.",
+    womanAnticipateFollicular:
+      "Энергия возвращается. Это твой творческий момент.",
+    womanBadgeSolo: "Одна",
+
+    // Man dashboard extras
+    manHelloLabel: (name) => (name ? `Привет, ${name}` : "Привет"),
+    manCurrentlyLabel: (partnerName) =>
+      partnerName ? `${partnerName} сейчас в фазе` : "Она сейчас в фазе",
+    manWhatToDoTitle: "Что ты можешь сделать для неё",
+    manWhatToAvoidTitle: "Чего избегать сейчас",
+    manMoodLabel: "Её вероятное настроение",
+    manPartnerMissingName: "твоя партнёрша",
+  },
+
+  questionnaire: {
+    introTitle: "Несколько вопросов",
+    introSubtitle:
+      "Займёт пару секунд. Это поможет адаптировать советы.",
+    questionCounter: (current, total) => `Вопрос ${current} из ${total}`,
+    finish: "Завершить",
+
+    questions: {
+      painIntensity: "Твои месячные обычно...",
+      periodTouch: "Во время месячных ты предпочитаешь...",
+      emotionalPms: "Эмоциональный ПМС (перед месячными)",
+      physicalPms: "Физический ПМС (головная боль, вздутие...)",
+      tired: "Когда ты устала, ты хочешь чтобы он...",
+      loveLanguage: "Твой предпочитаемый способ поддержки",
+      comfortFood: "Сладкое / еда-утешение во время месячных",
+      lightExercise: "Лёгкие упражнения во время месячных",
+    },
+
+    options: {
+      high: "Болезненные",
+      medium: "Умеренные",
+      low: "Лёгкие",
+
+      lots: "Много объятий",
+      space: "Свободное пространство",
+      depends: "Как когда",
+
+      often: "Часто",
+      sometimes: "Иногда",
+      rarely: "Редко",
+
+      gentle: "Предлагал спокойные занятия",
+      alone: "Оставлял в покое",
+      ask: "Просто спрашивал",
+
+      words: "Нежные слова",
+      hugs: "Объятия",
+      attention: "Маленькие знаки внимания",
+      // space reused
+
+      helps: "Это мне помогает",
+      weighs: "Это меня тяготит",
+      // depends reused
+
+      good: "Мне это помогает",
+      no: "Нет, спасибо",
+      // depends reused
+    },
   },
 
   phases: {
@@ -106,9 +239,17 @@ const ru = {
       tips: [
         "Подготовь грелку",
         "Проверь запас средств гигиены",
-        "Предложи обезболивающее, если она обычно принимает",
         "Будь нежным и терпеливым",
         "Обеспечь комфорт и спокойствие",
+      ],
+      extraTips: [
+        { text: "Предложи обезболивающее (она часто принимает)", tags: ["painful-periods"] },
+        { text: "Объятия и близость: она хочет быть рядом", tags: ["wants-affection-menstrual", "love-hugs"] },
+        { text: "Дай ей пространство — она так предпочитает", tags: ["wants-space-menstrual", "love-space"] },
+        { text: "Предложи её любимую еду-утешение", tags: ["food-helps"] },
+        { text: "Нежные слова — напомнить что ты рядом", tags: ["love-words"] },
+        { text: "Маленькие знаки (плед, мягкий свет, чай)", tags: ["love-attention"] },
+        { text: "Неспешная прогулка, если она хочет двигаться", tags: ["exercise-helps"] },
       ],
       avoid: [
         "Преуменьшать её боль",
@@ -125,6 +266,10 @@ const ru = {
         "Поддерживай её проекты",
         "Наслаждайся её возросшей энергией",
       ],
+      extraTips: [
+        { text: "Предложи спортивную активность — ей может понравиться", tags: ["exercise-helps"] },
+        { text: "Дай ей вести — она в своём потоке", tags: ["love-space"] },
+      ],
       avoid: [
         "Не предполагай — просто спроси, как она себя чувствует",
       ],
@@ -138,6 +283,10 @@ const ru = {
         "Хорошее время поговорить, если она захочет",
         "Наслаждайся естественной близостью",
       ],
+      extraTips: [
+        { text: "Скажи, что она красивая", tags: ["love-words"] },
+        { text: "Настоящее длинное объятие — она оценит", tags: ["love-hugs"] },
+      ],
       avoid: ["Не думай, что всё всегда будет легко"],
     },
     luteal: {
@@ -146,9 +295,16 @@ const ru = {
       tips: [
         "Слушай, не пытаясь сразу всё решить",
         "Облегчи её ментальную нагрузку, если можешь",
-        "Предлагай спокойные занятия",
         "Предугадывай её потребность в комфорте",
         "Сохраняй терпение",
+      ],
+      extraTips: [
+        { text: "Она может быть эмоциональна: прими без комментариев", tags: ["emotional-pms"] },
+        { text: "Головная боль? Предложи обезболивающее + воду + тихую комнату", tags: ["physical-pms"] },
+        { text: "Предложи спокойное занятие (фильм, готовка, прогулка)", tags: ["offer-gentle-activities"] },
+        { text: "Дай ей побыть одной, если она хочет", tags: ["leave-her-alone-when-tired"] },
+        { text: "Просто спроси, чего ей хочется", tags: ["ask-when-tired"] },
+        { text: "Принеси маленькую сладость, если она любит", tags: ["food-helps"] },
       ],
       avoid: [
         "«Это в тебе ПМС говорит»",

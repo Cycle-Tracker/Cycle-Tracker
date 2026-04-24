@@ -1080,3 +1080,463 @@ input[type="range"]::-moz-range-thumb {
     letter-spacing: 1px;
   }
 }
+
+/* ==========================================
+   Multi-step onboarding (StepOnboarding)
+   ========================================== */
+
+.step-page {
+  padding-top: 40px;
+}
+
+.step-hero {
+  position: relative;
+}
+
+.step-progress {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: #6b6b70;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.step-next-btn {
+  margin-top: 18px;
+}
+
+.step-back-btn {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: #6b6b70;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.step-back-btn:hover {
+  color: #2c2c2e;
+}
+
+.step-skip-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  border-radius: 10px;
+  color: #6b6b70;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.step-skip-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.step-name-input,
+.settings-name-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(60, 60, 67, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  color: #111;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 6px;
+}
+
+.step-name-input:focus,
+.settings-name-input:focus {
+  border-color: rgba(230, 90, 140, 0.5);
+  box-shadow: 0 0 0 3px rgba(230, 90, 140, 0.1);
+}
+
+.settings-hint {
+  font-weight: 400;
+  font-size: 12px;
+  color: #9a9a9f;
+  margin-left: 4px;
+}
+
+/* Questionnaire step */
+
+.quest-counter {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9a9a9f;
+  margin-bottom: 6px;
+}
+
+.quest-question {
+  margin: 4px 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #1c1c1e;
+  letter-spacing: -0.01em;
+}
+
+.quest-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quest-option-btn {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(60, 60, 67, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  color: #1c1c1e;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.quest-option-btn:hover {
+  background: rgba(230, 90, 140, 0.06);
+  border-color: rgba(230, 90, 140, 0.25);
+  transform: translateY(-1px);
+}
+
+.quest-option-btn.selected {
+  background: rgba(230, 90, 140, 0.1);
+  border-color: rgba(230, 90, 140, 0.45);
+  color: #b83b63;
+  font-weight: 600;
+}
+
+/* Cycle step card (mostly inherits .onboarding-card + .settings-row) */
+
+.step-cycle-card .settings-row {
+  margin-bottom: 14px;
+}
+
+/* ==========================================
+   Join sharing from settings
+   ========================================== */
+
+.share-join-btn {
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #b83b63;
+  border: 1px solid rgba(230, 90, 140, 0.35);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  margin-top: 4px;
+}
+
+.share-join-btn:hover {
+  background: rgba(230, 90, 140, 0.06);
+  transform: translateY(-1px);
+}
+
+/* ==========================================
+   Disconnect modal
+   ========================================== */
+
+.disconnect-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 30, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+  padding: 20px;
+  animation: fade-in 0.15s ease-out;
+}
+
+.disconnect-modal {
+  background: white;
+  border-radius: 22px;
+  padding: 24px 24px 20px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: modal-pop 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.disconnect-emoji {
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.disconnect-title {
+  margin: 4px 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+.disconnect-message {
+  margin: 0 0 10px;
+  font-size: 15.5px;
+  color: #2c2c2e;
+  line-height: 1.4;
+}
+
+.disconnect-help {
+  margin: 0 0 18px;
+  font-size: 12.5px;
+  color: #8a8a8f;
+  line-height: 1.4;
+}
+
+.disconnect-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.disconnect-cancel-btn,
+.disconnect-confirm-btn {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  border: none;
+}
+
+.disconnect-cancel-btn {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1c1c1e;
+}
+
+.disconnect-cancel-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.disconnect-confirm-btn {
+  background: #e65a8c;
+  color: white;
+}
+
+.disconnect-confirm-btn:hover {
+  background: #d94d7f;
+  transform: translateY(-1px);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.9) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ==========================================
+   Woman dashboard — "anticipate" card
+   ========================================== */
+
+.anticipate-card {
+  margin: 18px auto 22px;
+  max-width: 620px;
+  padding: 16px 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+}
+
+.anticipate-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.anticipate-body {
+  font-size: 14.5px;
+  color: #2c2c2e;
+  line-height: 1.45;
+}
+
+/* ==========================================
+   Man dashboard
+   ========================================== */
+
+.man-view {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.man-hello {
+  text-align: center;
+  font-size: 14px;
+  color: #6b6b70;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.man-phase-card {
+  padding: 20px 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+.man-phase-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.man-phase-emoji {
+  font-size: 44px;
+  line-height: 1;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.man-phase-lines {
+  flex: 1;
+  min-width: 0;
+}
+
+.man-phase-in {
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
+  color: #6b6b70;
+  margin-bottom: 2px;
+}
+
+.man-phase-name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.man-phase-mood-row,
+.man-phase-energy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.man-phase-mood-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9a9a9f;
+}
+
+.man-phase-mood-value {
+  font-size: 13.5px;
+  color: #2c2c2e;
+  text-align: right;
+}
+
+.man-tips-card,
+.man-avoid-card {
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================
+   Fullscreen overlay (e.g. join from settings)
+   ========================================== */
+
+.fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 110;
+  overflow-y: auto;
+  animation: fade-in 0.15s ease-out;
+}
+
+/* ==========================================
+   Mobile tuning
+   ========================================== */
+
+@media (max-width: 520px) {
+  .tracker-page {
+    padding: 18px 12px 36px;
+  }
+  .tracker-title {
+    font-size: 26px;
+  }
+  .tracker-subtitle {
+    font-size: 13px;
+  }
+  .current-phase-card {
+    padding: 20px 16px;
+  }
+  .quest-question {
+    font-size: 16.5px;
+  }
+  .quest-option-btn {
+    padding: 13px 14px;
+    font-size: 14.5px;
+  }
+  .man-phase-card {
+    padding: 18px 16px;
+  }
+  .man-phase-name {
+    font-size: 20px;
+  }
+  .man-phase-emoji {
+    width: 56px;
+    height: 56px;
+    font-size: 38px;
+  }
+  .disconnect-modal {
+    padding: 20px 18px 16px;
+  }
+  .disconnect-title {
+    font-size: 18px;
+  }
+  .step-page {
+    padding-top: 24px;
+  }
+}

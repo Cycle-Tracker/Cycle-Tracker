@@ -10,7 +10,7 @@ const fr = {
     appSubtitle: "Suivi élégant et discret du cycle",
     settingsOpenAria: "Ouvrir les réglages",
     settingsTitle: "Réglages",
-    settingsSectionLabel: "Réglages des phases",
+    settingsSectionLabel: "Réglages",
     totalCycleLabel: "Cycle total :",
     daysUnit: "jours",
     dayShort: "j",
@@ -31,29 +31,65 @@ const fr = {
     logPeriodButton: "Les règles ont commencé aujourd'hui",
     logPeriodConfirm:
       "Marquer aujourd'hui comme premier jour du cycle ? (la date de début sera mise à jour)",
-    footerLine1: "Chaque femme est différente.",
+    footerLine1: "Chaque personne est différente.",
     footerLine2:
       "Le plus fiable reste toujours de lui demander ce dont elle a besoin.",
     languageLabel: "Langue",
-    welcomeTitle: "Bienvenue",
-    welcomeSubtitle: "Configurons le cycle avant de commencer.",
-    welcomeLangStep: "1. Langue",
-    welcomeDateStep: "2. Début du dernier cycle",
-    welcomePhasesStep: "3. Durée des phases (optionnel)",
-    welcomePhasesHelp:
-      "Tu peux laisser les valeurs par défaut et ajuster plus tard.",
-    welcomeStartButton: "Commencer",
+
+    // ===== Multi-step onboarding =====
+    stepPrev: "← Précédent",
+    stepNext: "Suivant →",
+    stepFinish: "Terminer",
+    stepSkip: "Passer",
+    stepProgress: (current, total) => `${current} / ${total}`,
+
+    // Step: language
+    stepLangTitle: "Choisis ta langue",
+    stepLangSubtitle: "Tu pourras la changer plus tard.",
+
+    // Step: name
+    stepNameTitle: "Comment tu t'appelles ?",
+    stepNameSubtitle: "Ton prénom ne sert qu'à personnaliser l'app.",
+    stepNamePlaceholder: "Ton prénom",
+
+    // Step: role
+    stepRoleTitle: "Tu es...",
+    stepRoleSubtitle: "L'app s'adapte selon que tu vis le cycle ou que tu soutiens.",
+    roleWoman: "Celle qui vit le cycle",
+    roleWomanDesc: "Tu veux mieux comprendre ton corps et anticiper.",
+    roleMan: "Le partenaire",
+    roleManDesc: "Tu veux mieux la comprendre et l'accompagner.",
+
+    // Step: questionnaire intro
+    stepQuestTitle: "Quelques questions sur toi",
+    stepQuestSubtitle:
+      "Tes réponses aident à personnaliser les conseils qu'il verra. Tu peux passer cette étape.",
+
+    // Step: partner choice
+    stepShareTitle: "Partager avec ton partenaire ?",
+    stepShareSubtitle:
+      "Vous aurez la même info en temps réel sur vos deux téléphones.",
+
+    // Step: cycle dates
+    stepCycleTitle: "Ton dernier cycle",
+    stepCycleSubtitle:
+      "Quand ont commencé tes dernières règles ? Tu pourras ajuster les durées.",
+
+    // Step: join
+    stepJoinTitle: "Rejoindre un cycle",
+    stepJoinSubtitle:
+      "Entre le code que ton/ta partenaire t'a donné (ex. ROSE-4872).",
 
     // Onboarding choice (solo vs couple)
     choiceTitle: "Comment veux-tu utiliser l'app ?",
     choiceSubtitle:
-      "Tu peux l'utiliser seul, ou la partager avec elle pour rester synchronisés.",
+      "Tu peux l'utiliser seul·e, ou la partager avec l'autre pour rester synchronisés.",
     choiceCreateTitle: "Créer un cycle partagé",
     choiceCreateDesc:
-      "Tu obtiendras un code à partager avec ta partenaire. Vous verrez les mêmes infos en temps réel.",
+      "Tu obtiendras un code à lui partager. Vous verrez les mêmes infos en temps réel.",
     choiceJoinTitle: "Rejoindre avec un code",
     choiceJoinDesc:
-      "Entre le code que ta partenaire t'a donné pour voir son cycle.",
+      "Entre le code que ton/ta partenaire t'a donné pour voir le cycle.",
     choiceSoloTitle: "Utiliser en solo",
     choiceSoloDesc:
       "Les données restent sur ton appareil. Tu peux activer le partage plus tard.",
@@ -80,16 +116,112 @@ const fr = {
     shareCopyButton: "Copier",
     shareCopiedLabel: "Copié ✓",
     shareHelp:
-      "Partage ce code avec elle. Elle pourra l'entrer dans l'app pour voir et modifier le cycle.",
+      "Partage ce code avec l'autre. Il·elle pourra l'entrer dans l'app pour voir et modifier le cycle.",
     shareDisconnectButton: "Se déconnecter du cycle partagé",
-    shareDisconnectConfirm:
-      "Se déconnecter du cycle partagé ? Les données resteront sur Supabase et accessibles via le code.",
+    shareDisconnectTitle: "Se déconnecter ?",
+    shareDisconnectMsg: (name) =>
+      name
+        ? `Tu es sûr·e de vouloir te déconnecter de ${name} ? 🥺`
+        : "Tu es sûr·e de vouloir te déconnecter du cycle partagé ? 🥺",
+    shareDisconnectHelp:
+      "Les données resteront sur Supabase. Tu pourras revenir avec le même code.",
+    shareDisconnectConfirm: "Oui, me déconnecter",
+    shareDisconnectCancel: "Annuler",
     shareEnableButton: "Activer le partage",
-    shareEnableHelp:
-      "Crée un code pour partager ce cycle avec ta partenaire.",
+    shareEnableHelp: "Crée un code pour partager ce cycle.",
+    shareJoinButton: "Rejoindre un code existant",
+    shareJoinHelp: "Tu as déjà un code ? Connecte-toi dessus.",
     shareOfflineLabel: "Mode hors-ligne — le partage n'est pas disponible.",
     syncIndicatorSynced: "Synchronisé",
     syncIndicatorOffline: "Hors-ligne",
+
+    // Names
+    myNameLabel: "Ton prénom",
+    partnerNameLabel: "Prénom du/de la partenaire",
+    yourNameHint: "(facultatif)",
+
+    // Questionnaire management
+    questEditTitle: "Tes préférences",
+    questEditSubtitle:
+      "Tes réponses personnalisent ce que voit ton/ta partenaire.",
+    questEditButton: "Modifier mes réponses",
+    questSavedLabel: "Préférences enregistrées ✓",
+
+    // Role in settings
+    roleSectionLabel: "Ton rôle",
+
+    // Woman dashboard extras
+    womanPeriodInLabel: "Prochaines règles",
+    womanPeriodTodayLabel: "Tes règles ont commencé",
+    womanCyclePhaseLabel: "Tu es en phase",
+    womanAnticipateTitle: "À anticiper",
+    womanAnticipateMenstrual: "Les règles approchent. Prépare ton confort.",
+    womanAnticipateOvulatory:
+      "Tu es au pic d'énergie. Profite pour ce qui compte.",
+    womanAnticipateLuteal:
+      "Ton corps se prépare aux règles. La fatigue peut arriver.",
+    womanAnticipateFollicular:
+      "L'énergie revient. C'est ton moment créatif.",
+    womanBadgeSolo: "Solo",
+
+    // Man dashboard extras
+    manHelloLabel: (name) => (name ? `Salut ${name}` : "Salut"),
+    manCurrentlyLabel: (partnerName) =>
+      partnerName ? `${partnerName} est en phase` : "Elle est en phase",
+    manWhatToDoTitle: "Ce que tu peux faire pour elle",
+    manWhatToAvoidTitle: "À éviter en ce moment",
+    manMoodLabel: "Son humeur probable",
+    manPartnerMissingName: "ta partenaire",
+  },
+
+  questionnaire: {
+    introTitle: "Quelques questions",
+    introSubtitle:
+      "Réponds en quelques secondes. Ça nous aide à adapter les conseils.",
+    questionCounter: (current, total) => `Question ${current} sur ${total}`,
+    finish: "Terminer le questionnaire",
+
+    questions: {
+      painIntensity: "Tes règles sont généralement...",
+      periodTouch: "Pendant les règles, tu préfères...",
+      emotionalPms: "SPM émotionnel (avant les règles)",
+      physicalPms: "SPM physique (maux de tête, ballonnements...)",
+      tired: "Quand tu es fatiguée, tu préfères qu'il...",
+      loveLanguage: "Ta façon préférée d'être soutenue",
+      comfortFood: "Le sucré / confort food pendant les règles",
+      lightExercise: "L'exercice léger pendant les règles",
+    },
+
+    options: {
+      high: "Douloureuses",
+      medium: "Modérées",
+      low: "Légères",
+
+      lots: "Beaucoup de câlins",
+      space: "De l'espace",
+      depends: "Ça dépend",
+
+      often: "Souvent",
+      sometimes: "Parfois",
+      rarely: "Rarement",
+
+      gentle: "Te propose des activités douces",
+      alone: "Te laisse tranquille",
+      ask: "Te demande directement",
+
+      words: "Mots tendres",
+      hugs: "Câlins",
+      attention: "Petites attentions",
+      // space reused
+
+      helps: "Ça m'aide",
+      weighs: "Ça me pèse",
+      // depends reused
+
+      good: "Ça me fait du bien",
+      no: "Non merci",
+      // depends reused
+    },
   },
 
   phases: {
@@ -99,9 +231,17 @@ const fr = {
       tips: [
         "Prépare une bouillotte",
         "Vérifie les stocks de produits menstruels",
-        "Propose un antalgique si elle en prend habituellement",
         "Sois doux et patient",
         "Prévois du confort et du calme",
+      ],
+      extraTips: [
+        { text: "Propose un antalgique (elle en prend souvent)", tags: ["painful-periods"] },
+        { text: "Câlins et contact : elle aime être proche", tags: ["wants-affection-menstrual", "love-hugs"] },
+        { text: "Laisse-lui de l'espace, elle préfère ça", tags: ["wants-space-menstrual", "love-space"] },
+        { text: "Propose-lui son snack réconfort préféré", tags: ["food-helps"] },
+        { text: "Mots doux pour lui rappeler que tu es là", tags: ["love-words"] },
+        { text: "Petites attentions (plaid, lumière tamisée, tisane)", tags: ["love-attention"] },
+        { text: "Une promenade douce si elle a envie de bouger", tags: ["exercise-helps"] },
       ],
       avoid: [
         "Minimiser sa douleur",
@@ -118,6 +258,10 @@ const fr = {
         "Soutiens ses projets",
         "Profite d'une énergie souvent plus haute",
       ],
+      extraTips: [
+        { text: "Propose une sortie sportive — elle peut apprécier", tags: ["exercise-helps"] },
+        { text: "Laisse-la initier les plans — elle est dans son élan", tags: ["love-space"] },
+      ],
       avoid: [
         "Éviter de présumer : demande-lui simplement comment elle se sent",
       ],
@@ -131,6 +275,10 @@ const fr = {
         "Bon moment pour discuter si elle en a envie",
         "Profite de la complicité naturelle",
       ],
+      extraTips: [
+        { text: "Dis-lui que tu la trouves belle", tags: ["love-words"] },
+        { text: "Un vrai câlin long — elle en profitera", tags: ["love-hugs"] },
+      ],
       avoid: ["Ne pars pas du principe que tout est toujours facile"],
     },
     luteal: {
@@ -139,9 +287,16 @@ const fr = {
       tips: [
         "Écoute sans chercher à tout régler",
         "Allège sa charge mentale si possible",
-        "Propose des activités douces",
         "Anticipe ses besoins de confort",
         "Reste patient",
+      ],
+      extraTips: [
+        { text: "Elle peut être émotive : accueille sans commenter", tags: ["emotional-pms"] },
+        { text: "Maux de tête ? Propose doliprane + eau + pièce calme", tags: ["physical-pms"] },
+        { text: "Propose une activité calme (film, cuisine, balade)", tags: ["offer-gentle-activities"] },
+        { text: "Laisse-la souffler seule si elle préfère", tags: ["leave-her-alone-when-tired"] },
+        { text: "Demande-lui simplement de quoi elle a envie", tags: ["ask-when-tired"] },
+        { text: "Apporte-lui un petit plaisir sucré si elle aime", tags: ["food-helps"] },
       ],
       avoid: [
         "\"C'est ton SPM qui parle\"",

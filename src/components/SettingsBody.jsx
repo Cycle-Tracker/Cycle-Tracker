@@ -6,16 +6,27 @@ import { isSupabaseConfigured } from "../lib/supabase";
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
 
 /**
- * Shared controls used by both the Settings panel and the Onboarding screen.
+ * Shared settings panel.
  *
- * Props:
+ * Base props:
  *  - startDate, setStartDate, durations, updateDuration
- *  - resetDurations (optional — hidden if showReset = false)
- *  - logPeriodToday (optional — hidden if showLogPeriod = false)
+ *  - resetDurations      (optional — hidden if showReset = false)
+ *  - logPeriodToday      (optional — hidden if showLogPeriod = false)
  *  - totalDays
- *  - showTotal (default true)
- *  - showReset (default true)
- *  - showLogPeriod (default true)
+ *  - showTotal           (default true)
+ *  - showReset           (default true)
+ *  - showLogPeriod       (default true)
+ *
+ * Identity props (optional):
+ *  - role                "woman" | "man"
+ *  - myName, setMyName   (allow editing own first name)
+ *
+ * Sharing props (optional):
+ *  - sharedCode
+ *  - onEnableSharing      (if set, shows "enable sharing" button)
+ *  - onJoinSharing        (if set, shows "join existing code" button)
+ *  - onDisconnectSharing  (if set + sharedCode, shows disconnect button)
+ *  - showShare            (must be true to render the sharing section)
  */
 export default function SettingsBody({
   startDate,
@@ -28,9 +39,14 @@ export default function SettingsBody({
   showTotal = true,
   showReset = true,
   showLogPeriod = true,
-  // Sharing props (optional)
+  // Identity
+  role = null,
+  myName = "",
+  setMyName = null,
+  // Sharing
   sharedCode = null,
   onEnableSharing = null,
+  onJoinSharing = null,
   onDisconnectSharing = null,
   showShare = false,
 }) {
@@ -44,7 +60,6 @@ export default function SettingsBody({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback: select text so user can copy manually
       setCopied(false);
     }
   }
@@ -71,6 +86,23 @@ export default function SettingsBody({
           })}
         </div>
       </div>
+
+      {setMyName && (
+        <div className="settings-row">
+          <label className="section-label">
+            {t.ui.myNameLabel}{" "}
+            <span className="settings-hint">{t.ui.yourNameHint}</span>
+          </label>
+          <input
+            type="text"
+            className="settings-name-input"
+            value={myName || ""}
+            onChange={(e) => setMyName(e.target.value)}
+            maxLength={40}
+            placeholder={t.ui.stepNamePlaceholder}
+          />
+        </div>
+      )}
 
       {showShare && (
         <div className="settings-row share-row">
@@ -111,16 +143,32 @@ export default function SettingsBody({
             </>
           )}
 
-          {isSupabaseConfigured && !sharedCode && onEnableSharing && (
+          {isSupabaseConfigured && !sharedCode && (
             <>
-              <p className="share-help">{t.ui.shareEnableHelp}</p>
-              <button
-                type="button"
-                className="share-enable-btn"
-                onClick={onEnableSharing}
-              >
-                💞 {t.ui.shareEnableButton}
-              </button>
+              {onEnableSharing && (
+                <>
+                  <p className="share-help">{t.ui.shareEnableHelp}</p>
+                  <button
+                    type="button"
+                    className="share-enable-btn"
+                    onClick={onEnableSharing}
+                  >
+                    💞 {t.ui.shareEnableButton}
+                  </button>
+                </>
+              )}
+              {onJoinSharing && (
+                <>
+                  <p className="share-help">{t.ui.shareJoinHelp}</p>
+                  <button
+                    type="button"
+                    className="share-join-btn"
+                    onClick={onJoinSharing}
+                  >
+                    🔑 {t.ui.shareJoinButton}
+                  </button>
+                </>
+              )}
             </>
           )}
         </div>
@@ -135,78 +183,85 @@ export default function SettingsBody({
         </div>
       )}
 
-      <div className="settings-row">
-        <label className="section-label">{t.ui.startDateLabel}</label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        {showLogPeriod && logPeriodToday && (
-          <button
-            type="button"
-            className="log-period-btn"
-            onClick={logPeriodToday}
-          >
-            🔴 {t.ui.logPeriodButton}
-          </button>
-        )}
-      </div>
-
-      {PHASE_META.map((meta, i) => {
-        const localized = t.phases[meta.id] ?? {};
-        const fillPercent =
-          ((durations[i] - meta.minDays) / (meta.maxDays - meta.minDays)) *
-          100;
-
-        return (
-          <div key={meta.id} className="settings-row">
-            <div className="settings-row-top">
-              <div className="settings-phase-name">
-                <span>{meta.emoji}</span>
-                <span style={{ color: meta.accent }}>
-                  {localized.name ?? meta.id}
-                </span>
-              </div>
-
-              <div className="settings-days">
-                <span style={{ color: meta.accent, fontWeight: 700 }}>
-                  {durations[i]}
-                </span>
-                <span className="muted"> {t.ui.dayShort}</span>
-              </div>
-            </div>
-
+      {/* Cycle editing controls — only useful on the woman's side. */}
+      {(role === "woman" || role == null) && (
+        <>
+          <div className="settings-row">
+            <label className="section-label">{t.ui.startDateLabel}</label>
             <input
-              type="range"
-              min={meta.minDays}
-              max={meta.maxDays}
-              value={durations[i]}
-              onChange={(e) => updateDuration(i, parseInt(e.target.value, 10))}
-              style={{
-                background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
-              }}
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
-
-            <div className="range-hints">
-              <span>
-                {meta.minDays}
-                {t.ui.minSuffix}
-              </span>
-              <span>
-                {meta.maxDays}
-                {t.ui.maxSuffix}
-              </span>
-            </div>
+            {showLogPeriod && logPeriodToday && (
+              <button
+                type="button"
+                className="log-period-btn"
+                onClick={logPeriodToday}
+              >
+                🔴 {t.ui.logPeriodButton}
+              </button>
+            )}
           </div>
-        );
-      })}
 
-      {showReset && resetDurations && (
-        <button className="reset-btn" onClick={resetDurations}>
-          {t.ui.resetButton} (
-          {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
-        </button>
+          {PHASE_META.map((meta, i) => {
+            const localized = t.phases[meta.id] ?? {};
+            const fillPercent =
+              ((durations[i] - meta.minDays) /
+                (meta.maxDays - meta.minDays)) *
+              100;
+
+            return (
+              <div key={meta.id} className="settings-row">
+                <div className="settings-row-top">
+                  <div className="settings-phase-name">
+                    <span>{meta.emoji}</span>
+                    <span style={{ color: meta.accent }}>
+                      {localized.name ?? meta.id}
+                    </span>
+                  </div>
+                  <div className="settings-days">
+                    <span style={{ color: meta.accent, fontWeight: 700 }}>
+                      {durations[i]}
+                    </span>
+                    <span className="muted"> {t.ui.dayShort}</span>
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min={meta.minDays}
+                  max={meta.maxDays}
+                  value={durations[i]}
+                  onChange={(e) =>
+                    updateDuration(i, parseInt(e.target.value, 10))
+                  }
+                  style={{
+                    background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
+                  }}
+                />
+
+                <div className="range-hints">
+                  <span>
+                    {meta.minDays}
+                    {t.ui.minSuffix}
+                  </span>
+                  <span>
+                    {meta.maxDays}
+                    {t.ui.maxSuffix}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+
+          {showReset && resetDurations && (
+            <button className="reset-btn" onClick={resetDurations}>
+              {t.ui.resetButton} (
+              {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
+            </button>
+          )}
+        </>
       )}
     </>
   );

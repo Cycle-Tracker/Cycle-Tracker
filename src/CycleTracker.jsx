@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./CycleTracker.css";
 import { PHASE_META } from "./data/phaseMeta";
+import { tagsFromAnswers } from "./data/questionnaire";
 import {
   buildPhases,
   getDayOfCycle,
@@ -8,12 +9,13 @@ import {
   getTotalDays,
   todayIso,
 } from "./utils/cycleUtils";
-import EnergyDots from "./components/EnergyDots";
-import CycleWheel from "./components/CycleWheel";
-import Onboarding from "./components/Onboarding";
-import OnboardingChoice from "./components/OnboardingChoice";
-import JoinCycle from "./components/JoinCycle";
+import { personalizePhaseTips } from "./utils/tipFilter";
+import StepOnboarding from "./components/StepOnboarding";
 import SettingsBody from "./components/SettingsBody";
+import WomanView from "./components/WomanView";
+import ManView from "./components/ManView";
+import DisconnectModal from "./components/DisconnectModal";
+import JoinCycle from "./components/JoinCycle";
 import { useLanguage } from "./i18n";
 import { isSupabaseConfigured } from "./lib/supabase";
 import {
@@ -24,23 +26,31 @@ import {
 } from "./lib/cycleSync";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
-const MAX_ENERGY = 5;
 
-// localStorage keys
+// localStorage keys (per-device state)
 const LS_START_DATE = "cycle-start-date";
 const LS_DURATIONS = "cycle-durations";
 const LS_ONBOARDED = "cycle-onboarded";
 const LS_SHARED_CODE = "cycle-shared-code";
+const LS_ROLE = "cycle-role";
+const LS_MY_NAME = "cycle-my-name";
+const LS_PARTNER_NAME = "cycle-partner-name";
+const LS_QUESTIONNAIRE = "cycle-questionnaire";
 
 // ---------------- Initial state helpers ----------------
 
-function getInitialStartDate() {
+function readLS(key, fallback = null) {
   try {
-    const saved = localStorage.getItem(LS_START_DATE);
-    if (saved) return saved;
+    const v = localStorage.getItem(key);
+    return v == null ? fallback : v;
   } catch {
-    // ignore
+    return fallback;
   }
+}
+
+function getInitialStartDate() {
+  const saved = readLS(LS_START_DATE);
+  if (saved) return saved;
   const d = new Date();
   d.setDate(d.getDate() - 3);
   return d.toISOString().split("T")[0];
@@ -75,35 +85,59 @@ function getInitialOnboarded() {
   return false;
 }
 
-function getInitialSharedCode() {
+function getInitialQuestionnaire() {
   try {
-    return localStorage.getItem(LS_SHARED_CODE) || null;
+    const saved = localStorage.getItem(LS_QUESTIONNAIRE);
+    if (!saved) return {};
+    const parsed = JSON.parse(saved);
+    if (parsed && typeof parsed === "object") return parsed;
   } catch {
-    return null;
+    return {};
   }
+  return {};
+}
+
+function getInitialRole() {
+  const saved = readLS(LS_ROLE);
+  if (saved === "woman" || saved === "man") return saved;
+  // Legacy users coming in without a role: default to woman (the "full" view).
+  return "woman";
 }
 
 export default function CycleTracker() {
   const { t, lang, setLang } = useLanguage();
 
+  // Cycle data (can come from local or sync)
   const [startDate, setStartDate] = useState(getInitialStartDate);
   const [durations, setDurations] = useState(getInitialDurations);
+
+  // Identity / personalization (per-device mostly, some synced)
+  const [role, setRole] = useState(getInitialRole);
+  const [myName, setMyName] = useState(() => readLS(LS_MY_NAME, "") || "");
+  const [partnerName, setPartnerName] = useState(
+    () => readLS(LS_PARTNER_NAME, "") || ""
+  );
+  const [questionnaire, setQuestionnaire] = useState(getInitialQuestionnaire);
+
+  // UI state
   const [activeTab, setActiveTab] = useState("now");
   const [showSettings, setShowSettings] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(getInitialOnboarded);
 
   // Sharing state
-  const [sharedCode, setSharedCode] = useState(getInitialSharedCode);
-  const [showChoiceScreen, setShowChoiceScreen] = useState(false);
-  const [showJoinScreen, setShowJoinScreen] = useState(false);
+  const [sharedCode, setSharedCode] = useState(
+    () => readLS(LS_SHARED_CODE) || null
+  );
   const [syncBusy, setSyncBusy] = useState(false);
   const [syncError, setSyncError] = useState("");
+  const [showDisconnectModal, setShowDisconnectModal] = useState(false);
+  const [showJoinOverlay, setShowJoinOverlay] = useState(false);
 
   // Ref we use to ignore our own writes when the realtime subscription
   // echoes them back to us.
   const ignoreNextRemoteUpdate = useRef(false);
 
-  // ------------- Persist locally (always) -------------
+  // ------------- Persist locally -------------
 
   useEffect(() => {
     try {
@@ -123,17 +157,51 @@ export default function CycleTracker() {
 
   useEffect(() => {
     try {
-      if (sharedCode) {
-        localStorage.setItem(LS_SHARED_CODE, sharedCode);
-      } else {
-        localStorage.removeItem(LS_SHARED_CODE);
-      }
+      if (sharedCode) localStorage.setItem(LS_SHARED_CODE, sharedCode);
+      else localStorage.removeItem(LS_SHARED_CODE);
     } catch {
       // ignore
     }
   }, [sharedCode]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_ROLE, role);
+    } catch {
+      // ignore
+    }
+  }, [role]);
+
+  useEffect(() => {
+    try {
+      if (myName) localStorage.setItem(LS_MY_NAME, myName);
+      else localStorage.removeItem(LS_MY_NAME);
+    } catch {
+      // ignore
+    }
+  }, [myName]);
+
+  useEffect(() => {
+    try {
+      if (partnerName) localStorage.setItem(LS_PARTNER_NAME, partnerName);
+      else localStorage.removeItem(LS_PARTNER_NAME);
+    } catch {
+      // ignore
+    }
+  }, [partnerName]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_QUESTIONNAIRE, JSON.stringify(questionnaire));
+    } catch {
+      // ignore
+    }
+  }, [questionnaire]);
+
   // ------------- Apply a remote row -------------
+  // A row represents the shared cycle for both partners. Names and
+  // questionnaire are on the row because they describe the woman (the
+  // cycle owner), so both sides need them for personalization.
 
   const applyRemoteRow = useCallback(
     (row) => {
@@ -141,8 +209,29 @@ export default function CycleTracker() {
       if (row.start_date) setStartDate(row.start_date);
       if (Array.isArray(row.durations)) setDurations(row.durations);
       if (row.language && row.language !== lang) setLang(row.language);
+
+      // Name mapping depends on which side of the couple we are on.
+      if (role === "woman") {
+        if (typeof row.woman_name === "string" && row.woman_name) {
+          setMyName(row.woman_name);
+        }
+        if (typeof row.man_name === "string" && row.man_name) {
+          setPartnerName(row.man_name);
+        }
+      } else {
+        if (typeof row.man_name === "string" && row.man_name) {
+          setMyName(row.man_name);
+        }
+        if (typeof row.woman_name === "string" && row.woman_name) {
+          setPartnerName(row.woman_name);
+        }
+      }
+
+      if (row.questionnaire && typeof row.questionnaire === "object") {
+        setQuestionnaire(row.questionnaire);
+      }
     },
-    [lang, setLang]
+    [lang, role, setLang]
   );
 
   // ------------- Realtime subscription -------------
@@ -150,7 +239,6 @@ export default function CycleTracker() {
   useEffect(() => {
     if (!sharedCode || !isSupabaseConfigured) return undefined;
 
-    // Pull latest state when we mount / code changes
     let cancelled = false;
     fetchSharedCycle(sharedCode)
       .then((row) => {
@@ -176,21 +264,30 @@ export default function CycleTracker() {
     };
   }, [sharedCode, applyRemoteRow]);
 
-  // ------------- Push local changes to Supabase -------------
+  // ------------- Push local changes to Supabase (debounced) -------------
 
-  // When shared, debounce writes so rapid slider changes don't spam the API.
   const pushTimer = useRef(null);
   useEffect(() => {
     if (!sharedCode || !isSupabaseConfigured || !isOnboarded) return;
 
     if (pushTimer.current) clearTimeout(pushTimer.current);
     pushTimer.current = setTimeout(() => {
-      ignoreNextRemoteUpdate.current = true;
-      updateSharedCycle(sharedCode, {
+      const patch = {
         start_date: startDate,
         durations,
         language: lang,
-      }).catch((err) => {
+      };
+      // Only the woman's side is allowed to overwrite woman_name +
+      // questionnaire — otherwise the man could accidentally wipe them.
+      if (role === "woman") {
+        patch.woman_name = myName || null;
+        patch.questionnaire = questionnaire || {};
+      } else {
+        patch.man_name = myName || null;
+      }
+
+      ignoreNextRemoteUpdate.current = true;
+      updateSharedCycle(sharedCode, patch).catch((err) => {
         console.error("Push to Supabase failed:", err);
       });
     }, 400);
@@ -198,25 +295,41 @@ export default function CycleTracker() {
     return () => {
       if (pushTimer.current) clearTimeout(pushTimer.current);
     };
-  }, [sharedCode, startDate, durations, lang, isOnboarded]);
+  }, [
+    sharedCode,
+    startDate,
+    durations,
+    lang,
+    isOnboarded,
+    role,
+    myName,
+    questionnaire,
+  ]);
 
   // ------------- Derived state -------------
 
   const totalDays = useMemo(() => getTotalDays(durations), [durations]);
 
+  // User's personalization tags — computed once per questionnaire change.
+  const userTags = useMemo(
+    () => tagsFromAnswers(questionnaire),
+    [questionnaire]
+  );
+
   const phases = useMemo(() => {
     const base = buildPhases(PHASE_META, durations);
     return base.map((phase) => {
       const localized = t.phases[phase.id] ?? {};
+      const { tips, avoid } = personalizePhaseTips(localized, userTags);
       return {
         ...phase,
         name: localized.name ?? phase.id,
-        tips: localized.tips ?? [],
-        avoid: localized.avoid ?? [],
+        tips,
+        avoid,
         mood: localized.mood ?? "",
       };
     });
-  }, [durations, t]);
+  }, [durations, t, userTags]);
 
   const currentDay = useMemo(
     () => getDayOfCycle(startDate, totalDays),
@@ -227,6 +340,12 @@ export default function CycleTracker() {
     [currentDay, phases]
   );
   const daysUntilPeriod = totalDays - currentDay;
+
+  const shareBadgeText = useMemo(() => {
+    if (!sharedCode) return null;
+    if (partnerName) return `💞 ${partnerName}`;
+    return `💞 ${sharedCode}`;
+  }, [sharedCode, partnerName]);
 
   // ------------- Actions -------------
 
@@ -242,14 +361,7 @@ export default function CycleTracker() {
 
   function logPeriodToday() {
     const confirmed = window.confirm(t.ui.logPeriodConfirm);
-    if (confirmed) {
-      setStartDate(todayIso());
-    }
-  }
-
-  function finishBasicOnboarding() {
-    // Go to the sharing-choice screen instead of straight to dashboard
-    setShowChoiceScreen(true);
+    if (confirmed) setStartDate(todayIso());
   }
 
   function markOnboarded() {
@@ -259,19 +371,36 @@ export default function CycleTracker() {
       // ignore
     }
     setIsOnboarded(true);
-    setShowChoiceScreen(false);
-    setShowJoinScreen(false);
   }
 
-  async function handleCreateShared() {
+  // ---- Onboarding callbacks ----
+
+  async function handleOnboardingCreate({
+    name,
+    role: pickedRole,
+    questionnaire: answers,
+    startDate: pickedStart,
+    durations: pickedDurations,
+  }) {
     setSyncError("");
     setSyncBusy(true);
     try {
-      const { code } = await createSharedCycle({
-        startDate,
-        durations,
+      setMyName(name);
+      setRole(pickedRole);
+      setQuestionnaire(answers || {});
+      setStartDate(pickedStart);
+      setDurations(pickedDurations);
+
+      const createPayload = {
+        startDate: pickedStart,
+        durations: pickedDurations,
         language: lang,
-      });
+        questionnaire: answers || {},
+      };
+      if (pickedRole === "woman") createPayload.womanName = name;
+      else createPayload.manName = name;
+
+      const { code } = await createSharedCycle(createPayload);
       setSharedCode(code);
       markOnboarded();
     } catch (err) {
@@ -282,27 +411,99 @@ export default function CycleTracker() {
     }
   }
 
-  function handleJoinSuccess(row) {
+  function handleOnboardingSolo({
+    name,
+    role: pickedRole,
+    questionnaire: answers,
+    startDate: pickedStart,
+    durations: pickedDurations,
+  }) {
+    setMyName(name);
+    setRole(pickedRole);
+    setQuestionnaire(answers || {});
+    setStartDate(pickedStart);
+    setDurations(pickedDurations);
+    markOnboarded();
+  }
+
+  async function handleOnboardingJoin({
+    name,
+    role: pickedRole,
+    questionnaire: answers,
+    row,
+  }) {
+    // We're joining an existing cycle — pull what the other side already
+    // set. Then push our own name + role so they see us on their side too.
+    setMyName(name);
+    setRole(pickedRole);
+    // Don't overwrite synced questionnaire with an empty one.
+    if (answers && Object.keys(answers).length > 0) {
+      setQuestionnaire(answers);
+    }
     ignoreNextRemoteUpdate.current = true;
     applyRemoteRow(row);
     setSharedCode(row.code);
     markOnboarded();
+
+    // Push our name to the row so the other side sees us.
+    const patch = {};
+    if (pickedRole === "woman") patch.woman_name = name;
+    else patch.man_name = name;
+    if (Object.keys(patch).length) {
+      try {
+        ignoreNextRemoteUpdate.current = true;
+        await updateSharedCycle(row.code, patch);
+      } catch (err) {
+        console.error("Update post-join failed:", err);
+      }
+    }
   }
 
-  function handleDisconnectShared() {
-    const confirmed = window.confirm(t.ui.shareDisconnectConfirm);
-    if (!confirmed) return;
+  // ---- Settings actions ----
+
+  function requestDisconnect() {
+    setShowDisconnectModal(true);
+  }
+
+  function confirmDisconnect() {
+    setShowDisconnectModal(false);
     setSharedCode(null);
+    setPartnerName("");
+  }
+
+  async function handleJoinFromSettings(row) {
+    setShowJoinOverlay(false);
+    ignoreNextRemoteUpdate.current = true;
+    applyRemoteRow(row);
+    setSharedCode(row.code);
+
+    // Push our name to the row so the other side sees us.
+    const patch = {};
+    if (role === "woman" && myName) patch.woman_name = myName;
+    else if (role === "man" && myName) patch.man_name = myName;
+    if (Object.keys(patch).length) {
+      try {
+        ignoreNextRemoteUpdate.current = true;
+        await updateSharedCycle(row.code, patch);
+      } catch (err) {
+        console.error("Update post-join failed:", err);
+      }
+    }
   }
 
   async function handleEnableSharingFromSettings() {
     setSyncBusy(true);
     try {
-      const { code } = await createSharedCycle({
+      const payload = {
         startDate,
         durations,
         language: lang,
-      });
+        questionnaire: questionnaire || {},
+      };
+      if (role === "woman") payload.womanName = myName || undefined;
+      else payload.manName = myName || undefined;
+
+      const { code } = await createSharedCycle(payload);
       setSharedCode(code);
     } catch (err) {
       console.error(err);
@@ -312,71 +513,43 @@ export default function CycleTracker() {
     }
   }
 
-  // ------------- Render: onboarding flows -------------
+  // ------------- Render: onboarding -------------
 
-  if (!isOnboarded && !showChoiceScreen && !showJoinScreen) {
-    return (
-      <Onboarding
-        startDate={startDate}
-        setStartDate={setStartDate}
-        durations={durations}
-        updateDuration={updateDuration}
-        totalDays={totalDays}
-        onComplete={finishBasicOnboarding}
-      />
-    );
-  }
-
-  if (!isOnboarded && showChoiceScreen && !showJoinScreen) {
+  if (!isOnboarded) {
     return (
       <>
-        <OnboardingChoice
-          supabaseAvailable={isSupabaseConfigured}
-          onCreate={handleCreateShared}
-          onJoin={() => {
-            setShowJoinScreen(true);
-          }}
-          onSolo={markOnboarded}
+        <StepOnboarding
+          onCompleteCreate={handleOnboardingCreate}
+          onCompleteSolo={handleOnboardingSolo}
+          onCompleteJoin={handleOnboardingJoin}
+          busy={syncBusy}
+          serverError={syncError}
+          onClearError={() => setSyncError("")}
         />
         {syncBusy && (
           <div className="sync-busy-overlay">
             <div className="sync-busy-box">{t.ui.createLoading}</div>
           </div>
         )}
-        {syncError && (
-          <div
-            className="sync-busy-overlay"
-            onClick={() => setSyncError("")}
-          >
-            <div className="sync-busy-box error">{syncError}</div>
-          </div>
-        )}
       </>
-    );
-  }
-
-  if (!isOnboarded && showJoinScreen) {
-    return (
-      <JoinCycle
-        onJoined={handleJoinSuccess}
-        onBack={() => setShowJoinScreen(false)}
-      />
     );
   }
 
   // ------------- Render: main dashboard -------------
 
+  const appClass = `tracker-page role-${role}`;
+
   return (
-    <div className="tracker-page">
+    <div className={appClass}>
       <div className="tracker-header">
         <div className="tracker-spacer" />
 
         <div className="tracker-title-wrap">
           <h1 className="tracker-title">{t.ui.appTitle}</h1>
           <p className="tracker-subtitle">{t.ui.appSubtitle}</p>
-          {sharedCode && (
+          {shareBadgeText && (
             <div className="tracker-share-badge" title={sharedCode}>
-              💞 {sharedCode}
+              {shareBadgeText}
             </div>
           )}
         </div>
@@ -395,7 +568,9 @@ export default function CycleTracker() {
 
       {showSettings && (
         <div className="settings-panel">
-          <div className="settings-top-label">{t.ui.settingsSectionLabel}</div>
+          <div className="settings-top-label">
+            {t.ui.settingsSectionLabel}
+          </div>
 
           <SettingsBody
             startDate={startDate}
@@ -406,11 +581,22 @@ export default function CycleTracker() {
             logPeriodToday={logPeriodToday}
             totalDays={totalDays}
             showShare
+            showLogPeriod={role === "woman"}
             sharedCode={sharedCode}
             onEnableSharing={
-              isSupabaseConfigured ? handleEnableSharingFromSettings : null
+              isSupabaseConfigured && !sharedCode
+                ? handleEnableSharingFromSettings
+                : null
             }
-            onDisconnectSharing={sharedCode ? handleDisconnectShared : null}
+            onJoinSharing={
+              isSupabaseConfigured && !sharedCode
+                ? () => setShowJoinOverlay(true)
+                : null
+            }
+            onDisconnectSharing={sharedCode ? requestDisconnect : null}
+            role={role}
+            myName={myName}
+            setMyName={setMyName}
           />
 
           {syncBusy && (
@@ -419,165 +605,23 @@ export default function CycleTracker() {
         </div>
       )}
 
-      <div className="current-phase-card">
-        <div className="wheel-wrap">
-          <CycleWheel
-            currentDay={currentDay}
-            phases={phases}
-            totalDays={totalDays}
-            dayLabel={t.ui.dayShort.toUpperCase()}
-          />
-        </div>
-
-        <div className="current-phase-content">
-          <div className="section-label">{t.ui.currentPhaseLabel}</div>
-
-          <div className="current-phase-emoji">{currentPhase.emoji}</div>
-
-          <h2
-            className="current-phase-title"
-            style={{ color: currentPhase.accent }}
-          >
-            {currentPhase.name}
-          </h2>
-
-          <div className="current-phase-mood">{currentPhase.mood}</div>
-
-          <div className="section-label energy-label">{t.ui.energyLabel}</div>
-
-          <EnergyDots
-            level={currentPhase.energy}
-            max={MAX_ENERGY}
-            activeColor={currentPhase.accent}
-            inactiveColor="rgba(60,60,67,0.16)"
-          />
-
-          {daysUntilPeriod > 0 && currentPhase.id !== "menstrual" && (
-            <div className="period-counter">
-              {t.ui.periodInPrefix}{" "}
-              <span>{t.ui.periodInDays(daysUntilPeriod)}</span>
-            </div>
-          )}
-
-          {currentPhase.id === "menstrual" && (
-            <div className="period-counter">
-              <span>{t.ui.periodTodayLabel}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="tabs-row">
-        {[
-          { key: "now", label: t.ui.tabTips },
-          { key: "all", label: t.ui.tabAll },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            className={`tab-btn ${activeTab === tab.key ? "active" : ""}`}
-            onClick={() => setActiveTab(tab.key)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === "now" && (
-        <div>
-          <div className="tips-card">
-            <div
-              className="tips-title"
-              style={{ color: currentPhase.accent }}
-            >
-              {t.ui.canDoTitle}
-            </div>
-
-            {currentPhase.tips.map((tip, i) => (
-              <div key={i} className="tip-item">
-                <span style={{ color: currentPhase.accent, flexShrink: 0 }}>
-                  →
-                </span>
-                {tip}
-              </div>
-            ))}
-          </div>
-
-          <div className="avoid-card">
-            <div className="avoid-title">{t.ui.avoidTitle}</div>
-
-            {currentPhase.avoid.map((item, i) => (
-              <div key={i} className="tip-item">
-                <span className="danger-mark">×</span>
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeTab === "all" && (
-        <div>
-          {phases.map((phase, i) => {
-            const isActive = phase.id === currentPhase.id;
-
-            return (
-              <div
-                key={phase.id}
-                className="phase-card"
-                style={{
-                  borderColor: isActive
-                    ? `${phase.color}40`
-                    : "rgba(255,255,255,0.65)",
-                  background: isActive
-                    ? `linear-gradient(135deg, ${phase.color}10, rgba(255,255,255,0.88))`
-                    : undefined,
-                }}
-              >
-                <div className="phase-card-top">
-                  <span
-                    className="phase-emoji"
-                    style={{
-                      boxShadow: isActive
-                        ? `0 0 0 2px ${phase.color}25 inset`
-                        : "inset 0 1px 0 rgba(255,255,255,0.7)",
-                    }}
-                  >
-                    {phase.emoji}
-                  </span>
-
-                  <div className="phase-card-main">
-                    <div
-                      className="phase-card-name"
-                      style={{ color: isActive ? phase.accent : undefined }}
-                    >
-                      {phase.name}
-                      {isActive && (
-                        <span className="now-badge">{t.ui.nowBadge}</span>
-                      )}
-                    </div>
-
-                    <div className="phase-card-days">
-                      {t.ui.dayShort.toUpperCase()}
-                      {phase.days[0]}–{t.ui.dayShort.toUpperCase()}
-                      {phase.days[1]} · {durations[i]} {t.ui.daysUnit}
-                    </div>
-                  </div>
-
-                  <div className="phase-card-dots">
-                    <EnergyDots
-                      level={phase.energy}
-                      max={MAX_ENERGY}
-                      activeColor={isActive ? phase.accent : "#a1a1aa"}
-                      inactiveColor="rgba(60,60,67,0.16)"
-                    />
-                  </div>
-                </div>
-
-                <div className="phase-card-mood">{phase.mood}</div>
-              </div>
-            );
-          })}
-        </div>
+      {role === "man" ? (
+        <ManView
+          currentPhase={currentPhase}
+          name={myName}
+          partnerName={partnerName}
+        />
+      ) : (
+        <WomanView
+          phases={phases}
+          currentPhase={currentPhase}
+          currentDay={currentDay}
+          totalDays={totalDays}
+          daysUntilPeriod={daysUntilPeriod}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          durations={durations}
+        />
       )}
 
       <div className="footer-note">
@@ -587,6 +631,23 @@ export default function CycleTracker() {
           {t.ui.footerLine2}
         </p>
       </div>
+
+      {showDisconnectModal && (
+        <DisconnectModal
+          partnerName={partnerName}
+          onCancel={() => setShowDisconnectModal(false)}
+          onConfirm={confirmDisconnect}
+        />
+      )}
+
+      {showJoinOverlay && (
+        <div className="fullscreen-overlay">
+          <JoinCycle
+            onJoined={handleJoinFromSettings}
+            onBack={() => setShowJoinOverlay(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }
