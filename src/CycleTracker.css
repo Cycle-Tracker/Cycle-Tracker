@@ -730,3 +730,353 @@ input[type="range"]::-moz-range-thumb {
     padding: 20px 14px 16px;
   }
 }
+
+/* ==========================================
+   Couple-sync: onboarding choice
+   ========================================== */
+
+.onboarding-lang-grid {
+  margin-bottom: 16px;
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.choice-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 14px;
+  border: 1px solid rgba(230, 90, 140, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, background 0.15s ease;
+}
+
+.choice-option:hover {
+  border-color: rgba(230, 90, 140, 0.38);
+  background: rgba(255, 255, 255, 0.92);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(230, 90, 140, 0.12);
+}
+
+.choice-option:active {
+  transform: translateY(0);
+}
+
+.choice-option.choice-primary {
+  background: linear-gradient(135deg, #ffe6ee, #ffd5e3);
+  border-color: rgba(230, 90, 140, 0.4);
+}
+
+.choice-option.choice-subtle {
+  background: rgba(248, 248, 252, 0.7);
+  border-color: rgba(60, 60, 67, 0.12);
+}
+
+.choice-option-emoji {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.choice-option-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.choice-option-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c2c2e;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+
+.choice-option-desc {
+  font-size: 12.5px;
+  color: #6b6b70;
+  line-height: 1.35;
+}
+
+.choice-option-arrow {
+  color: #e65a8c;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   Couple-sync: join screen
+   ========================================== */
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.join-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-align: center;
+  border: 1.5px solid rgba(230, 90, 140, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #2c2c2e;
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+
+.join-input:focus {
+  outline: none;
+  border-color: #e65a8c;
+  box-shadow: 0 0 0 3px rgba(230, 90, 140, 0.18);
+}
+
+.join-error {
+  color: #b83b63;
+  font-size: 13px;
+  text-align: center;
+  background: rgba(230, 90, 140, 0.08);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.join-back-btn {
+  background: transparent;
+  border: none;
+  color: #6b6b70;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.join-back-btn:hover {
+  color: #2c2c2e;
+}
+
+.join-back-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.onboarding-start-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ==========================================
+   Couple-sync: share section in settings
+   ========================================== */
+
+.share-row {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 230, 238, 0.5),
+    rgba(255, 213, 227, 0.3)
+  );
+  border-radius: 14px;
+  padding: 12px 12px;
+  border: 1px solid rgba(230, 90, 140, 0.18);
+}
+
+.share-active {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #b83b63;
+  margin-bottom: 8px;
+}
+
+.share-active-dot {
+  color: #22c55e;
+  font-size: 10px;
+  animation: share-pulse 2s infinite;
+}
+
+@keyframes share-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.share-code-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.share-code {
+  flex: 1;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #b83b63;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(230, 90, 140, 0.2);
+  text-align: center;
+  user-select: all;
+}
+
+.share-copy-btn {
+  padding: 10px 14px;
+  background: #e65a8c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.share-copy-btn:hover {
+  background: #d94d7f;
+}
+
+.share-help {
+  font-size: 12.5px;
+  color: #6b6b70;
+  line-height: 1.4;
+  margin: 6px 0 10px;
+}
+
+.share-enable-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: #e65a8c;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.share-enable-btn:hover {
+  background: #d94d7f;
+  transform: translateY(-1px);
+}
+
+.share-disconnect-btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  color: #6b6b70;
+  border: 1px solid rgba(60, 60, 67, 0.15);
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  margin-top: 4px;
+}
+
+.share-disconnect-btn:hover {
+  background: rgba(230, 90, 140, 0.06);
+  color: #b83b63;
+  border-color: rgba(230, 90, 140, 0.25);
+}
+
+.share-offline {
+  font-size: 13px;
+  color: #6b6b70;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* ==========================================
+   Couple-sync: header badge + overlays
+   ========================================== */
+
+.tracker-share-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #b83b63;
+  background: rgba(230, 90, 140, 0.1);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.sync-busy-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 30, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.sync-busy-box {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 28px;
+  font-size: 15px;
+  color: #2c2c2e;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  max-width: 320px;
+  text-align: center;
+}
+
+.sync-busy-box.error {
+  color: #b83b63;
+  cursor: pointer;
+}
+
+.sync-inline-msg {
+  font-size: 13px;
+  color: #6b6b70;
+  text-align: center;
+  padding: 8px;
+  font-style: italic;
+}
+
+@media (max-width: 520px) {
+  .choice-option {
+    padding: 12px 12px;
+  }
+  .choice-option-title {
+    font-size: 14.5px;
+  }
+  .choice-option-desc {
+    font-size: 12px;
+  }
+  .share-code {
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+}

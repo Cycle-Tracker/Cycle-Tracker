@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./CycleTracker.css";
 import { PHASE_META } from "./data/phaseMeta";
 import {
@@ -11,20 +11,36 @@ import {
 import EnergyDots from "./components/EnergyDots";
 import CycleWheel from "./components/CycleWheel";
 import Onboarding from "./components/Onboarding";
+import OnboardingChoice from "./components/OnboardingChoice";
+import JoinCycle from "./components/JoinCycle";
 import SettingsBody from "./components/SettingsBody";
 import { useLanguage } from "./i18n";
+import { isSupabaseConfigured } from "./lib/supabase";
+import {
+  createSharedCycle,
+  fetchSharedCycle,
+  subscribeToCycle,
+  updateSharedCycle,
+} from "./lib/cycleSync";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
 const MAX_ENERGY = 5;
 
+// localStorage keys
+const LS_START_DATE = "cycle-start-date";
+const LS_DURATIONS = "cycle-durations";
+const LS_ONBOARDED = "cycle-onboarded";
+const LS_SHARED_CODE = "cycle-shared-code";
+
+// ---------------- Initial state helpers ----------------
+
 function getInitialStartDate() {
   try {
-    const saved = localStorage.getItem("cycle-start-date");
+    const saved = localStorage.getItem(LS_START_DATE);
     if (saved) return saved;
   } catch {
     // ignore
   }
-
   const d = new Date();
   d.setDate(d.getDate() - 3);
   return d.toISOString().split("T")[0];
@@ -32,11 +48,9 @@ function getInitialStartDate() {
 
 function getInitialDurations() {
   try {
-    const saved = localStorage.getItem("cycle-durations");
+    const saved = localStorage.getItem(LS_DURATIONS);
     if (!saved) return DEFAULT_DURATIONS;
-
     const parsed = JSON.parse(saved);
-
     if (
       Array.isArray(parsed) &&
       parsed.length === PHASE_META.length &&
@@ -47,32 +61,53 @@ function getInitialDurations() {
   } catch {
     return DEFAULT_DURATIONS;
   }
-
   return DEFAULT_DURATIONS;
 }
 
 function getInitialOnboarded() {
   try {
-    if (localStorage.getItem("cycle-onboarded") === "true") return true;
-    // Backward compat: existing users who already saved data are considered onboarded
-    if (localStorage.getItem("cycle-start-date")) return true;
+    if (localStorage.getItem(LS_ONBOARDED) === "true") return true;
+    // Backward compat: if they had saved data already, consider them onboarded.
+    if (localStorage.getItem(LS_START_DATE)) return true;
   } catch {
     // ignore
   }
   return false;
 }
 
+function getInitialSharedCode() {
+  try {
+    return localStorage.getItem(LS_SHARED_CODE) || null;
+  } catch {
+    return null;
+  }
+}
+
 export default function CycleTracker() {
-  const { t } = useLanguage();
+  const { t, lang, setLang } = useLanguage();
+
   const [startDate, setStartDate] = useState(getInitialStartDate);
+  const [durations, setDurations] = useState(getInitialDurations);
   const [activeTab, setActiveTab] = useState("now");
   const [showSettings, setShowSettings] = useState(false);
-  const [durations, setDurations] = useState(getInitialDurations);
   const [isOnboarded, setIsOnboarded] = useState(getInitialOnboarded);
+
+  // Sharing state
+  const [sharedCode, setSharedCode] = useState(getInitialSharedCode);
+  const [showChoiceScreen, setShowChoiceScreen] = useState(false);
+  const [showJoinScreen, setShowJoinScreen] = useState(false);
+  const [syncBusy, setSyncBusy] = useState(false);
+  const [syncError, setSyncError] = useState("");
+
+  // Ref we use to ignore our own writes when the realtime subscription
+  // echoes them back to us.
+  const ignoreNextRemoteUpdate = useRef(false);
+
+  // ------------- Persist locally (always) -------------
 
   useEffect(() => {
     try {
-      localStorage.setItem("cycle-start-date", startDate);
+      localStorage.setItem(LS_START_DATE, startDate);
     } catch {
       // ignore
     }
@@ -80,16 +115,95 @@ export default function CycleTracker() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("cycle-durations", JSON.stringify(durations));
+      localStorage.setItem(LS_DURATIONS, JSON.stringify(durations));
     } catch {
       // ignore
     }
   }, [durations]);
 
+  useEffect(() => {
+    try {
+      if (sharedCode) {
+        localStorage.setItem(LS_SHARED_CODE, sharedCode);
+      } else {
+        localStorage.removeItem(LS_SHARED_CODE);
+      }
+    } catch {
+      // ignore
+    }
+  }, [sharedCode]);
+
+  // ------------- Apply a remote row -------------
+
+  const applyRemoteRow = useCallback(
+    (row) => {
+      if (!row) return;
+      if (row.start_date) setStartDate(row.start_date);
+      if (Array.isArray(row.durations)) setDurations(row.durations);
+      if (row.language && row.language !== lang) setLang(row.language);
+    },
+    [lang, setLang]
+  );
+
+  // ------------- Realtime subscription -------------
+
+  useEffect(() => {
+    if (!sharedCode || !isSupabaseConfigured) return undefined;
+
+    // Pull latest state when we mount / code changes
+    let cancelled = false;
+    fetchSharedCycle(sharedCode)
+      .then((row) => {
+        if (cancelled || !row) return;
+        ignoreNextRemoteUpdate.current = true;
+        applyRemoteRow(row);
+      })
+      .catch((err) => {
+        console.error("Fetch shared cycle failed:", err);
+      });
+
+    const unsubscribe = subscribeToCycle(sharedCode, (row) => {
+      if (ignoreNextRemoteUpdate.current) {
+        ignoreNextRemoteUpdate.current = false;
+        return;
+      }
+      applyRemoteRow(row);
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [sharedCode, applyRemoteRow]);
+
+  // ------------- Push local changes to Supabase -------------
+
+  // When shared, debounce writes so rapid slider changes don't spam the API.
+  const pushTimer = useRef(null);
+  useEffect(() => {
+    if (!sharedCode || !isSupabaseConfigured || !isOnboarded) return;
+
+    if (pushTimer.current) clearTimeout(pushTimer.current);
+    pushTimer.current = setTimeout(() => {
+      ignoreNextRemoteUpdate.current = true;
+      updateSharedCycle(sharedCode, {
+        start_date: startDate,
+        durations,
+        language: lang,
+      }).catch((err) => {
+        console.error("Push to Supabase failed:", err);
+      });
+    }, 400);
+
+    return () => {
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+    };
+  }, [sharedCode, startDate, durations, lang, isOnboarded]);
+
+  // ------------- Derived state -------------
+
   const totalDays = useMemo(() => getTotalDays(durations), [durations]);
 
-  // Build language-aware phases by merging visual meta (phaseMeta) with
-  // localized strings (t.phases[id]).
   const phases = useMemo(() => {
     const base = buildPhases(PHASE_META, durations);
     return base.map((phase) => {
@@ -114,6 +228,8 @@ export default function CycleTracker() {
   );
   const daysUntilPeriod = totalDays - currentDay;
 
+  // ------------- Actions -------------
+
   function updateDuration(index, value) {
     const next = [...durations];
     next[index] = value;
@@ -131,16 +247,74 @@ export default function CycleTracker() {
     }
   }
 
-  function completeOnboarding() {
+  function finishBasicOnboarding() {
+    // Go to the sharing-choice screen instead of straight to dashboard
+    setShowChoiceScreen(true);
+  }
+
+  function markOnboarded() {
     try {
-      localStorage.setItem("cycle-onboarded", "true");
+      localStorage.setItem(LS_ONBOARDED, "true");
     } catch {
       // ignore
     }
     setIsOnboarded(true);
+    setShowChoiceScreen(false);
+    setShowJoinScreen(false);
   }
 
-  if (!isOnboarded) {
+  async function handleCreateShared() {
+    setSyncError("");
+    setSyncBusy(true);
+    try {
+      const { code } = await createSharedCycle({
+        startDate,
+        durations,
+        language: lang,
+      });
+      setSharedCode(code);
+      markOnboarded();
+    } catch (err) {
+      console.error(err);
+      setSyncError(t.ui.createError);
+    } finally {
+      setSyncBusy(false);
+    }
+  }
+
+  function handleJoinSuccess(row) {
+    ignoreNextRemoteUpdate.current = true;
+    applyRemoteRow(row);
+    setSharedCode(row.code);
+    markOnboarded();
+  }
+
+  function handleDisconnectShared() {
+    const confirmed = window.confirm(t.ui.shareDisconnectConfirm);
+    if (!confirmed) return;
+    setSharedCode(null);
+  }
+
+  async function handleEnableSharingFromSettings() {
+    setSyncBusy(true);
+    try {
+      const { code } = await createSharedCycle({
+        startDate,
+        durations,
+        language: lang,
+      });
+      setSharedCode(code);
+    } catch (err) {
+      console.error(err);
+      window.alert(t.ui.createError);
+    } finally {
+      setSyncBusy(false);
+    }
+  }
+
+  // ------------- Render: onboarding flows -------------
+
+  if (!isOnboarded && !showChoiceScreen && !showJoinScreen) {
     return (
       <Onboarding
         startDate={startDate}
@@ -148,10 +322,49 @@ export default function CycleTracker() {
         durations={durations}
         updateDuration={updateDuration}
         totalDays={totalDays}
-        onComplete={completeOnboarding}
+        onComplete={finishBasicOnboarding}
       />
     );
   }
+
+  if (!isOnboarded && showChoiceScreen && !showJoinScreen) {
+    return (
+      <>
+        <OnboardingChoice
+          supabaseAvailable={isSupabaseConfigured}
+          onCreate={handleCreateShared}
+          onJoin={() => {
+            setShowJoinScreen(true);
+          }}
+          onSolo={markOnboarded}
+        />
+        {syncBusy && (
+          <div className="sync-busy-overlay">
+            <div className="sync-busy-box">{t.ui.createLoading}</div>
+          </div>
+        )}
+        {syncError && (
+          <div
+            className="sync-busy-overlay"
+            onClick={() => setSyncError("")}
+          >
+            <div className="sync-busy-box error">{syncError}</div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  if (!isOnboarded && showJoinScreen) {
+    return (
+      <JoinCycle
+        onJoined={handleJoinSuccess}
+        onBack={() => setShowJoinScreen(false)}
+      />
+    );
+  }
+
+  // ------------- Render: main dashboard -------------
 
   return (
     <div className="tracker-page">
@@ -161,6 +374,11 @@ export default function CycleTracker() {
         <div className="tracker-title-wrap">
           <h1 className="tracker-title">{t.ui.appTitle}</h1>
           <p className="tracker-subtitle">{t.ui.appSubtitle}</p>
+          {sharedCode && (
+            <div className="tracker-share-badge" title={sharedCode}>
+              💞 {sharedCode}
+            </div>
+          )}
         </div>
 
         <div className="tracker-header-actions">
@@ -187,7 +405,17 @@ export default function CycleTracker() {
             resetDurations={resetDurations}
             logPeriodToday={logPeriodToday}
             totalDays={totalDays}
+            showShare
+            sharedCode={sharedCode}
+            onEnableSharing={
+              isSupabaseConfigured ? handleEnableSharingFromSettings : null
+            }
+            onDisconnectSharing={sharedCode ? handleDisconnectShared : null}
           />
+
+          {syncBusy && (
+            <div className="sync-inline-msg">{t.ui.createLoading}</div>
+          )}
         </div>
       )}
 

@@ -50,6 +50,53 @@ const ru = {
     welcomePhasesHelp:
       "Можно оставить значения по умолчанию и изменить позже.",
     welcomeStartButton: "Начать",
+
+    // Onboarding choice (solo vs couple)
+    choiceTitle: "Как вы хотите использовать приложение?",
+    choiceSubtitle:
+      "Используйте сами или поделитесь с ней, чтобы быть в синхроне.",
+    choiceCreateTitle: "Создать общий цикл",
+    choiceCreateDesc:
+      "Вы получите код, чтобы поделиться с партнёршей. Вы оба будете видеть одни и те же данные в реальном времени.",
+    choiceJoinTitle: "Присоединиться по коду",
+    choiceJoinDesc:
+      "Введите код, который вам дала партнёрша, чтобы видеть её цикл.",
+    choiceSoloTitle: "Использовать одному",
+    choiceSoloDesc:
+      "Данные останутся на вашем устройстве. Вы сможете включить общий доступ позже.",
+
+    // Join cycle screen
+    joinTitle: "Присоединиться к циклу",
+    joinSubtitle: "Введите код для обмена (например, ROSE-4872).",
+    joinPlaceholder: "ROSE-4872",
+    joinButton: "Присоединиться",
+    joinBack: "← Назад",
+    joinErrorInvalid: "Неверный код. Ожидаемый формат: СЛОВО-1234.",
+    joinErrorNotFound: "Цикл с таким кодом не найден.",
+    joinErrorNetwork: "Проблема с подключением. Попробуйте ещё раз.",
+    joinLoading: "Подключение...",
+
+    // Create shared
+    createLoading: "Создание общего цикла...",
+    createError: "Не удалось создать общий цикл. Попробуйте снова.",
+
+    // Share section in settings
+    shareSectionLabel: "Общий доступ",
+    shareActiveLabel: "Общий цикл активен",
+    shareCodeLabel: "Код для обмена",
+    shareCopyButton: "Копировать",
+    shareCopiedLabel: "Скопировано ✓",
+    shareHelp:
+      "Поделитесь этим кодом с ней. Она сможет ввести его в приложении, чтобы видеть и редактировать цикл.",
+    shareDisconnectButton: "Отключиться от общего цикла",
+    shareDisconnectConfirm:
+      "Отключиться от общего цикла? Данные останутся на Supabase и будут доступны по коду.",
+    shareEnableButton: "Включить общий доступ",
+    shareEnableHelp:
+      "Создайте код, чтобы поделиться этим циклом с партнёршей.",
+    shareOfflineLabel: "Офлайн — общий доступ недоступен.",
+    syncIndicatorSynced: "Синхронизировано",
+    syncIndicatorOffline: "Офлайн",
   },
 
   phases: {

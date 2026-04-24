@@ -43,6 +43,53 @@ const en = {
     welcomePhasesHelp:
       "You can keep the defaults and fine-tune them later.",
     welcomeStartButton: "Get started",
+
+    // Onboarding choice (solo vs couple)
+    choiceTitle: "How do you want to use the app?",
+    choiceSubtitle:
+      "Use it on your own, or share it with her so you stay in sync.",
+    choiceCreateTitle: "Create a shared cycle",
+    choiceCreateDesc:
+      "You'll get a code to share with your partner. You'll both see the same info in real time.",
+    choiceJoinTitle: "Join with a code",
+    choiceJoinDesc:
+      "Enter the code your partner gave you to see her cycle.",
+    choiceSoloTitle: "Use on your own",
+    choiceSoloDesc:
+      "Data stays on your device. You can turn on sharing later.",
+
+    // Join cycle screen
+    joinTitle: "Join a cycle",
+    joinSubtitle: "Enter the sharing code (e.g. ROSE-4872).",
+    joinPlaceholder: "ROSE-4872",
+    joinButton: "Join",
+    joinBack: "← Back",
+    joinErrorInvalid: "Invalid code. Expected format: WORD-1234.",
+    joinErrorNotFound: "No cycle found with this code.",
+    joinErrorNetwork: "Connection issue. Try again in a moment.",
+    joinLoading: "Connecting...",
+
+    // Create shared
+    createLoading: "Creating shared cycle...",
+    createError: "Couldn't create the shared cycle. Try again.",
+
+    // Share section in settings
+    shareSectionLabel: "Sharing",
+    shareActiveLabel: "Shared cycle active",
+    shareCodeLabel: "Code to share",
+    shareCopyButton: "Copy",
+    shareCopiedLabel: "Copied ✓",
+    shareHelp:
+      "Share this code with her. She can enter it in the app to view and edit the cycle.",
+    shareDisconnectButton: "Disconnect from shared cycle",
+    shareDisconnectConfirm:
+      "Disconnect from the shared cycle? Data will remain on Supabase and accessible via the code.",
+    shareEnableButton: "Enable sharing",
+    shareEnableHelp:
+      "Create a code to share this cycle with your partner.",
+    shareOfflineLabel: "Offline mode — sharing is unavailable.",
+    syncIndicatorSynced: "Synced",
+    syncIndicatorOffline: "Offline",
   },
 
   phases: {

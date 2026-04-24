@@ -43,6 +43,53 @@ const fr = {
     welcomePhasesHelp:
       "Tu peux laisser les valeurs par défaut et ajuster plus tard.",
     welcomeStartButton: "Commencer",
+
+    // Onboarding choice (solo vs couple)
+    choiceTitle: "Comment veux-tu utiliser l'app ?",
+    choiceSubtitle:
+      "Tu peux l'utiliser seul, ou la partager avec elle pour rester synchronisés.",
+    choiceCreateTitle: "Créer un cycle partagé",
+    choiceCreateDesc:
+      "Tu obtiendras un code à partager avec ta partenaire. Vous verrez les mêmes infos en temps réel.",
+    choiceJoinTitle: "Rejoindre avec un code",
+    choiceJoinDesc:
+      "Entre le code que ta partenaire t'a donné pour voir son cycle.",
+    choiceSoloTitle: "Utiliser en solo",
+    choiceSoloDesc:
+      "Les données restent sur ton appareil. Tu peux activer le partage plus tard.",
+
+    // Join cycle screen
+    joinTitle: "Rejoindre un cycle",
+    joinSubtitle: "Entre le code de partage (ex. ROSE-4872).",
+    joinPlaceholder: "ROSE-4872",
+    joinButton: "Rejoindre",
+    joinBack: "← Retour",
+    joinErrorInvalid: "Code invalide. Format attendu : MOT-1234.",
+    joinErrorNotFound: "Aucun cycle trouvé avec ce code.",
+    joinErrorNetwork: "Problème de connexion. Réessaie dans un instant.",
+    joinLoading: "Connexion...",
+
+    // Create shared
+    createLoading: "Création du cycle partagé...",
+    createError: "Impossible de créer le cycle partagé. Réessaie.",
+
+    // Share section in settings
+    shareSectionLabel: "Partage",
+    shareActiveLabel: "Cycle partagé actif",
+    shareCodeLabel: "Code à partager",
+    shareCopyButton: "Copier",
+    shareCopiedLabel: "Copié ✓",
+    shareHelp:
+      "Partage ce code avec elle. Elle pourra l'entrer dans l'app pour voir et modifier le cycle.",
+    shareDisconnectButton: "Se déconnecter du cycle partagé",
+    shareDisconnectConfirm:
+      "Se déconnecter du cycle partagé ? Les données resteront sur Supabase et accessibles via le code.",
+    shareEnableButton: "Activer le partage",
+    shareEnableHelp:
+      "Crée un code pour partager ce cycle avec ta partenaire.",
+    shareOfflineLabel: "Mode hors-ligne — le partage n'est pas disponible.",
+    syncIndicatorSynced: "Synchronisé",
+    syncIndicatorOffline: "Hors-ligne",
   },
 
   phases: {

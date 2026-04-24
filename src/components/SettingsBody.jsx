@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { PHASE_META } from "../data/phaseMeta";
 import { LOCALE_LIST, useLanguage } from "../i18n";
+import { isSupabaseConfigured } from "../lib/supabase";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
 
@@ -26,8 +28,26 @@ export default function SettingsBody({
   showTotal = true,
   showReset = true,
   showLogPeriod = true,
+  // Sharing props (optional)
+  sharedCode = null,
+  onEnableSharing = null,
+  onDisconnectSharing = null,
+  showShare = false,
 }) {
   const { t, lang, setLang } = useLanguage();
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    if (!sharedCode) return;
+    try {
+      await navigator.clipboard.writeText(sharedCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback: select text so user can copy manually
+      setCopied(false);
+    }
+  }
 
   return (
     <>
@@ -51,6 +71,60 @@ export default function SettingsBody({
           })}
         </div>
       </div>
+
+      {showShare && (
+        <div className="settings-row share-row">
+          <label className="section-label">{t.ui.shareSectionLabel}</label>
+
+          {!isSupabaseConfigured && (
+            <div className="share-offline">{t.ui.shareOfflineLabel}</div>
+          )}
+
+          {isSupabaseConfigured && sharedCode && (
+            <>
+              <div className="share-active">
+                <span className="share-active-dot" aria-hidden>
+                  ●
+                </span>
+                {t.ui.shareActiveLabel}
+              </div>
+              <div className="share-code-row">
+                <div className="share-code">{sharedCode}</div>
+                <button
+                  type="button"
+                  className="share-copy-btn"
+                  onClick={handleCopy}
+                >
+                  {copied ? t.ui.shareCopiedLabel : t.ui.shareCopyButton}
+                </button>
+              </div>
+              <p className="share-help">{t.ui.shareHelp}</p>
+              {onDisconnectSharing && (
+                <button
+                  type="button"
+                  className="share-disconnect-btn"
+                  onClick={onDisconnectSharing}
+                >
+                  {t.ui.shareDisconnectButton}
+                </button>
+              )}
+            </>
+          )}
+
+          {isSupabaseConfigured && !sharedCode && onEnableSharing && (
+            <>
+              <p className="share-help">{t.ui.shareEnableHelp}</p>
+              <button
+                type="button"
+                className="share-enable-btn"
+                onClick={onEnableSharing}
+              >
+                💞 {t.ui.shareEnableButton}
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {showTotal && (
         <div className="settings-total">
