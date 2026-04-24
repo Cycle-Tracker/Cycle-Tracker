@@ -1,0 +1,48 @@
+// Language-agnostic phase metadata.
+// Text (name, tips, avoid, mood) lives in src/i18n/<locale>.js keyed by `id`.
+export const PHASE_META = [
+  {
+    id: "menstrual",
+    emoji: "🌑",
+    color: "#c0392b",
+    bg: "#2d0a0a",
+    accent: "#e74c3c",
+    energy: 1,
+    minDays: 2,
+    maxDays: 10,
+    defaultDays: 5,
+  },
+  {
+    id: "follicular",
+    emoji: "🌒",
+    color: "#27ae60",
+    bg: "#0a2d1a",
+    accent: "#2ecc71",
+    energy: 4,
+    minDays: 3,
+    maxDays: 14,
+    defaultDays: 8,
+  },
+  {
+    id: "ovulatory",
+    emoji: "🌕",
+    color: "#f39c12",
+    bg: "#2d1f0a",
+    accent: "#f1c40f",
+    energy: 5,
+    minDays: 1,
+    maxDays: 5,
+    defaultDays: 3,
+  },
+  {
+    id: "luteal",
+    emoji: "🌘",
+    color: "#8e44ad",
+    bg: "#1a0a2d",
+    accent: "#9b59b6",
+    energy: 2,
+    minDays: 7,
+    maxDays: 18,
+    defaultDays: 12,
+  },
+];

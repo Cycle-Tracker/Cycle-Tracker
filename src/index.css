@@ -1,0 +1,12 @@
+/* Minimal global reset. Main app styles live in CycleTracker.css */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  color-scheme: light;
+}
+
+#root {
+  min-height: 100vh;
+}
