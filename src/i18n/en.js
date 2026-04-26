@@ -169,6 +169,8 @@ const en = {
     womanAnticipateFollicular:
       "Energy is coming back. It's your creative moment.",
     womanBadgeSolo: "Solo",
+    womanSelfCareTitle: "Take care of yourself",
+    womanSelfAvoidTitle: "Be mindful of",
 
     // Man dashboard extras
     manHelloLabel: (name) => (name ? `Hi ${name}` : "Hi"),
@@ -268,6 +270,20 @@ const en = {
         "Planning something heavy without asking her first",
         "Making remarks about her mood",
       ],
+      selfCare: [
+        "Rest: your body needs calm right now",
+        "Hydrate (water, chamomile or raspberry leaf tea)",
+        "Hot water bottle on the belly for cramps",
+        "Iron-rich foods (lentils, spinach, red meat)",
+        "Gentle walk or yoga if you feel up to it",
+        "Cancel without guilt anything that asks too much",
+      ],
+      selfAvoid: [
+        "Excess caffeine — can amplify cramps",
+        "Alcohol — worsens mood swings, dehydrates",
+        "Intense exercise if you're not feeling it",
+        "Judging yourself for low energy",
+      ],
     },
     follicular: {
       name: "Follicular",
@@ -287,6 +303,17 @@ const en = {
       avoid: [
         "Don't assume — just ask her how she's feeling",
       ],
+      selfCare: [
+        "Enjoy the energy coming back",
+        "Good time to start new projects",
+        "More intense exercise possible (cardio, strength)",
+        "Great period for learning and focus",
+        "Socialize — your mood naturally lifts",
+      ],
+      selfAvoid: [
+        "Overloading: energy is here, don't burn it",
+        "Ignoring fatigue if it shows up anyway",
+      ],
     },
     ovulatory: {
       name: "Ovulation",
@@ -304,6 +331,18 @@ const en = {
         { text: "A long, real hug — she'll enjoy it", tags: ["love-hugs"] },
       ],
       avoid: ["Don't assume everything is always easy"],
+      selfCare: [
+        "Enjoy the confidence and radiance",
+        "Good moment for presentations, interviews, important conversations",
+        "Hydrate well: your body loses more water",
+        "Higher libido: it's normal and healthy",
+        "Maximum sociability — see your loved ones",
+      ],
+      selfAvoid: [
+        "Impulsive decisions driven by confidence",
+        "Forgetting contraception if no baby plans (peak fertility)",
+        "Over-planning — your energy is still finite",
+      ],
     },
     luteal: {
       name: "Luteal",
@@ -328,6 +367,20 @@ const en = {
         "\"That's just your PMS talking\"",
         "Avoidable conflicts",
         "Unnecessary social pressure",
+      ],
+      selfCare: [
+        "Take care of yourself: your body is doing a lot quietly",
+        "Magnesium for PMS (dark chocolate, almonds, banana)",
+        "Sleep is a priority — you may need more",
+        "Gentle activity: yoga, stretching, walking",
+        "Track your symptoms to know yourself better",
+        "Be kind to yourself",
+      ],
+      selfAvoid: [
+        "Self-criticism — it's hormones talking, not you",
+        "Excess refined sugar — amplifies mood swings",
+        "Important conflicts — postpone if possible",
+        "Comparing your mood to the start of the cycle",
       ],
     },
   },

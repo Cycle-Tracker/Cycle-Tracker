@@ -149,9 +149,9 @@ export default function WomanView({
               className="tips-title"
               style={{ color: currentPhase.accent }}
             >
-              {t.ui.canDoTitle}
+              {t.ui.womanSelfCareTitle}
             </div>
-            {currentPhase.tips.map((tip, i) => (
+            {currentPhase.selfCare.map((tip, i) => (
               <div key={i} className="tip-item">
                 <span style={{ color: currentPhase.accent, flexShrink: 0 }}>
                   →
@@ -162,8 +162,8 @@ export default function WomanView({
           </div>
 
           <div className="avoid-card">
-            <div className="avoid-title">{t.ui.avoidTitle}</div>
-            {currentPhase.avoid.map((item, i) => (
+            <div className="avoid-title">{t.ui.womanSelfAvoidTitle}</div>
+            {currentPhase.selfAvoid.map((item, i) => (
               <div key={i} className="tip-item">
                 <span className="danger-mark">×</span>
                 {item}

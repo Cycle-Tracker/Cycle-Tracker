@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "../i18n";
+import CycleWheel from "./CycleWheel";
 import EnergyDots from "./EnergyDots";
 import PhaseInfoPopup from "./PhaseInfoPopup";
 
@@ -16,6 +17,8 @@ const MAX_ENERGY = 5;
  * Props:
  *  - phases        — all 4 phases, already localized (incl. description)
  *  - currentPhase  — the current phase object
+ *  - currentDay    — current day in the cycle (1..totalDays)
+ *  - totalDays     — total cycle length
  *  - durations     — array of 4 day counts (aligned with PHASE_META order)
  *  - activeTab, setActiveTab
  *  - name          — the man's own first name (used for greeting)
@@ -24,6 +27,8 @@ const MAX_ENERGY = 5;
 export default function ManView({
   phases,
   currentPhase,
+  currentDay,
+  totalDays,
   durations,
   activeTab,
   setActiveTab,
@@ -48,6 +53,15 @@ export default function ManView({
           background: `linear-gradient(135deg, ${currentPhase.color}14, rgba(255,255,255,0.92))`,
         }}
       >
+        <div className="wheel-wrap">
+          <CycleWheel
+            currentDay={currentDay}
+            phases={phases}
+            totalDays={totalDays}
+            dayLabel={t.ui.dayShort.toUpperCase()}
+          />
+        </div>
+
         <div className="man-phase-top">
           <span className="man-phase-emoji" aria-hidden>
             {currentPhase.emoji}

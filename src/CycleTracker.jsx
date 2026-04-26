@@ -330,6 +330,10 @@ export default function CycleTracker() {
         avoid,
         mood: localized.mood ?? "",
         description: localized.description ?? "",
+        selfCare: Array.isArray(localized.selfCare) ? localized.selfCare : [],
+        selfAvoid: Array.isArray(localized.selfAvoid)
+          ? localized.selfAvoid
+          : [],
       };
     });
   }, [durations, t, userTags]);
@@ -624,6 +628,8 @@ export default function CycleTracker() {
         <ManView
           phases={phases}
           currentPhase={currentPhase}
+          currentDay={currentDay}
+          totalDays={totalDays}
           durations={durations}
           activeTab={activeTab}
           setActiveTab={setActiveTab}

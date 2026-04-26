@@ -168,6 +168,8 @@ const fr = {
     womanAnticipateFollicular:
       "L'énergie revient. C'est ton moment créatif.",
     womanBadgeSolo: "Solo",
+    womanSelfCareTitle: "Pour prendre soin de toi",
+    womanSelfAvoidTitle: "À éviter pour toi",
 
     // Man dashboard extras
     manHelloLabel: (name) => (name ? `Salut ${name}` : "Salut"),
@@ -267,6 +269,20 @@ const fr = {
         "Planifier quelque chose de lourd sans lui demander",
         "Faire des remarques sur son humeur",
       ],
+      selfCare: [
+        "Repose-toi : ton corps a besoin de calme",
+        "Hydrate-toi (eau, tisanes camomille ou framboisier)",
+        "Bouillotte chaude sur le ventre pour les crampes",
+        "Privilégie le fer (lentilles, épinards, viande rouge)",
+        "Marche douce ou yoga si tu en as l'envie",
+        "Annule sans culpabiliser ce qui demande trop d'énergie",
+      ],
+      selfAvoid: [
+        "Caféine en excès — peut amplifier les crampes",
+        "Alcool — accentue les sautes d'humeur, déshydrate",
+        "Sport intense si tu n'es pas en forme",
+        "Te juger pour ton manque d'énergie",
+      ],
     },
     follicular: {
       name: "Folliculaire",
@@ -286,6 +302,17 @@ const fr = {
       avoid: [
         "Éviter de présumer : demande-lui simplement comment elle se sent",
       ],
+      selfCare: [
+        "Profite de l'énergie qui revient",
+        "Bon moment pour démarrer de nouveaux projets",
+        "Sport plus intense possible (cardio, renforcement)",
+        "Période propice à l'apprentissage et à la concentration",
+        "Sociabilise — ton humeur s'éclaircit naturellement",
+      ],
+      selfAvoid: [
+        "Te surcharger : l'énergie est là, ne la grille pas",
+        "Ignorer la fatigue si elle apparaît malgré tout",
+      ],
     },
     ovulatory: {
       name: "Ovulation",
@@ -303,6 +330,18 @@ const fr = {
         { text: "Un vrai câlin long — elle en profitera", tags: ["love-hugs"] },
       ],
       avoid: ["Ne pars pas du principe que tout est toujours facile"],
+      selfCare: [
+        "Profite de la confiance et du rayonnement",
+        "Bon moment pour les présentations, entretiens, conversations importantes",
+        "Hydrate-toi bien : le corps perd plus d'eau",
+        "Libido plus haute : c'est normal et sain",
+        "Sociabilité au max — vois tes proches",
+      ],
+      selfAvoid: [
+        "Décisions impulsives sous l'effet de la confiance",
+        "Oublier la contraception si tu n'es pas en projet bébé (fertilité au max)",
+        "Surplaning — ton énergie reste finie",
+      ],
     },
     luteal: {
       name: "Phase lutéale",
@@ -327,6 +366,20 @@ const fr = {
         "\"C'est ton SPM qui parle\"",
         "Les conflits évitables",
         "La pression sociale inutile",
+      ],
+      selfCare: [
+        "Prends soin de toi : ton corps prépare beaucoup en silence",
+        "Magnésium contre le SPM (chocolat noir, amandes, banane)",
+        "Sommeil prioritaire — tu peux avoir besoin de plus dormir",
+        "Activité douce : yoga, étirements, marche",
+        "Note tes symptômes pour mieux te connaître",
+        "Sois indulgente avec toi-même",
+      ],
+      selfAvoid: [
+        "L'auto-critique : c'est l'hormone qui parle, pas toi",
+        "Sucre raffiné en excès — amplifie les sautes d'humeur",
+        "Conflits importants — reporte si possible",
+        "Comparer ton humeur à celle du début de cycle",
       ],
     },
   },
