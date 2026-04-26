@@ -46,13 +46,7 @@ export default function ManView({
     <div className="man-view">
       <div className="man-hello">{hello}</div>
 
-      <div
-        className="current-phase-card"
-        style={{
-          borderColor: `${currentPhase.color}40`,
-          background: `linear-gradient(135deg, ${currentPhase.color}14, rgba(255,255,255,0.92))`,
-        }}
-      >
+      <div className="current-phase-card">
         <div className="wheel-wrap">
           <CycleWheel
             currentDay={currentDay}
