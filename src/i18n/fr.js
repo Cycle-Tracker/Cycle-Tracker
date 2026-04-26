@@ -181,6 +181,17 @@ const fr = {
     manPartnerMissingName: "ta partenaire",
     manTabNow: "Maintenant",
     manTabAll: "Toutes les phases",
+    manPeriodInLabel: "Prochaines règles",
+    manPeriodTodayLabel: "Ses règles ont commencé",
+    manTraverseTitle: "Ce qu'elle traverse",
+    manTraverseMenstrual:
+      "Elle peut se sentir vidée, plus sensible et avoir mal physiquement. Sa fatigue n'est pas une humeur, c'est biologique.",
+    manTraverseFollicular:
+      "Son énergie revient progressivement. Sa motivation, sa concentration et sa créativité sont en hausse.",
+    manTraverseOvulatory:
+      "C'est son pic — confiante, sociale, à l'aise dans son corps. Beaucoup d'énergie disponible.",
+    manTraverseLuteal:
+      "Sa patience peut s'effriter, ses émotions s'amplifier (irritation, larmes faciles). Ce n'est pas dirigé contre toi.",
 
     // Phase info popup
     phaseInfoAria: "En savoir plus sur cette phase",

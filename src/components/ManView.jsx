@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useLanguage } from "../i18n";
 import CycleWheel from "./CycleWheel";
 import EnergyDots from "./EnergyDots";
@@ -15,20 +15,22 @@ const MAX_ENERGY = 5;
  * woman's questionnaire tags) by the parent component.
  *
  * Props:
- *  - phases        — all 4 phases, already localized (incl. description)
- *  - currentPhase  — the current phase object
- *  - currentDay    — current day in the cycle (1..totalDays)
- *  - totalDays     — total cycle length
- *  - durations     — array of 4 day counts (aligned with PHASE_META order)
+ *  - phases          — all 4 phases, already localized (incl. description)
+ *  - currentPhase    — the current phase object
+ *  - currentDay      — current day in the cycle (1..totalDays)
+ *  - totalDays       — total cycle length
+ *  - daysUntilPeriod — days until the next period starts
+ *  - durations       — array of 4 day counts (aligned with PHASE_META order)
  *  - activeTab, setActiveTab
- *  - name          — the man's own first name (used for greeting)
- *  - partnerName   — the woman's first name (used in "X is in phase Y")
+ *  - name            — the man's own first name (used for greeting)
+ *  - partnerName     — the woman's first name (used in "X is in phase Y")
  */
 export default function ManView({
   phases,
   currentPhase,
   currentDay,
   totalDays,
+  daysUntilPeriod,
   durations,
   activeTab,
   setActiveTab,
@@ -41,6 +43,22 @@ export default function ManView({
   const partnerLabel = partnerName || t.ui.manPartnerMissingName;
   const hello = t.ui.manHelloLabel(name || null);
   const inPhase = t.ui.manCurrentlyLabel(partnerLabel);
+
+  const traverseMessage = useMemo(() => {
+    if (!currentPhase) return "";
+    switch (currentPhase.id) {
+      case "menstrual":
+        return t.ui.manTraverseMenstrual;
+      case "follicular":
+        return t.ui.manTraverseFollicular;
+      case "ovulatory":
+        return t.ui.manTraverseOvulatory;
+      case "luteal":
+        return t.ui.manTraverseLuteal;
+      default:
+        return "";
+    }
+  }, [currentPhase, t]);
 
   return (
     <div className="man-view">
@@ -86,8 +104,39 @@ export default function ManView({
             activeColor={currentPhase.accent}
             inactiveColor="rgba(60,60,67,0.16)"
           />
+
+          {daysUntilPeriod > 0 && currentPhase.id !== "menstrual" && (
+            <div className="period-counter">
+              {t.ui.manPeriodInLabel}{" "}
+              <span>{t.ui.periodInDays(daysUntilPeriod)}</span>
+            </div>
+          )}
+
+          {currentPhase.id === "menstrual" && (
+            <div className="period-counter">
+              <span>{t.ui.manPeriodTodayLabel}</span>
+            </div>
+          )}
         </div>
       </div>
+
+      {traverseMessage && (
+        <div
+          className="anticipate-card"
+          style={{
+            borderColor: `${currentPhase.color}30`,
+            background: `linear-gradient(135deg, ${currentPhase.color}12, rgba(255,255,255,0.88))`,
+          }}
+        >
+          <div
+            className="anticipate-title"
+            style={{ color: currentPhase.accent }}
+          >
+            {t.ui.manTraverseTitle}
+          </div>
+          <div className="anticipate-body">{traverseMessage}</div>
+        </div>
+      )}
 
       <div className="tabs-row">
         {[

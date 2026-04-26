@@ -182,6 +182,17 @@ const en = {
     manPartnerMissingName: "your partner",
     manTabNow: "Right now",
     manTabAll: "All phases",
+    manPeriodInLabel: "Next period",
+    manPeriodTodayLabel: "Her period has started",
+    manTraverseTitle: "What she's going through",
+    manTraverseMenstrual:
+      "She may feel drained, more sensitive, and have physical pain. Her tiredness isn't a mood — it's biological.",
+    manTraverseFollicular:
+      "Her energy is gradually returning. Motivation, focus and creativity are on the rise.",
+    manTraverseOvulatory:
+      "This is her peak — confident, social, comfortable in her body. Lots of energy available.",
+    manTraverseLuteal:
+      "Her patience may wear thin and emotions amplify (irritation, easy tears). It's not aimed at you.",
 
     // Phase info popup
     phaseInfoAria: "Learn more about this phase",

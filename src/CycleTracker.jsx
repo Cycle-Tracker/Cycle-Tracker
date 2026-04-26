@@ -630,6 +630,7 @@ export default function CycleTracker() {
           currentPhase={currentPhase}
           currentDay={currentDay}
           totalDays={totalDays}
+          daysUntilPeriod={daysUntilPeriod}
           durations={durations}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
