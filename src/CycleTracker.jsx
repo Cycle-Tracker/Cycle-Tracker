@@ -106,7 +106,7 @@ function getInitialRole() {
 }
 
 export default function CycleTracker() {
-  const { t, lang, setLang } = useLanguage();
+  const { t, lang } = useLanguage();
 
   // Cycle data (can come from local or sync)
   const [startDate, setStartDate] = useState(getInitialStartDate);
@@ -210,7 +210,9 @@ export default function CycleTracker() {
       if (!row) return;
       if (row.start_date) setStartDate(row.start_date);
       if (Array.isArray(row.durations)) setDurations(row.durations);
-      if (row.language && row.language !== lang) setLang(row.language);
+      // NOTE: language is intentionally NOT applied from the remote row.
+      // It must stay per-browser (localStorage) so each partner can pick
+      // their own language independently.
 
       // Name mapping depends on which side of the couple we are on.
       if (role === "woman") {
@@ -233,7 +235,7 @@ export default function CycleTracker() {
         setQuestionnaire(row.questionnaire);
       }
     },
-    [lang, role, setLang]
+    [role]
   );
 
   // ------------- Realtime subscription -------------
@@ -277,7 +279,6 @@ export default function CycleTracker() {
       const patch = {
         start_date: startDate,
         durations,
-        language: lang,
       };
       // Only the woman's side is allowed to overwrite woman_name +
       // questionnaire — otherwise the man could accidentally wipe them.
@@ -301,7 +302,6 @@ export default function CycleTracker() {
     sharedCode,
     startDate,
     durations,
-    lang,
     isOnboarded,
     role,
     myName,
