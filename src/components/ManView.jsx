@@ -47,7 +47,7 @@ export default function ManView({
       <div className="man-hello">{hello}</div>
 
       <div
-        className="man-phase-card"
+        className="current-phase-card"
         style={{
           borderColor: `${currentPhase.color}40`,
           background: `linear-gradient(135deg, ${currentPhase.color}14, rgba(255,255,255,0.92))`,
@@ -62,40 +62,30 @@ export default function ManView({
           />
         </div>
 
-        <div className="man-phase-top">
-          <span className="man-phase-emoji" aria-hidden>
-            {currentPhase.emoji}
-          </span>
-          <div className="man-phase-lines">
-            <div className="man-phase-in">{inPhase}</div>
-            <h2
-              className="man-phase-name"
-              style={{ color: currentPhase.accent }}
+        <div className="current-phase-content">
+          <div className="section-label">{inPhase}</div>
+          <div className="current-phase-emoji">{currentPhase.emoji}</div>
+          <h2
+            className="current-phase-title"
+            style={{ color: currentPhase.accent }}
+          >
+            {currentPhase.name}
+            <button
+              type="button"
+              className="phase-info-btn"
+              aria-label={t.ui.phaseInfoAria}
+              onClick={() => setInfoPhase(currentPhase)}
+              style={{
+                color: currentPhase.accent,
+                borderColor: `${currentPhase.color}55`,
+              }}
             >
-              {currentPhase.name}
-              <button
-                type="button"
-                className="phase-info-btn"
-                aria-label={t.ui.phaseInfoAria}
-                onClick={() => setInfoPhase(currentPhase)}
-                style={{
-                  color: currentPhase.accent,
-                  borderColor: `${currentPhase.color}55`,
-                }}
-              >
-                i
-              </button>
-            </h2>
-          </div>
-        </div>
+              i
+            </button>
+          </h2>
+          <div className="current-phase-mood">{currentPhase.mood}</div>
 
-        <div className="man-phase-mood-row">
-          <span className="man-phase-mood-label">{t.ui.manMoodLabel}</span>
-          <span className="man-phase-mood-value">{currentPhase.mood}</span>
-        </div>
-
-        <div className="man-phase-energy">
-          <span className="man-phase-mood-label">{t.ui.energyLabel}</span>
+          <div className="section-label energy-label">{t.ui.energyLabel}</div>
           <EnergyDots
             level={currentPhase.energy}
             max={MAX_ENERGY}

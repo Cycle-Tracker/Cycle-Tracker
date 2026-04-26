@@ -186,82 +186,86 @@ export default function SettingsBody({
         </div>
       )}
 
-      {/* Cycle editing controls — both roles can adjust them; the
-          man's edits propagate via sync. */}
-      <div className="settings-row">
-        <label className="section-label">{t.ui.startDateLabel}</label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        {showLogPeriod && logPeriodToday && role === "woman" && (
-          <button
-            type="button"
-            className="log-period-btn"
-            onClick={logPeriodToday}
-          >
-            🔴 {t.ui.logPeriodButton}
-          </button>
-        )}
-      </div>
-
-      {PHASE_META.map((meta, i) => {
-        const localized = t.phases[meta.id] ?? {};
-        const fillPercent =
-          ((durations[i] - meta.minDays) /
-            (meta.maxDays - meta.minDays)) *
-          100;
-
-        return (
-          <div key={meta.id} className="settings-row">
-            <div className="settings-row-top">
-              <div className="settings-phase-name">
-                <span>{meta.emoji}</span>
-                <span style={{ color: meta.accent }}>
-                  {localized.name ?? meta.id}
-                </span>
-              </div>
-              <div className="settings-days">
-                <span style={{ color: meta.accent, fontWeight: 700 }}>
-                  {durations[i]}
-                </span>
-                <span className="muted"> {t.ui.dayShort}</span>
-              </div>
-            </div>
-
+      {/* Cycle editing controls — woman-only. The man receives the
+          values via shared-cycle sync but can't edit them. */}
+      {role === "woman" && (
+        <>
+          <div className="settings-row">
+            <label className="section-label">{t.ui.startDateLabel}</label>
             <input
-              type="range"
-              min={meta.minDays}
-              max={meta.maxDays}
-              value={durations[i]}
-              onChange={(e) =>
-                updateDuration(i, parseInt(e.target.value, 10))
-              }
-              style={{
-                background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
-              }}
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
-
-            <div className="range-hints">
-              <span>
-                {meta.minDays}
-                {t.ui.minSuffix}
-              </span>
-              <span>
-                {meta.maxDays}
-                {t.ui.maxSuffix}
-              </span>
-            </div>
+            {showLogPeriod && logPeriodToday && (
+              <button
+                type="button"
+                className="log-period-btn"
+                onClick={logPeriodToday}
+              >
+                🔴 {t.ui.logPeriodButton}
+              </button>
+            )}
           </div>
-        );
-      })}
 
-      {showReset && resetDurations && (
-        <button className="reset-btn" onClick={resetDurations}>
-          {t.ui.resetButton} (
-          {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
-        </button>
+          {PHASE_META.map((meta, i) => {
+            const localized = t.phases[meta.id] ?? {};
+            const fillPercent =
+              ((durations[i] - meta.minDays) /
+                (meta.maxDays - meta.minDays)) *
+              100;
+
+            return (
+              <div key={meta.id} className="settings-row">
+                <div className="settings-row-top">
+                  <div className="settings-phase-name">
+                    <span>{meta.emoji}</span>
+                    <span style={{ color: meta.accent }}>
+                      {localized.name ?? meta.id}
+                    </span>
+                  </div>
+                  <div className="settings-days">
+                    <span style={{ color: meta.accent, fontWeight: 700 }}>
+                      {durations[i]}
+                    </span>
+                    <span className="muted"> {t.ui.dayShort}</span>
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min={meta.minDays}
+                  max={meta.maxDays}
+                  value={durations[i]}
+                  onChange={(e) =>
+                    updateDuration(i, parseInt(e.target.value, 10))
+                  }
+                  style={{
+                    background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
+                  }}
+                />
+
+                <div className="range-hints">
+                  <span>
+                    {meta.minDays}
+                    {t.ui.minSuffix}
+                  </span>
+                  <span>
+                    {meta.maxDays}
+                    {t.ui.maxSuffix}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+
+          {showReset && resetDurations && (
+            <button className="reset-btn" onClick={resetDurations}>
+              {t.ui.resetButton} (
+              {DEFAULT_DURATIONS.reduce((a, b) => a + b, 0)} {t.ui.daysUnit})
+            </button>
+          )}
+        </>
       )}
 
       {role === "woman" && onEditQuestionnaire && (
