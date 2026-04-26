@@ -67,6 +67,26 @@ export default function SettingsBody({
     }
   }
 
+  // Share via the OS share sheet if available (gives the user SMS, WhatsApp,
+  // Mail, etc. on mobile). Fall back to opening the SMS app directly with the
+  // body prefilled. `sms:?&body=` works on both iOS and Android.
+  async function handleShareSMS() {
+    if (!sharedCode) return;
+    const body =
+      typeof t.ui.shareSMSBody === "function"
+        ? t.ui.shareSMSBody(sharedCode)
+        : `${sharedCode}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ text: body });
+        return;
+      }
+    } catch {
+      // user cancelled or share failed — fall through to sms: link
+    }
+    window.location.href = `sms:?&body=${encodeURIComponent(body)}`;
+  }
+
   return (
     <>
       <div className="settings-row settings-lang-row">
@@ -133,6 +153,13 @@ export default function SettingsBody({
                   {copied ? t.ui.shareCopiedLabel : t.ui.shareCopyButton}
                 </button>
               </div>
+              <button
+                type="button"
+                className="share-sms-btn"
+                onClick={handleShareSMS}
+              >
+                💬 {t.ui.shareSMSButton ?? "Envoyer par SMS"}
+              </button>
               <p className="share-help">{t.ui.shareHelp}</p>
               {onDisconnectSharing && (
                 <button

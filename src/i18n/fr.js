@@ -120,6 +120,9 @@ const fr = {
     shareCodeLabel: "Code à partager",
     shareCopyButton: "Copier",
     shareCopiedLabel: "Copié ✓",
+    shareSMSButton: "Envoyer par SMS",
+    shareSMSBody: (code) =>
+      `Salut ! Voici mon code Cycle Tracker : ${code}\nOuvre l'app et entre ce code pour suivre mon cycle avec moi 💖`,
     shareHelp:
       "Partage ce code avec l'autre. Il·elle pourra l'entrer dans l'app pour voir et modifier le cycle.",
     shareDisconnectButton: "Se déconnecter du cycle partagé",
