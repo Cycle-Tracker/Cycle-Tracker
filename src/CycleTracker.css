@@ -1882,3 +1882,852 @@ input[type="range"]::-moz-range-thumb {
     font-size: 12.5px;
   }
 }
+
+/* =================================================================== */
+/* Auth screen (login / signup) — reuses .onboarding-page wrapper       */
+/* =================================================================== */
+
+.auth-page {
+  /* same padding/feel as onboarding so the transition is gentle */
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(60, 60, 67, 0.7);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.auth-tab-btn.active {
+  background: #fff;
+  color: #1c1c1e;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-form .section-label {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-size: 15px;
+  background: #fff;
+  color: #1c1c1e;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #e85a8c;
+  box-shadow: 0 0 0 3px rgba(232, 90, 140, 0.15);
+}
+
+.auth-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  margin-top: 4px;
+  padding: 10px 12px;
+  background: rgba(220, 53, 69, 0.08);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  border-radius: 10px;
+  color: #b42434;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.auth-skip-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  color: rgba(60, 60, 67, 0.75);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.auth-skip-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+  color: #1c1c1e;
+}
+
+.auth-skip-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Language picker at the bottom of the auth screen */
+.auth-lang-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 0 8px;
+}
+
+.auth-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(60, 60, 67, 0.85);
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.auth-lang-btn:hover {
+  background: #fff;
+}
+
+.auth-lang-btn.active {
+  background: #fff;
+  border-color: #e85a8c;
+  color: #d94a7a;
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  .auth-card {
+    padding: 18px 16px;
+  }
+  .auth-input {
+    font-size: 16px; /* avoid iOS zoom on focus */
+  }
+  .auth-tab-btn {
+    font-size: 13.5px;
+  }
+}
+
+/* =================================================================== */
+/* "Mon compte" section in SettingsBody                                 */
+/* =================================================================== */
+
+.account-row .account-email-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.account-email-label {
+  font-size: 12px;
+  color: rgba(60, 60, 67, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.account-email-value {
+  font-size: 14px;
+  color: #1c1c1e;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.account-signout-btn,
+.account-signin-btn {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.account-signout-btn {
+  background: rgba(220, 53, 69, 0.06);
+  border: 1px solid rgba(220, 53, 69, 0.18);
+  color: #b42434;
+}
+
+.account-signout-btn:hover {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.account-signin-btn {
+  background: #fff;
+  border: 1px solid rgba(232, 90, 140, 0.35);
+  color: #d94a7a;
+  margin-top: 4px;
+}
+
+.account-signin-btn:hover {
+  background: rgba(232, 90, 140, 0.06);
+  border-color: #e85a8c;
+}
+
+/* Danger / destructive: delete account. Visually quieter than signout
+   so the user has to read it intentionally — but unmistakably red. */
+.account-delete-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px dashed rgba(176, 36, 52, 0.35);
+  border-radius: 11px;
+  color: #b42434;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.account-delete-btn:hover {
+  background: rgba(220, 53, 69, 0.06);
+  border-color: rgba(220, 53, 69, 0.55);
+  border-style: solid;
+}
+
+/* =================================================================== */
+/* "Refaire le démarrage" button in settings                            */
+/* =================================================================== */
+
+.redo-onboarding-row .settings-hint {
+  margin-bottom: 8px;
+}
+
+.redo-onboarding-btn {
+  width: 100%;
+  padding: 11px 16px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 11px;
+  color: #1c1c1e;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease,
+    color 120ms ease, box-shadow 120ms ease;
+}
+
+.redo-onboarding-btn:hover {
+  background: rgba(232, 90, 140, 0.05);
+  border-color: rgba(232, 90, 140, 0.35);
+  color: #d94a7a;
+}
+
+/* ===========================
+   Install / Add-to-home banner
+   =========================== */
+
+.install-prompt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 12px 0;
+  padding: 12px 14px 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffe7f0 0%, #ffd4e2 100%);
+  border: 1px solid rgba(232, 90, 140, 0.25);
+  box-shadow: 0 4px 14px rgba(232, 90, 140, 0.12);
+  color: #4a2235;
+  animation: install-prompt-slide-in 320ms ease-out;
+}
+
+@keyframes install-prompt-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.install-prompt-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.install-prompt-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.install-prompt-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #b03468;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.install-prompt-help {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #6c3a4f;
+}
+
+.install-prompt-btn {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e85a8c 0%, #d94a7a 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(217, 74, 122, 0.35);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.install-prompt-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 74, 122, 0.45);
+}
+
+.install-prompt-btn:active {
+  transform: translateY(0);
+}
+
+.install-prompt-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: #b03468;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.65;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+
+.install-prompt-close:hover {
+  opacity: 1;
+  background: rgba(232, 90, 140, 0.12);
+}
+
+@media (max-width: 380px) {
+  .install-prompt {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .install-prompt-icon {
+    font-size: 22px;
+  }
+  .install-prompt-title {
+    font-size: 13px;
+  }
+  .install-prompt-help {
+    font-size: 12px;
+  }
+  .install-prompt-btn {
+    padding: 7px 12px;
+    font-size: 12.5px;
+  }
+}
+
+/* ===========================
+   Generic page shell (used by settings, calendar, journal, history)
+   =========================== */
+
+.page-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  animation: page-shell-fade-in 220ms ease-out;
+}
+
+@keyframes page-shell-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-header-simple {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 16px 14px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.page-body {
+  padding: 18px 16px 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-help {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Coming-soon placeholder card */
+.coming-soon-card {
+  margin-top: 8px;
+  padding: 32px 20px;
+  border: 1px dashed rgba(232, 90, 140, 0.35);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+.coming-soon-icon {
+  font-size: 38px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.coming-soon-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #b03468;
+  margin-bottom: 6px;
+}
+
+.coming-soon-body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ===========================
+   Bottom navigation bar
+   =========================== */
+
+.has-bottom-nav {
+  /* Reserve room at the bottom so content doesn't sit behind the nav */
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(255, 245, 248, 0.92);
+  border-top: 1px solid rgba(232, 90, 140, 0.18);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 -2px 12px rgba(232, 90, 140, 0.08);
+}
+
+.bottom-nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 4px 4px;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  transition: color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.bottom-nav-tab:active {
+  transform: scale(0.96);
+}
+
+.bottom-nav-tab.active {
+  color: #b03468;
+  background: rgba(232, 90, 140, 0.1);
+}
+
+.bottom-nav-icon {
+  font-size: 20px;
+  line-height: 1;
+  filter: grayscale(0.55);
+  opacity: 0.85;
+  transition: filter 140ms ease, opacity 140ms ease;
+}
+
+.bottom-nav-tab.active .bottom-nav-icon {
+  filter: none;
+  opacity: 1;
+}
+
+.bottom-nav-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+@media (max-width: 360px) {
+  .bottom-nav-label {
+    font-size: 9.5px;
+  }
+  .bottom-nav-icon {
+    font-size: 18px;
+  }
+}
+
+/* ===========================
+   Bell button (top of home)
+   =========================== */
+
+.bell-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: var(--shadow);
+  transition: background 140ms ease, transform 140ms ease,
+    border-color 140ms ease;
+}
+
+.bell-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(232, 90, 140, 0.3);
+}
+
+.bell-btn:active {
+  transform: scale(0.95);
+}
+
+/* ===========================
+   Notifications sheet
+   =========================== */
+
+.notifs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(40, 16, 28, 0.32);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in 0.18s ease-out;
+}
+
+.notifs-sheet {
+  width: 100%;
+  max-width: 520px;
+  max-height: 70vh;
+  background: var(--bg);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+  animation: notifs-slide-up 0.24s ease-out;
+}
+
+@keyframes notifs-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.notifs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.notifs-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.notifs-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.notifs-close:hover {
+  background: rgba(232, 90, 140, 0.1);
+  color: #b03468;
+}
+
+.notifs-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 18px 16px 22px;
+}
+
+.notifs-empty {
+  text-align: center;
+  padding: 24px 8px;
+  color: var(--text-secondary);
+}
+
+.notifs-empty-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.notifs-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ---------- Settings: OS notifications row ---------- */
+
+.notifs-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notifs-toggle-btn {
+  align-self: flex-start;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.notifs-toggle-btn.off {
+  background: rgba(232, 90, 140, 0.1);
+  color: #b03468;
+}
+
+.notifs-toggle-btn.on {
+  background: linear-gradient(135deg, #e85a8c, #b03468);
+  color: white;
+  box-shadow: 0 4px 14px rgba(232, 90, 140, 0.35);
+}
+
+.notifs-toggle-btn:active {
+  transform: scale(0.97);
+}
+
+.notifs-test-btn {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.notifs-test-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.notifs-blocked,
+.notifs-test-fail {
+  color: #b03468;
+}
+
+.notifs-test-ok {
+  color: #2f8a4a;
+}
+
+/* ---------- Auto notification prompt (Home banner) ---------- */
+/* Mirrors .install-prompt styling but with a subtler lavender tint so the
+   two banners are visually distinct when they happen to appear together. */
+
+.notif-prompt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 12px 0;
+  padding: 12px 14px 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f0eaff 0%, #e1d4ff 100%);
+  border: 1px solid rgba(127, 90, 232, 0.25);
+  box-shadow: 0 4px 14px rgba(127, 90, 232, 0.12);
+  color: #2d2546;
+  animation: install-prompt-slide-in 320ms ease-out;
+}
+
+.notif-prompt-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.notif-prompt-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.notif-prompt-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5b3eb0;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.notif-prompt-help {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #4a3a6f;
+}
+
+.notif-prompt-btn {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7f5ae8 0%, #6a48d4 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(106, 72, 212, 0.35);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.notif-prompt-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(106, 72, 212, 0.45);
+}
+
+.notif-prompt-btn:active {
+  transform: translateY(0);
+}
+
+.notif-prompt-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.notif-prompt-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: #5b3eb0;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.65;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+
+.notif-prompt-close:hover {
+  opacity: 1;
+  background: rgba(127, 90, 232, 0.12);
+}

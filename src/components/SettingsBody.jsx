@@ -2,6 +2,15 @@ import { useState } from "react";
 import { PHASE_META } from "../data/phaseMeta";
 import { LOCALE_LIST, useLanguage } from "../i18n";
 import { isSupabaseConfigured } from "../lib/supabase";
+import {
+  clearOsNotificationDedup,
+  getBrowserNotificationPermission,
+  isBrowserNotificationSupported,
+  isOsNotificationsEnabled,
+  requestBrowserNotificationPermission,
+  setOsNotificationsEnabled,
+  showOsNotification,
+} from "../utils/browserNotifications";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
 
@@ -52,9 +61,57 @@ export default function SettingsBody({
   onJoinSharing = null,
   onDisconnectSharing = null,
   showShare = false,
+  // Account / auth
+  session = null,
+  onSignOut = null,
+  onSignIn = null,
+  onDeleteAccount = null,
+  // Redo onboarding (re-run the launch flow: lang, name, role, etc.)
+  onRedoOnboarding = null,
 }) {
   const { t, lang, setLang } = useLanguage();
   const [copied, setCopied] = useState(false);
+
+  // Browser-notification state. We track permission + the user toggle so the
+  // UI can show: not-supported / blocked / off / on. Re-read on mount in case
+  // permission changed in another tab.
+  const notifsSupported = isBrowserNotificationSupported();
+  const [notifsPermission, setNotifsPermission] = useState(() =>
+    notifsSupported ? getBrowserNotificationPermission() : "unsupported"
+  );
+  const [notifsEnabled, setNotifsEnabledState] = useState(() =>
+    notifsSupported ? isOsNotificationsEnabled() : false
+  );
+  const [notifTestStatus, setNotifTestStatus] = useState(""); // "", "ok", "blocked"
+
+  async function handleToggleNotifs() {
+    if (!notifsSupported) return;
+    if (notifsEnabled) {
+      // Turn off (we can't revoke browser permission, just our own toggle).
+      setOsNotificationsEnabled(false);
+      setNotifsEnabledState(false);
+      return;
+    }
+    // Turn on — ensure permission first.
+    const result = await requestBrowserNotificationPermission();
+    setNotifsPermission(result);
+    if (result === "granted") {
+      setOsNotificationsEnabled(true);
+      setNotifsEnabledState(true);
+    }
+  }
+
+  function handleTestNotif() {
+    // Reset dedup so the test always fires even if the same id was shown today.
+    clearOsNotificationDedup();
+    const ok = showOsNotification({
+      id: `test-${Date.now()}`,
+      title: t.ui.notifTestTitle ?? "Test notification",
+      body: t.ui.notifTestBody ?? "Si tu vois ceci, les notifs sont bien actives.",
+    });
+    setNotifTestStatus(ok ? "ok" : "blocked");
+    setTimeout(() => setNotifTestStatus(""), 3000);
+  }
 
   async function handleCopy() {
     if (!sharedCode) return;
@@ -308,6 +365,145 @@ export default function SettingsBody({
           >
             💭 {t.ui.questReEditOpen ?? t.ui.questEditButton}
           </button>
+        </div>
+      )}
+
+      {/* Redo the full onboarding flow — useful when the user wants to
+          change their role (cycle owner vs partner), name, dates, or
+          re-enter a different sharing code. */}
+      {onRedoOnboarding && (
+        <div className="settings-row redo-onboarding-row">
+          <label className="section-label">
+            {t.ui.redoOnboardingSectionLabel ?? "Reprendre le démarrage"}
+          </label>
+          <p className="settings-hint">
+            {t.ui.redoOnboardingHelp ??
+              "Pour changer ton rôle, ton prénom ou tes réponses."}
+          </p>
+          <button
+            type="button"
+            className="redo-onboarding-btn"
+            onClick={onRedoOnboarding}
+          >
+            {t.ui.redoOnboardingButton ?? "🔄 Refaire le démarrage"}
+          </button>
+        </div>
+      )}
+
+      {/* OS notifications toggle. Available on all platforms — graceful
+          when the browser doesn't support the Notification API or the
+          user has blocked permission at the OS/browser level. */}
+      <div className="settings-row notifs-row">
+        <label className="section-label">
+          {t.ui.notifsSettingsLabel ?? "Notifications"}
+        </label>
+        {!notifsSupported && (
+          <p className="settings-hint">
+            {t.ui.notifsUnsupported ??
+              "Ton navigateur ne supporte pas les notifications."}
+          </p>
+        )}
+        {notifsSupported && (
+          <>
+            <p className="settings-hint">
+              {t.ui.notifsSettingsHelp ??
+                "Reçois une notification quand les règles approchent ou pendant la fenêtre fertile."}
+            </p>
+            {notifsPermission === "denied" ? (
+              <p className="settings-hint notifs-blocked">
+                {t.ui.notifsBlocked ??
+                  "Les notifications sont bloquées dans les réglages de ton navigateur."}
+              </p>
+            ) : (
+              <button
+                type="button"
+                className={`notifs-toggle-btn ${notifsEnabled ? "on" : "off"}`}
+                onClick={handleToggleNotifs}
+                aria-pressed={notifsEnabled}
+              >
+                {notifsEnabled
+                  ? `🔔 ${t.ui.notifsToggleOn ?? "Activées"}`
+                  : `🔕 ${t.ui.notifsToggleOff ?? "Activer"}`}
+              </button>
+            )}
+            {notifsEnabled && notifsPermission === "granted" && (
+              <button
+                type="button"
+                className="notifs-test-btn"
+                onClick={handleTestNotif}
+              >
+                {t.ui.notifsTest ?? "Tester"}
+              </button>
+            )}
+            {notifTestStatus === "ok" && (
+              <p className="settings-hint notifs-test-ok">
+                {t.ui.notifsTestSent ?? "Notification envoyée ✓"}
+              </p>
+            )}
+            {notifTestStatus === "blocked" && (
+              <p className="settings-hint notifs-test-fail">
+                {t.ui.notifsTestFail ??
+                  "Impossible d'envoyer la notification."}
+              </p>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Account section — only when Supabase auth is plausibly available
+          (we use the presence of either onSignOut or onSignIn as the signal:
+          CycleTracker only passes these in when isSupabaseConfigured is true). */}
+      {(onSignOut || onSignIn) && (
+        <div className="settings-row account-row">
+          <label className="section-label">
+            {t.ui.accountSectionLabel ?? "Mon compte"}
+          </label>
+          {session?.user?.email ? (
+            <>
+              <div className="account-email-row">
+                <span className="account-email-label">
+                  {t.ui.accountEmailLabel ?? "Connecté en tant que"}
+                </span>
+                <span className="account-email-value">
+                  {session.user.email}
+                </span>
+              </div>
+              {onSignOut && (
+                <button
+                  type="button"
+                  className="account-signout-btn"
+                  onClick={onSignOut}
+                >
+                  {t.ui.accountSignOutButton ?? "Se déconnecter"}
+                </button>
+              )}
+              {onDeleteAccount && (
+                <button
+                  type="button"
+                  className="account-delete-btn"
+                  onClick={onDeleteAccount}
+                >
+                  {t.ui.accountDeleteButton ?? "Supprimer mon compte"}
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <p className="settings-hint">
+                {t.ui.accountSignedOutLabel ??
+                  "Connecte-toi pour retrouver ton cycle sur tous tes appareils."}
+              </p>
+              {onSignIn && (
+                <button
+                  type="button"
+                  className="account-signin-btn"
+                  onClick={onSignIn}
+                >
+                  {t.ui.accountSignInButton ?? "Se connecter / créer un compte"}
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
     </>

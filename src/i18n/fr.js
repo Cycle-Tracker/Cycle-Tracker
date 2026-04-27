@@ -9,6 +9,7 @@ const fr = {
     appTitle: "Cycle Tracker",
     appSubtitle: "Suivi élégant et discret du cycle",
     settingsOpenAria: "Ouvrir les réglages",
+    settingsCloseAria: "Fermer les réglages",
     settingsTitle: "Réglages",
     settingsSectionLabel: "Réglages",
     totalCycleLabel: "Cycle total :",
@@ -196,6 +197,38 @@ const fr = {
     manTraverseLuteal:
       "Sa patience peut s'effriter, ses émotions s'amplifier (irritation, larmes faciles). Ce n'est pas dirigé contre toi.",
 
+    // ----- Auth (login / signup) -----
+    authTitle: "Bienvenue sur Cycle Tracker",
+    authSubtitle: "Crée un compte pour retrouver ton cycle facilement.",
+    authTabSignIn: "Connexion",
+    authTabSignUp: "Inscription",
+    authEmailLabel: "Email",
+    authEmailPlaceholder: "ton@email.com",
+    authPasswordLabel: "Mot de passe",
+    authPasswordPlaceholder: "Au moins 6 caractères",
+    authSignInButton: "Se connecter",
+    authSignUpButton: "Créer mon compte",
+    authLoading: "Patiente...",
+    authSkipButton: "Continuer sans compte",
+    authSwitchToSignUp: "Pas encore de compte ? Inscris-toi",
+    authSwitchToSignIn: "Tu as déjà un compte ? Connecte-toi",
+    authErrorInvalidCredentials: "Email ou mot de passe incorrect.",
+    authErrorEmailExists: "Un compte existe déjà avec cet email.",
+    authErrorWeakPassword: "Mot de passe trop court (6 caractères minimum).",
+    authErrorInvalidEmail: "Email invalide.",
+    authErrorNetwork: "Erreur réseau. Réessaye dans un instant.",
+    authErrorGeneric: "Quelque chose s'est mal passé.",
+    accountSectionLabel: "Mon compte",
+    accountEmailLabel: "Connecté en tant que",
+    accountSignOutButton: "Se déconnecter",
+    accountSignedOutLabel: "Tu n'es pas connecté",
+    accountSignInButton: "Me connecter",
+    accountDeleteButton: "🗑️ Supprimer mon compte",
+    accountDeleteConfirm1:
+      "Supprimer définitivement ton compte ? Ton cycle restera accessible à ton/ta partenaire, mais ton accès sera supprimé.",
+    accountDeleteConfirm2: "Vraiment ? Cette action est irréversible.",
+    accountDeleteError: "La suppression a échoué.",
+
     // Phase info popup
     phaseInfoAria: "En savoir plus sur cette phase",
     phaseInfoTitle: "À propos de cette phase",
@@ -205,6 +238,155 @@ const fr = {
     questReEditOpen: "Modifier mes réponses",
     questReEditSave: "Enregistrer",
     questReEditReset: "Tout effacer",
+
+    // Redo full onboarding flow (role pick, name, dates, partner choice)
+    redoOnboardingSectionLabel: "Changer mon rôle ou mes infos",
+    redoOnboardingHelp:
+      "Permet de redire si tu es la personne qui a le cycle 👩 ou son/sa partenaire 👨, de changer ton prénom, tes dates ou de rejoindre un autre code.",
+    redoOnboardingButton: "🔄 Refaire le démarrage",
+    redoOnboardingConfirm:
+      "Reprendre le démarrage depuis le début ? Tes informations actuelles seront remplacées par tes nouvelles réponses.",
+
+    // Bottom navigation tabs
+    tabHome: "Accueil",
+    tabCalendar: "Calendrier",
+    tabJournal: "Journal",
+    tabHistory: "Historique",
+    tabSettings: "Réglages",
+
+    // Placeholder pages
+    comingSoonTitle: "Bientôt disponible",
+    comingSoonBody:
+      "Cette page arrive très vite. On y travaille avec amour 💖",
+    calendarPageHelp:
+      "Vois tes règles passées, l'ovulation et les jours fertiles. La fenêtre de fertilité s'affichera ici.",
+    journalPageHelp:
+      "Notez vos humeurs, douleurs ou petits mots ici. Tout est partagé entre toi et ton/ta partenaire.",
+    historyPageHelp:
+      "Cycles passés, durée moyenne et tendances de ton corps mois après mois.",
+
+    // Notifications bell on home
+    notifsAria: "Notifications",
+    notifsTitle: "Notifications",
+    notifsEmpty: "Aucune notification pour le moment",
+    notifsClose: "Fermer",
+    partnerFallback: "ta partenaire",
+
+    // OS notifications (Settings)
+    notifsSettingsLabel: "Notifications du téléphone",
+    notifsSettingsHelp:
+      "Reçois une notification quand les règles approchent ou pendant la fenêtre fertile.",
+    notifsToggleOn: "Activées",
+    notifsToggleOff: "Activer les notifications",
+    notifsBlocked:
+      "Les notifications sont bloquées. Active-les dans les réglages de ton navigateur.",
+    notifsUnsupported:
+      "Ton navigateur ne supporte pas les notifications.",
+    notifsTest: "Envoyer une notification de test",
+    notifsTestSent: "Notification envoyée ✓",
+    notifsTestFail: "Impossible d'envoyer la notification.",
+    notifTestTitle: "Test ✨",
+    notifTestBody: "Si tu vois ceci, les notifs sont bien actives.",
+
+    // Auto-prompt banner (Home)
+    notifPromptTitle: "Activer les notifications ?",
+    notifPromptHelp:
+      "Reçois un rappel doux avant les règles et pendant la fenêtre fertile.",
+    notifPromptButton: "Activer",
+    notifPromptBusy: "...",
+    notifPromptClose: "Fermer",
+
+    // Notification messages (computed from cycle state)
+    notifPeriodTodayTitle: "Premier jour des règles 🩸",
+    notifPeriodTodayBodyWoman:
+      "Sois douce avec toi aujourd'hui. Repos, chaleur, et tout ce qui te fait du bien.",
+    notifPeriodTodayBodyMan: (name) =>
+      `${name} commence ses règles aujourd'hui. Une attention, un thé chaud, un câlin — tout est bienvenu.`,
+
+    notifOvulationTodayTitle: "Pic d'ovulation aujourd'hui 🌕",
+    notifOvulationTodayBodyWoman:
+      "Tu es au sommet de ton énergie. Confiance, magnétisme, créativité.",
+    notifOvulationTodayBodyMan: (name) =>
+      `${name} est en plein pic — sociable, énergique, communicative. Profite de ce moment ensemble.`,
+
+    notifOvulationTomorrowTitle: "Ovulation demain",
+    notifOvulationTomorrowBody:
+      "Le pic arrive — pic de libido, de confiance et d'énergie sociale.",
+
+    notifFertileTitle: "Fenêtre fertile",
+    notifFertileBody:
+      "Période fertile en cours. À garder en tête si vous essayez ou évitez de concevoir.",
+
+    notifPeriodTomorrowTitle: "Règles demain",
+    notifPeriodInNTitle: (n) => `Règles dans ${n} jours`,
+    notifPeriodSoonBodyWoman:
+      "Phase prémenstruelle. Si tu sens des tensions, c'est normal — ralentis ce que tu peux.",
+    notifPeriodSoonBodyMan: (name) =>
+      `Les règles de ${name} approchent. Patience et douceur sont des super-pouvoirs.`,
+
+    notifCalmTitle: "Tout est calme ✨",
+    notifCalmBody: (name) =>
+      name
+        ? `Rien de spécial à signaler aujourd'hui, ${name}.`
+        : "Rien de spécial à signaler aujourd'hui.",
+
+    // Calendar
+    calendarPrevAria: "Mois précédent",
+    calendarNextAria: "Mois suivant",
+    calendarToday: "Aujourd'hui",
+    calendarKind_period: "Règles",
+    calendarKind_ovulation: "Ovulation",
+    calendarKind_fertile: "Période fertile",
+    calendarPredictedPeriod: "Règles prévues",
+    calendarPastPeriod: "Règles (jour passé)",
+    calendarOvulationDay: "Jour d'ovulation prévu",
+    calendarFertileDay: "Jour de la fenêtre fertile",
+    calendarMarkPeriodStart: "Marquer comme premier jour des règles",
+    calendarMarkConfirm:
+      "Marquer ce jour comme le premier jour de tes règles ? La date de cycle sera mise à jour.",
+
+    // Journal
+    journalAdd: "Ajouter une entrée",
+    journalAddTitle: "Nouvelle entrée",
+    journalEditTitle: "Modifier l'entrée",
+    journalEdit: "Modifier",
+    journalDelete: "Supprimer",
+    journalDeleteConfirm: "Supprimer cette entrée ?",
+    journalDateLabel: "Date",
+    journalMoodLabel: "Humeur",
+    journalEnergyLabel: "Énergie",
+    journalNoteLabel: "Note",
+    journalNotePlaceholder:
+      "Comment tu te sens, ce qui s'est passé, un mot pour ton/ta partenaire…",
+    journalAuthorMe: "Moi",
+    journalEmptyTitle: "Pas encore d'entrée",
+    journalEmptyBody:
+      "Ajoute ta première note pour partager avec ton/ta partenaire.",
+    journalMood_happy: "Joyeuse",
+    journalMood_calm: "Calme",
+    journalMood_tired: "Fatiguée",
+    journalMood_sad: "Triste",
+    journalMood_stressed: "Stressée",
+    journalMood_love: "Amoureuse",
+
+    // History
+    historyTotalCycles: "Cycles enregistrés",
+    historyAvgLength: "Cycle moyen",
+    historyAvgPeriod: "Règles moyennes",
+    historyPastCycles: "Cycles passés",
+    historyPredictions: "Prochaines règles prévues",
+    historyNoDataTitle: "Pas encore d'historique",
+    historyNoDataBody:
+      "Marque tes règles à chaque cycle pour voir tes statistiques apparaître ici.",
+
+    // Install banner (PWA install prompt)
+    installPromptTitle: "Ajouter l'app à ton écran d'accueil",
+    installPromptHelpAndroid:
+      "Installe Cycle pour l'ouvrir comme une vraie app, en un tap.",
+    installPromptHelpIOS:
+      "Sur iPhone : appuie sur Partager ⬆️ puis « Sur l'écran d'accueil ».",
+    installPromptButton: "Installer",
+    installPromptClose: "Fermer",
   },
 
   questionnaire: {
@@ -217,8 +399,10 @@ const fr = {
     questions: {
       painIntensity: "Tes règles sont généralement...",
       periodTouch: "Pendant les règles, tu préfères...",
-      emotionalPms: "SPM émotionnel (avant les règles)",
-      physicalPms: "SPM physique (maux de tête, ballonnements...)",
+      emotionalPms:
+        "Avant tes règles, tu te sens plus sensible ou irritable ?",
+      physicalPms:
+        "Avant tes règles, tu as des inconforts physiques (maux de tête, ballonnements, douleurs)?",
       tired: "Quand tu es fatiguée, tu préfères qu'il...",
       loveLanguage: "Ta façon préférée d'être soutenue",
       comfortFood: "Le sucré / confort food pendant les règles",

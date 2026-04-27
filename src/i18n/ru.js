@@ -9,6 +9,7 @@ const ru = {
     appTitle: "Трекер цикла",
     appSubtitle: "Элегантное и деликатное отслеживание цикла",
     settingsOpenAria: "Открыть настройки",
+    settingsCloseAria: "Закрыть настройки",
     settingsTitle: "Настройки",
     settingsSectionLabel: "Настройки",
     totalCycleLabel: "Общий цикл:",
@@ -204,6 +205,38 @@ const ru = {
     manTraverseLuteal:
       "Терпение может истощаться, эмоции усиливаться (раздражение, слёзы). Это направлено не против тебя.",
 
+    // ----- Auth (login / signup) -----
+    authTitle: "Добро пожаловать в Cycle Tracker",
+    authSubtitle: "Создай аккаунт, чтобы легко возвращаться к своему циклу.",
+    authTabSignIn: "Вход",
+    authTabSignUp: "Регистрация",
+    authEmailLabel: "Email",
+    authEmailPlaceholder: "твой@email.com",
+    authPasswordLabel: "Пароль",
+    authPasswordPlaceholder: "Минимум 6 символов",
+    authSignInButton: "Войти",
+    authSignUpButton: "Создать аккаунт",
+    authLoading: "Загрузка...",
+    authSkipButton: "Продолжить без аккаунта",
+    authSwitchToSignUp: "Нет аккаунта? Зарегистрируйся",
+    authSwitchToSignIn: "Уже есть аккаунт? Войди",
+    authErrorInvalidCredentials: "Неверный email или пароль.",
+    authErrorEmailExists: "Аккаунт с таким email уже существует.",
+    authErrorWeakPassword: "Пароль слишком короткий (минимум 6 символов).",
+    authErrorInvalidEmail: "Неверный email.",
+    authErrorNetwork: "Ошибка сети. Попробуй ещё раз.",
+    authErrorGeneric: "Что-то пошло не так.",
+    accountSectionLabel: "Мой аккаунт",
+    accountEmailLabel: "Вошёл как",
+    accountSignOutButton: "Выйти",
+    accountSignedOutLabel: "Ты не вошёл",
+    accountSignInButton: "Войти",
+    accountDeleteButton: "🗑️ Удалить мой аккаунт",
+    accountDeleteConfirm1:
+      "Удалить аккаунт навсегда? Цикл останется доступным партнёру, но твой доступ будет удалён.",
+    accountDeleteConfirm2: "Точно уверен(а)? Это действие необратимо.",
+    accountDeleteError: "Не удалось удалить аккаунт.",
+
     // Phase info popup
     phaseInfoAria: "Узнать больше об этой фазе",
     phaseInfoTitle: "Об этой фазе",
@@ -213,6 +246,161 @@ const ru = {
     questReEditOpen: "Изменить ответы",
     questReEditSave: "Сохранить",
     questReEditReset: "Сбросить всё",
+
+    // Redo full onboarding flow (role pick, name, dates, partner choice)
+    redoOnboardingSectionLabel: "Пройти настройку заново",
+    redoOnboardingHelp:
+      "Чтобы изменить роль (цикл или партнёр), имя, даты или ввести другой код.",
+    redoOnboardingButton: "🔄 Пройти заново",
+    redoOnboardingConfirm:
+      "Начать настройку с самого начала? Текущие данные будут заменены новыми ответами.",
+
+    // Bottom navigation tabs
+    tabHome: "Главная",
+    tabCalendar: "Календарь",
+    tabJournal: "Дневник",
+    tabHistory: "История",
+    tabSettings: "Настройки",
+
+    // Placeholder pages
+    comingSoonTitle: "Скоро будет",
+    comingSoonBody: "Эта страница уже в пути. Мы её готовим 💖",
+    calendarPageHelp:
+      "Прошлые месячные, овуляция и фертильные дни. Окно фертильности появится здесь.",
+    journalPageHelp:
+      "Записывайте настроение, симптомы или тёплые слова. Всё видно тебе и партнёру.",
+    historyPageHelp:
+      "Прошлые циклы, средняя длина и тенденции твоего тела месяц за месяцем.",
+
+    // Notifications bell on home
+    notifsAria: "Уведомления",
+    notifsTitle: "Уведомления",
+    notifsEmpty: "Пока нет уведомлений",
+    notifsClose: "Закрыть",
+    partnerFallback: "твоя партнёрша",
+
+    // OS notifications (Settings)
+    notifsSettingsLabel: "Уведомления на телефоне",
+    notifsSettingsHelp:
+      "Получай уведомление, когда приближаются месячные или во время фертильного окна.",
+    notifsToggleOn: "Включены",
+    notifsToggleOff: "Включить уведомления",
+    notifsBlocked:
+      "Уведомления заблокированы. Включи их в настройках браузера.",
+    notifsUnsupported:
+      "Твой браузер не поддерживает уведомления.",
+    notifsTest: "Отправить тестовое уведомление",
+    notifsTestSent: "Уведомление отправлено ✓",
+    notifsTestFail: "Не удалось отправить уведомление.",
+    notifTestTitle: "Тест ✨",
+    notifTestBody: "Если ты это видишь, уведомления работают.",
+
+    // Auto-prompt banner (Home)
+    notifPromptTitle: "Включить уведомления?",
+    notifPromptHelp:
+      "Получай мягкое напоминание перед месячными и во время фертильного окна.",
+    notifPromptButton: "Включить",
+    notifPromptBusy: "...",
+    notifPromptClose: "Закрыть",
+
+    // Notification messages (computed from cycle state)
+    notifPeriodTodayTitle: "Первый день месячных 🩸",
+    notifPeriodTodayBodyWoman:
+      "Будь сегодня нежной с собой. Отдых, тепло и всё, что приносит уют.",
+    notifPeriodTodayBodyMan: (name) =>
+      `У ${name} сегодня начинаются месячные. Маленькое внимание, горячий чай, объятие — всё кстати.`,
+
+    notifOvulationTodayTitle: "Пик овуляции сегодня 🌕",
+    notifOvulationTodayBodyWoman:
+      "Ты на пике своей энергии. Уверенность, магнетизм, креативность.",
+    notifOvulationTodayBodyMan: (name) =>
+      `${name} на пике — общительна, энергична, разговорчива. Насладитесь этим моментом вместе.`,
+
+    notifOvulationTomorrowTitle: "Овуляция завтра",
+    notifOvulationTomorrowBody:
+      "Пик уже близко — пик либидо, уверенности и социальной энергии.",
+
+    notifFertileTitle: "Фертильное окно",
+    notifFertileBody:
+      "Идёт фертильный период. Учти это, если планируете или избегаете зачатия.",
+
+    notifPeriodTomorrowTitle: "Месячные завтра",
+    notifPeriodInNTitle: (n) => {
+      const mod10 = n % 10;
+      const mod100 = n % 100;
+      if (mod10 === 1 && mod100 !== 11) return `Месячные через ${n} день`;
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+        return `Месячные через ${n} дня`;
+      return `Месячные через ${n} дней`;
+    },
+    notifPeriodSoonBodyWoman:
+      "Предменструальная фаза. Если чувствуешь напряжение — это нормально, замедляйся где можешь.",
+    notifPeriodSoonBodyMan: (name) =>
+      `Месячные ${name} приближаются. Терпение и мягкость — это суперсилы.`,
+
+    notifCalmTitle: "Всё спокойно ✨",
+    notifCalmBody: (name) =>
+      name
+        ? `Сегодня ничего особенного, ${name}.`
+        : "Сегодня ничего особенного.",
+
+    // Calendar
+    calendarPrevAria: "Предыдущий месяц",
+    calendarNextAria: "Следующий месяц",
+    calendarToday: "Сегодня",
+    calendarKind_period: "Месячные",
+    calendarKind_ovulation: "Овуляция",
+    calendarKind_fertile: "Фертильный период",
+    calendarPredictedPeriod: "Прогноз месячных",
+    calendarPastPeriod: "Месячные (прошедший день)",
+    calendarOvulationDay: "Прогнозируемый день овуляции",
+    calendarFertileDay: "День в фертильном окне",
+    calendarMarkPeriodStart: "Отметить как первый день месячных",
+    calendarMarkConfirm:
+      "Отметить этот день как первый день месячных? Дата цикла будет обновлена.",
+
+    // Journal
+    journalAdd: "Добавить запись",
+    journalAddTitle: "Новая запись",
+    journalEditTitle: "Изменить запись",
+    journalEdit: "Изменить",
+    journalDelete: "Удалить",
+    journalDeleteConfirm: "Удалить эту запись?",
+    journalDateLabel: "Дата",
+    journalMoodLabel: "Настроение",
+    journalEnergyLabel: "Энергия",
+    journalNoteLabel: "Заметка",
+    journalNotePlaceholder:
+      "Как ты себя чувствуешь, что произошло, тёплое слово для партнёра…",
+    journalAuthorMe: "Я",
+    journalEmptyTitle: "Пока нет записей",
+    journalEmptyBody:
+      "Добавь первую заметку, чтобы поделиться с партнёром.",
+    journalMood_happy: "Радостная",
+    journalMood_calm: "Спокойная",
+    journalMood_tired: "Уставшая",
+    journalMood_sad: "Грустная",
+    journalMood_stressed: "В стрессе",
+    journalMood_love: "Влюблённая",
+
+    // History
+    historyTotalCycles: "Записанных циклов",
+    historyAvgLength: "Средний цикл",
+    historyAvgPeriod: "Средние месячные",
+    historyPastCycles: "Прошлые циклы",
+    historyPredictions: "Прогноз следующих месячных",
+    historyNoDataTitle: "Истории пока нет",
+    historyNoDataBody:
+      "Отмечай начало месячных каждый цикл, чтобы здесь появилась статистика.",
+
+    // Install banner (PWA install prompt)
+    installPromptTitle: "Добавить приложение на главный экран",
+    installPromptHelpAndroid:
+      "Установи Cycle, чтобы открывать его как настоящее приложение в одно касание.",
+    installPromptHelpIOS:
+      "На iPhone: нажми «Поделиться» ⬆️ и выбери «На экран Домой».",
+    installPromptButton: "Установить",
+    installPromptClose: "Закрыть",
   },
 
   questionnaire: {
@@ -225,8 +413,10 @@ const ru = {
     questions: {
       painIntensity: "Твои месячные обычно...",
       periodTouch: "Во время месячных ты предпочитаешь...",
-      emotionalPms: "Эмоциональный ПМС (перед месячными)",
-      physicalPms: "Физический ПМС (головная боль, вздутие...)",
+      emotionalPms:
+        "Перед месячными ты чувствуешь себя более чувствительной или раздражительной?",
+      physicalPms:
+        "Перед месячными у тебя бывает физический дискомфорт (головная боль, вздутие, спазмы)?",
       tired: "Когда ты устала, ты хочешь чтобы он...",
       loveLanguage: "Твой предпочитаемый способ поддержки",
       comfortFood: "Сладкое / еда-утешение во время месячных",

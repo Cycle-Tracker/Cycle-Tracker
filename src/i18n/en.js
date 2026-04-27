@@ -9,6 +9,7 @@ const en = {
     appTitle: "Cycle Tracker",
     appSubtitle: "Elegant, discreet cycle tracking",
     settingsOpenAria: "Open settings",
+    settingsCloseAria: "Close settings",
     settingsTitle: "Settings",
     settingsSectionLabel: "Settings",
     totalCycleLabel: "Total cycle:",
@@ -197,6 +198,38 @@ const en = {
     manTraverseLuteal:
       "Her patience may wear thin and emotions amplify (irritation, easy tears). It's not aimed at you.",
 
+    // ----- Auth (login / signup) -----
+    authTitle: "Welcome to Cycle Tracker",
+    authSubtitle: "Create an account to easily find your cycle again.",
+    authTabSignIn: "Sign in",
+    authTabSignUp: "Sign up",
+    authEmailLabel: "Email",
+    authEmailPlaceholder: "your@email.com",
+    authPasswordLabel: "Password",
+    authPasswordPlaceholder: "At least 6 characters",
+    authSignInButton: "Sign in",
+    authSignUpButton: "Create my account",
+    authLoading: "Loading...",
+    authSkipButton: "Continue without an account",
+    authSwitchToSignUp: "No account yet? Sign up",
+    authSwitchToSignIn: "Already have an account? Sign in",
+    authErrorInvalidCredentials: "Wrong email or password.",
+    authErrorEmailExists: "An account already exists with this email.",
+    authErrorWeakPassword: "Password too short (6 characters minimum).",
+    authErrorInvalidEmail: "Invalid email.",
+    authErrorNetwork: "Network error. Try again in a moment.",
+    authErrorGeneric: "Something went wrong.",
+    accountSectionLabel: "My account",
+    accountEmailLabel: "Signed in as",
+    accountSignOutButton: "Sign out",
+    accountSignedOutLabel: "You're not signed in",
+    accountSignInButton: "Sign in",
+    accountDeleteButton: "🗑️ Delete my account",
+    accountDeleteConfirm1:
+      "Permanently delete your account? Your cycle will stay available to your partner, but your access will be removed.",
+    accountDeleteConfirm2: "Are you sure? This is irreversible.",
+    accountDeleteError: "Couldn't delete your account.",
+
     // Phase info popup
     phaseInfoAria: "Learn more about this phase",
     phaseInfoTitle: "About this phase",
@@ -206,6 +239,154 @@ const en = {
     questReEditOpen: "Edit my answers",
     questReEditSave: "Save",
     questReEditReset: "Clear all",
+
+    // Redo full onboarding flow (role pick, name, dates, partner choice)
+    redoOnboardingSectionLabel: "Change my role or info",
+    redoOnboardingHelp:
+      "Pick again whether you're the person with the cycle 👩 or the partner 👨, change your name, your dates, or join a different code.",
+    redoOnboardingButton: "🔄 Restart setup",
+    redoOnboardingConfirm:
+      "Restart setup from scratch? Your current info will be replaced by your new answers.",
+
+    // Bottom navigation tabs
+    tabHome: "Home",
+    tabCalendar: "Calendar",
+    tabJournal: "Journal",
+    tabHistory: "History",
+    tabSettings: "Settings",
+
+    // Placeholder pages
+    comingSoonTitle: "Coming soon",
+    comingSoonBody: "This page is on its way. We're working on it 💖",
+    calendarPageHelp:
+      "See past periods, ovulation and fertile days. The fertility window will appear here.",
+    journalPageHelp:
+      "Log moods, symptoms or sweet notes here. Everything is shared between you and your partner.",
+    historyPageHelp:
+      "Past cycles, average length and how your body trends month after month.",
+
+    // Notifications bell on home
+    notifsAria: "Notifications",
+    notifsTitle: "Notifications",
+    notifsEmpty: "No notifications yet",
+    notifsClose: "Close",
+    partnerFallback: "your partner",
+
+    // OS notifications (Settings)
+    notifsSettingsLabel: "Phone notifications",
+    notifsSettingsHelp:
+      "Get a notification when the period is approaching or during the fertile window.",
+    notifsToggleOn: "Enabled",
+    notifsToggleOff: "Enable notifications",
+    notifsBlocked:
+      "Notifications are blocked. Enable them in your browser settings.",
+    notifsUnsupported:
+      "Your browser doesn't support notifications.",
+    notifsTest: "Send a test notification",
+    notifsTestSent: "Notification sent ✓",
+    notifsTestFail: "Couldn't send the notification.",
+    notifTestTitle: "Test ✨",
+    notifTestBody: "If you see this, notifications are working.",
+
+    // Auto-prompt banner (Home)
+    notifPromptTitle: "Enable notifications?",
+    notifPromptHelp:
+      "Get a gentle reminder before the period and during the fertile window.",
+    notifPromptButton: "Enable",
+    notifPromptBusy: "...",
+    notifPromptClose: "Close",
+
+    // Notification messages (computed from cycle state)
+    notifPeriodTodayTitle: "First day of period 🩸",
+    notifPeriodTodayBodyWoman:
+      "Be gentle with yourself today. Rest, warmth, and whatever feels good.",
+    notifPeriodTodayBodyMan: (name) =>
+      `${name}'s period starts today. A small attention, hot tea, a hug — anything is welcome.`,
+
+    notifOvulationTodayTitle: "Ovulation peak today 🌕",
+    notifOvulationTodayBodyWoman:
+      "You're at the top of your energy. Confidence, magnetism, creativity.",
+    notifOvulationTodayBodyMan: (name) =>
+      `${name} is at her peak — sociable, energetic, communicative. Enjoy this moment together.`,
+
+    notifOvulationTomorrowTitle: "Ovulation tomorrow",
+    notifOvulationTomorrowBody:
+      "The peak is coming — peak libido, confidence and social energy.",
+
+    notifFertileTitle: "Fertile window",
+    notifFertileBody:
+      "Fertile period ongoing. Worth keeping in mind if you're trying or avoiding to conceive.",
+
+    notifPeriodTomorrowTitle: "Period tomorrow",
+    notifPeriodInNTitle: (n) => `Period in ${n} days`,
+    notifPeriodSoonBodyWoman:
+      "Premenstrual phase. If you feel tension, it's normal — slow down what you can.",
+    notifPeriodSoonBodyMan: (name) =>
+      `${name}'s period is approaching. Patience and softness are superpowers.`,
+
+    notifCalmTitle: "All calm ✨",
+    notifCalmBody: (name) =>
+      name
+        ? `Nothing special to report today, ${name}.`
+        : "Nothing special to report today.",
+
+    // Calendar
+    calendarPrevAria: "Previous month",
+    calendarNextAria: "Next month",
+    calendarToday: "Today",
+    calendarKind_period: "Period",
+    calendarKind_ovulation: "Ovulation",
+    calendarKind_fertile: "Fertile window",
+    calendarPredictedPeriod: "Predicted period",
+    calendarPastPeriod: "Period (past day)",
+    calendarOvulationDay: "Predicted ovulation day",
+    calendarFertileDay: "Day in the fertile window",
+    calendarMarkPeriodStart: "Mark as first day of period",
+    calendarMarkConfirm:
+      "Mark this day as the first day of your period? The cycle date will be updated.",
+
+    // Journal
+    journalAdd: "Add an entry",
+    journalAddTitle: "New entry",
+    journalEditTitle: "Edit entry",
+    journalEdit: "Edit",
+    journalDelete: "Delete",
+    journalDeleteConfirm: "Delete this entry?",
+    journalDateLabel: "Date",
+    journalMoodLabel: "Mood",
+    journalEnergyLabel: "Energy",
+    journalNoteLabel: "Note",
+    journalNotePlaceholder:
+      "How you feel, what happened, a sweet word for your partner…",
+    journalAuthorMe: "Me",
+    journalEmptyTitle: "No entries yet",
+    journalEmptyBody:
+      "Add your first note to share with your partner.",
+    journalMood_happy: "Happy",
+    journalMood_calm: "Calm",
+    journalMood_tired: "Tired",
+    journalMood_sad: "Sad",
+    journalMood_stressed: "Stressed",
+    journalMood_love: "In love",
+
+    // History
+    historyTotalCycles: "Logged cycles",
+    historyAvgLength: "Avg cycle",
+    historyAvgPeriod: "Avg period",
+    historyPastCycles: "Past cycles",
+    historyPredictions: "Next periods predicted",
+    historyNoDataTitle: "No history yet",
+    historyNoDataBody:
+      "Log your period each cycle to see your stats appear here.",
+
+    // Install banner (PWA install prompt)
+    installPromptTitle: "Add the app to your home screen",
+    installPromptHelpAndroid:
+      "Install Cycle to open it like a real app, in one tap.",
+    installPromptHelpIOS:
+      "On iPhone: tap Share ⬆️ then \"Add to Home Screen\".",
+    installPromptButton: "Install",
+    installPromptClose: "Close",
   },
 
   questionnaire: {
@@ -218,8 +399,10 @@ const en = {
     questions: {
       painIntensity: "Your periods are usually...",
       periodTouch: "During your period, you prefer...",
-      emotionalPms: "Emotional PMS (before your period)",
-      physicalPms: "Physical PMS (headache, bloating...)",
+      emotionalPms:
+        "Before your period, do you feel more sensitive or irritable?",
+      physicalPms:
+        "Before your period, do you have physical discomfort (headaches, bloating, cramps)?",
       tired: "When you're tired, you'd rather he...",
       loveLanguage: "Your preferred way of being supported",
       comfortFood: "Sweets / comfort food during your period",
