@@ -4,18 +4,17 @@ import { normalizeDate, toIsoDateLocal } from "./cycleUtils";
  * Helpers to predict period dates, ovulation day, and fertile window from
  * a start date + phase durations, and to classify any given calendar day.
  *
- * Conventions:
+ * IMPORTANT: the calendar derives its phase boundaries from the SAME
+ * `durations` array that drives the home-page wheel, so the two views agree
+ * day-for-day:
  *  - durations: [menstrual, follicular, ovulatory, luteal]
  *  - Day 1 = first day of the period.
- *  - Ovulation day estimate = (totalDays - 14). This is the standard luteal-
- *    phase rule (luteal phase ≈ 14 days before next period). It works whether
- *    cycles are short or long.
- *  - Ovulation peak (highest fertility) = 3 days centered on ovulation day:
- *    J-1, J, J+1. Most fertility apps use this window since the egg can be
- *    fertilized for ~24h after release and the day before is the highest-yield
- *    window for conception.
- *  - Fertile window = 5 days before ovulation + the 3-day peak = 7 days total
- *    (sperm can survive up to 5 days in the reproductive tract).
+ *  - Period         = days [1 .. menstrual]
+ *  - Ovulation peak = the full ovulatory phase from `durations[2]`
+ *                     (= days [menstrual + follicular + 1 .. + ovulatory])
+ *  - Fertile window = 5 days before ovulation start + ovulation peak
+ *                     (sperm can survive up to 5 days in the reproductive
+ *                     tract; the egg lives ~24h post-ovulation)
  */
 
 const MS_PER_DAY = 86400000;
@@ -55,17 +54,30 @@ export function isoOf(date) {
 export function buildCycles(startDate, durations, past = 6, future = 6) {
   const totalDays = durations.reduce((s, n) => s + n, 0);
   const periodLen = durations[0];
-  const ovulationOffset = Math.max(0, totalDays - 14); // days from period start
+  const follicularLen = durations[1] ?? 0;
+  const ovulatoryLen = Math.max(1, durations[2] ?? 1);
+
+  // Day-of-cycle offsets (1-indexed: day 1 = first day of period)
+  // Convert to 0-indexed offsets from periodStart for addDays().
+  const ovulationStartOffset = periodLen + follicularLen; // first day of ovulatory phase
+  const ovulationEndOffset = ovulationStartOffset + ovulatoryLen - 1;
+  // Use the middle day of the ovulatory phase as the canonical "ovulation day"
+  // (used by notifications + predictions).
+  const ovulationOffset =
+    ovulationStartOffset + Math.floor((ovulatoryLen - 1) / 2);
+  const fertileStartOffset = Math.max(0, ovulationStartOffset - 5);
+  const fertileEndOffset = ovulationEndOffset;
+
   const cycles = [];
 
   for (let i = -past; i <= future; i++) {
     const periodStart = addDays(startDate, i * totalDays);
     const periodEnd = addDays(periodStart, periodLen - 1);
     const ovulation = addDays(periodStart, ovulationOffset);
-    const ovulationStart = addDays(ovulation, -1);
-    const ovulationEnd = addDays(ovulation, 1);
-    const fertileStart = addDays(ovulation, -5);
-    const fertileEnd = ovulationEnd; // include the post-ovulation peak day
+    const ovulationStart = addDays(periodStart, ovulationStartOffset);
+    const ovulationEnd = addDays(periodStart, ovulationEndOffset);
+    const fertileStart = addDays(periodStart, fertileStartOffset);
+    const fertileEnd = addDays(periodStart, fertileEndOffset);
     cycles.push({
       index: i,
       periodStart,
@@ -147,13 +159,21 @@ export function nextPeriodStart(startDate, durations) {
 
 /**
  * Predicted ovulation date for the cycle containing `today`.
+ * Uses the middle of the ovulatory phase (durations[2]) for consistency with
+ * the wheel and the calendar.
  */
 export function currentOvulationDate(startDate, durations) {
   const totalDays = durations.reduce((s, n) => s + n, 0);
+  const periodLen = durations[0];
+  const follicularLen = durations[1] ?? 0;
+  const ovulatoryLen = Math.max(1, durations[2] ?? 1);
+  const ovulationOffset =
+    periodLen + follicularLen + Math.floor((ovulatoryLen - 1) / 2);
+
   const today = normalizeDate(new Date());
   const start = normalizeDate(startDate);
   const elapsed = diffDays(today, start);
   const cyclesElapsed = elapsed >= 0 ? Math.floor(elapsed / totalDays) : 0;
   const periodStart = addDays(start, cyclesElapsed * totalDays);
-  return addDays(periodStart, Math.max(0, totalDays - 14));
+  return addDays(periodStart, ovulationOffset);
 }
