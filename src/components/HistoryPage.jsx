@@ -144,13 +144,15 @@ export default function HistoryPage({
             <ul className="history-predict-list">
               {nextThree.map((iso, idx) => (
                 <li key={iso} className="history-predict-row">
-                  <span className="history-predict-num">#{idx + 1}</span>
-                  <span className="history-predict-date">
-                    {formatLong(iso, lang)}
-                  </span>
-                  <span className="history-predict-when">
-                    {relativeIn(iso, t)}
-                  </span>
+                  <div className="history-predict-num">{idx + 1}</div>
+                  <div className="history-predict-info">
+                    <div className="history-predict-date">
+                      {formatLong(iso, lang)}
+                    </div>
+                    <div className="history-predict-when">
+                      {relativeShort(iso, t)}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>

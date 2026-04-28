@@ -11,9 +11,9 @@ export default function BottomNav({ active, onSelect }) {
   const { t } = useLanguage();
 
   const tabs = [
-    { id: "home", label: t.ui.tabHome, icon: "🏠" },
     { id: "calendar", label: t.ui.tabCalendar, icon: "📅" },
     { id: "journal", label: t.ui.tabJournal, icon: "📔" },
+    { id: "home", label: t.ui.tabHome, icon: "🏠" },
     { id: "history", label: t.ui.tabHistory, icon: "📊" },
     { id: "settings", label: t.ui.tabSettings, icon: "⚙️" },
   ];
