@@ -1,4 +1,4 @@
-import { normalizeDate } from "./cycleUtils";
+import { normalizeDate, toIsoDateLocal } from "./cycleUtils";
 
 /**
  * Helpers to predict period dates, ovulation day, and fertile window from
@@ -10,7 +10,12 @@ import { normalizeDate } from "./cycleUtils";
  *  - Ovulation day estimate = (totalDays - 14). This is the standard luteal-
  *    phase rule (luteal phase ≈ 14 days before next period). It works whether
  *    cycles are short or long.
- *  - Fertile window = 5 days before ovulation + ovulation day = 6 days total.
+ *  - Ovulation peak (highest fertility) = 3 days centered on ovulation day:
+ *    J-1, J, J+1. Most fertility apps use this window since the egg can be
+ *    fertilized for ~24h after release and the day before is the highest-yield
+ *    window for conception.
+ *  - Fertile window = 5 days before ovulation + the 3-day peak = 7 days total
+ *    (sperm can survive up to 5 days in the reproductive tract).
  */
 
 const MS_PER_DAY = 86400000;
@@ -26,8 +31,7 @@ export function diffDays(a, b) {
 }
 
 export function isoOf(date) {
-  const d = normalizeDate(date);
-  return d.toISOString().split("T")[0];
+  return toIsoDateLocal(normalizeDate(date));
 }
 
 /**
@@ -37,13 +41,15 @@ export function isoOf(date) {
  *
  * Each cycle:
  *   {
- *     index,        // 0 = current, -1 = previous, +1 = next, ...
- *     periodStart,  // Date — first day of period for this cycle
- *     periodEnd,    // Date — last day of period
- *     ovulation,    // Date — predicted ovulation day
- *     fertileStart, // Date — start of fertile window (5 days before ovulation)
- *     fertileEnd,   // Date — end of fertile window (= ovulation day)
- *     totalDays,    // length of this cycle
+ *     index,           // 0 = current, -1 = previous, +1 = next, ...
+ *     periodStart,     // Date — first day of period for this cycle
+ *     periodEnd,       // Date — last day of period
+ *     ovulation,       // Date — predicted ovulation day (center of peak)
+ *     ovulationStart,  // Date — first day of 3-day ovulation peak (J-1)
+ *     ovulationEnd,    // Date — last day of 3-day ovulation peak (J+1)
+ *     fertileStart,    // Date — start of fertile window (5 days before ovulation)
+ *     fertileEnd,      // Date — end of fertile window (J+1 of ovulation)
+ *     totalDays,       // length of this cycle
  *   }
  */
 export function buildCycles(startDate, durations, past = 6, future = 6) {
@@ -56,13 +62,17 @@ export function buildCycles(startDate, durations, past = 6, future = 6) {
     const periodStart = addDays(startDate, i * totalDays);
     const periodEnd = addDays(periodStart, periodLen - 1);
     const ovulation = addDays(periodStart, ovulationOffset);
+    const ovulationStart = addDays(ovulation, -1);
+    const ovulationEnd = addDays(ovulation, 1);
     const fertileStart = addDays(ovulation, -5);
-    const fertileEnd = ovulation; // ovulation day inclusive
+    const fertileEnd = ovulationEnd; // include the post-ovulation peak day
     cycles.push({
       index: i,
       periodStart,
       periodEnd,
       ovulation,
+      ovulationStart,
+      ovulationEnd,
       fertileStart,
       fertileEnd,
       totalDays,
@@ -90,7 +100,14 @@ export function classifyDay(date, cycles) {
     ) {
       isPeriod = true;
     }
-    if (t === normalizeDate(c.ovulation).getTime()) {
+    // Ovulation peak — 3-day window (J-1, J, J+1) for visibility
+    const ovStart = c.ovulationStart
+      ? normalizeDate(c.ovulationStart).getTime()
+      : normalizeDate(c.ovulation).getTime();
+    const ovEnd = c.ovulationEnd
+      ? normalizeDate(c.ovulationEnd).getTime()
+      : normalizeDate(c.ovulation).getTime();
+    if (t >= ovStart && t <= ovEnd) {
       isOvulation = true;
     }
     if (
