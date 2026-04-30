@@ -524,6 +524,13 @@ export default function StepOnboarding({
               ((durations[i] - meta.minDays) /
                 (meta.maxDays - meta.minDays)) *
               100;
+            // Aligns the gradient stop with the thumb's center.
+            // Thumb is 22px; its center moves from 11px (min) to width-11px (max),
+            // so we offset the gradient by (11 - 0.22 * fillPercent) px.
+            const fillStop = `calc(${fillPercent}% + ${(
+              11 -
+              0.22 * fillPercent
+            ).toFixed(2)}px)`;
             return (
               <div key={meta.id} className="settings-row">
                 <div className="settings-row-top">
@@ -549,7 +556,7 @@ export default function StepOnboarding({
                     updateDuration(i, parseInt(e.target.value, 10))
                   }
                   style={{
-                    background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillPercent}%, rgba(0,0,0,0.08) ${fillPercent}%, rgba(0,0,0,0.08) 100%)`,
+                    background: `linear-gradient(to right, ${meta.color} 0%, ${meta.color} ${fillStop}, rgba(0,0,0,0.08) ${fillStop}, rgba(0,0,0,0.08) 100%)`,
                   }}
                 />
               </div>
