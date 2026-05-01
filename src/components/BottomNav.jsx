@@ -4,15 +4,15 @@ import { useLanguage } from "../i18n";
  * Sticky bottom navigation bar with 5 tabs.
  *
  * Props:
- *  - active: "home" | "calendar" | "journal" | "history" | "settings"
+ *  - active: "journal" | "calendar" | "home" | "history" | "settings"
  *  - onSelect(tabId)
  */
 export default function BottomNav({ active, onSelect }) {
   const { t } = useLanguage();
 
   const tabs = [
-    { id: "calendar", label: t.ui.tabCalendar, icon: "📅" },
     { id: "journal", label: t.ui.tabJournal, icon: "📔" },
+    { id: "calendar", label: t.ui.tabCalendar, icon: "📅" },
     { id: "home", label: t.ui.tabHome, icon: "🏠" },
     { id: "history", label: t.ui.tabHistory, icon: "📊" },
     { id: "settings", label: t.ui.tabSettings, icon: "⚙️" },
