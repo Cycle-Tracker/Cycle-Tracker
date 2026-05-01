@@ -175,6 +175,8 @@ const en = {
     womanBadgeSolo: "Solo",
     womanSelfCareTitle: "Take care of yourself",
     womanSelfAvoidTitle: "Be mindful of",
+    womanFoodTitle: "Foods to lean on",
+    womanFoodAvoidTitle: "Foods to ease off",
 
     // Man dashboard extras
     manHelloLabel: (name) => (name ? `Hi ${name}` : "Hi"),
@@ -182,6 +184,8 @@ const en = {
       partnerName ? `${partnerName} is in phase` : "She's in phase",
     manWhatToDoTitle: "What you can do for her",
     manWhatToAvoidTitle: "Avoid right now",
+    manFoodTitle: "Foods that would help her",
+    manFoodAvoidTitle: "Foods to ease off for her",
     manMoodLabel: "Her likely mood",
     manPartnerMissingName: "your partner",
     manTabNow: "Right now",
@@ -481,6 +485,23 @@ const en = {
         "Intense exercise if you're not feeling it",
         "Judging yourself for low energy",
       ],
+      food: {
+        eat: [
+          "Iron: red meat, lentils, spinach (replenishes blood loss)",
+          "Vitamin C with iron: orange, kiwi, bell pepper (boosts absorption)",
+          "Magnesium: 70%+ dark chocolate, almonds, banana (eases cramps)",
+          "Omega-3: salmon, sardines, flax seeds (anti-inflammatory)",
+          "Warm teas: raspberry leaf, chamomile, ginger (natural pain relief)",
+          "Broths and soups: easy to digest, comforting, hydrating",
+        ],
+        avoid: [
+          "Excess coffee — accentuates cramps and dehydration",
+          "Alcohol — dehydrates and increases inflammation",
+          "Refined sugar — sugar spike then energy crash",
+          "Very salty foods — promote water retention",
+          "Ultra-processed foods — low in iron and magnesium",
+        ],
+      },
     },
     follicular: {
       name: "Follicular",
@@ -511,6 +532,21 @@ const en = {
         "Overloading: energy is here, don't burn it",
         "Ignoring fatigue if it shows up anyway",
       ],
+      food: {
+        eat: [
+          "Lean protein: eggs, chicken, tofu, white fish (steady energy)",
+          "Cruciferous veggies: broccoli, kale, arugula (regulate estrogen)",
+          "Whole grains: oats, quinoa, brown rice (long-lasting energy)",
+          "Fermented foods: yogurt, kefir, sauerkraut (gut microbiome)",
+          "Fresh fruit and leafy greens: vitamins for the new energy",
+          "Pumpkin and flax seeds: zinc and lignans for hormone balance",
+        ],
+        avoid: [
+          "Too much non-fermented soy — may disrupt estrogen balance",
+          "Sodas and sugary juices — avoidable sugar spike",
+          "Heavy meals at night — may dampen the new momentum",
+        ],
+      },
     },
     ovulatory: {
       name: "Ovulation",
@@ -540,6 +576,21 @@ const en = {
         "Forgetting contraception if no baby plans (peak fertility)",
         "Over-planning — your energy is still finite",
       ],
+      food: {
+        eat: [
+          "Antioxidants: berries, pomegranate, blueberries (cell protection)",
+          "Healthy fats: avocado, walnuts, olive oil (hormone balance)",
+          "Hydration: water, coconut water, infusions (your body loses more water)",
+          "Leafy greens: kale, spinach, broccoli (fiber + folate)",
+          "Fatty fish: salmon, mackerel (anti-inflammatory omega-3)",
+          "Vitamin C-rich fruits: kiwi, citrus, strawberries",
+        ],
+        avoid: [
+          "Too much salt — promotes bloating",
+          "Alcohol — reduces ovulation quality",
+          "Too much caffeine — can amplify anxiety at peak estrogen",
+        ],
+      },
     },
     luteal: {
       name: "Luteal",
@@ -579,6 +630,23 @@ const en = {
         "Important conflicts — postpone if possible",
         "Comparing your mood to the start of the cycle",
       ],
+      food: {
+        eat: [
+          "Magnesium: dark chocolate, almonds, cashews, banana (eases PMS)",
+          "Complex carbs: sweet potato, brown rice, oats (curb cravings)",
+          "Vitamin B6: chickpeas, turkey, banana (mood regulation)",
+          "Calcium: yogurt, sardines, broccoli (eases PMS pain)",
+          "Tryptophan: eggs, turkey, pumpkin seeds (boosts serotonin)",
+          "Soothing teas: chamomile, lemon balm, verbena",
+        ],
+        avoid: [
+          "Refined sugar — amplifies irritability and cravings",
+          "Excess salt — worsens bloating",
+          "Coffee after 2 pm — disrupts already fragile sleep",
+          "Alcohol — worsens fatigue and mood swings",
+          "Ultra-processed foods — low in magnesium and B6",
+        ],
+      },
     },
   },
 };

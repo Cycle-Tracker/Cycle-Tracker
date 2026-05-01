@@ -150,7 +150,7 @@ export default function HistoryPage({
                       {formatLong(iso, lang)}
                     </div>
                     <div className="history-predict-when">
-                      {relativeShort(iso, t)}
+                      {relativeIn(iso, t)}
                     </div>
                   </div>
                 </li>

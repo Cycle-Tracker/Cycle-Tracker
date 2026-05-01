@@ -181,6 +181,39 @@ export default function ManView({
               </div>
             ))}
           </div>
+
+          {currentPhase.food?.eat?.length > 0 && (
+            <div className="tips-card food-card">
+              <div
+                className="tips-title"
+                style={{ color: currentPhase.accent }}
+              >
+                🍽️ {t.ui.manFoodTitle}
+              </div>
+              {currentPhase.food.eat.map((item, i) => (
+                <div key={i} className="tip-item">
+                  <span style={{ color: currentPhase.accent, flexShrink: 0 }}>
+                    →
+                  </span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {currentPhase.food?.avoid?.length > 0 && (
+            <div className="avoid-card food-avoid-card">
+              <div className="avoid-title">
+                🚫 {t.ui.manFoodAvoidTitle}
+              </div>
+              {currentPhase.food.avoid.map((item, i) => (
+                <div key={i} className="tip-item">
+                  <span className="danger-mark">×</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 

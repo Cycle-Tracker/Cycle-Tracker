@@ -592,7 +592,7 @@ export default function StepOnboarding({
             type="text"
             className="join-input"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e) => setCode(normalizeCode(e.target.value))}
             placeholder={t.ui.joinPlaceholder}
             autoCapitalize="characters"
             autoComplete="off"

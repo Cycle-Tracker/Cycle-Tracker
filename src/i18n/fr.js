@@ -174,6 +174,8 @@ const fr = {
     womanBadgeSolo: "Solo",
     womanSelfCareTitle: "Pour prendre soin de toi",
     womanSelfAvoidTitle: "À éviter pour toi",
+    womanFoodTitle: "Côté assiette : à privilégier",
+    womanFoodAvoidTitle: "Côté assiette : à limiter",
 
     // Man dashboard extras
     manHelloLabel: (name) => (name ? `Salut ${name}` : "Salut"),
@@ -181,6 +183,8 @@ const fr = {
       partnerName ? `${partnerName} est en phase` : "Elle est en phase",
     manWhatToDoTitle: "Ce que tu peux faire pour elle",
     manWhatToAvoidTitle: "À éviter en ce moment",
+    manFoodTitle: "Ce qui lui ferait du bien à manger",
+    manFoodAvoidTitle: "Ce qui lui irait moins bien",
     manMoodLabel: "Son humeur probable",
     manPartnerMissingName: "ta partenaire",
     manTabNow: "Maintenant",
@@ -481,6 +485,23 @@ const fr = {
         "Sport intense si tu n'es pas en forme",
         "Te juger pour ton manque d'énergie",
       ],
+      food: {
+        eat: [
+          "Fer : viande rouge, lentilles, épinards, boudin (compense la perte de sang)",
+          "Vitamine C avec le fer : orange, kiwi, poivron (booste l'absorption)",
+          "Magnésium : chocolat noir 70%+, amandes, banane (apaise les crampes)",
+          "Oméga-3 : saumon, sardines, graines de lin (anti-inflammatoire)",
+          "Tisanes chaudes : framboisier, camomille, gingembre (anti-douleur naturel)",
+          "Bouillons et soupes : faciles à digérer, réconfortants, hydratants",
+        ],
+        avoid: [
+          "Café en excès — accentue les crampes et la déshydratation",
+          "Alcool — déshydrate et amplifie l'inflammation",
+          "Sucre raffiné — pic glycémique = chute d'énergie",
+          "Aliments très salés — favorisent la rétention d'eau",
+          "Plats ultra-transformés — pauvres en fer et magnésium",
+        ],
+      },
     },
     follicular: {
       name: "Folliculaire",
@@ -511,6 +532,21 @@ const fr = {
         "Te surcharger : l'énergie est là, ne la grille pas",
         "Ignorer la fatigue si elle apparaît malgré tout",
       ],
+      food: {
+        eat: [
+          "Protéines maigres : œufs, poulet, tofu, poisson blanc (énergie stable)",
+          "Légumes crucifères : brocoli, chou, roquette (régulent les œstrogènes)",
+          "Céréales complètes : avoine, quinoa, riz brun (énergie longue durée)",
+          "Fermentés : yaourt, kéfir, choucroute (pour le microbiote)",
+          "Fruits frais et légumes verts : vitamines pour la nouvelle énergie",
+          "Graines de courge et lin : zinc et lignanes pour l'équilibre hormonal",
+        ],
+        avoid: [
+          "Excès de soja non fermenté — peut perturber l'équilibre œstrogénique",
+          "Sodas et jus sucrés — pic glycémique évitable",
+          "Repas trop lourds le soir — peuvent freiner la dynamique",
+        ],
+      },
     },
     ovulatory: {
       name: "Ovulation",
@@ -540,6 +576,21 @@ const fr = {
         "Oublier la contraception si tu n'es pas en projet bébé (fertilité au max)",
         "Surplaning — ton énergie reste finie",
       ],
+      food: {
+        eat: [
+          "Antioxydants : baies, grenade, myrtilles (protection cellulaire)",
+          "Bonnes graisses : avocat, noix, huile d'olive (équilibre hormonal)",
+          "Hydratation : eau, eau de coco, infusions (le corps perd plus d'eau)",
+          "Légumes verts : kale, épinards, brocoli (fibres + folates)",
+          "Poisson gras : saumon, maquereau (oméga-3 anti-inflammatoires)",
+          "Fruits riches en vitamine C : kiwi, agrumes, fraises",
+        ],
+        avoid: [
+          "Excès de sel — favorise les ballonnements",
+          "Alcool — réduit la qualité de l'ovulation",
+          "Trop de caféine — peut accentuer l'anxiété au pic d'œstrogènes",
+        ],
+      },
     },
     luteal: {
       name: "Phase lutéale",
@@ -579,6 +630,23 @@ const fr = {
         "Conflits importants — reporte si possible",
         "Comparer ton humeur à celle du début de cycle",
       ],
+      food: {
+        eat: [
+          "Magnésium : chocolat noir, amandes, cajou, banane (apaise le SPM)",
+          "Glucides complexes : patate douce, riz complet, flocons d'avoine (anti-fringales)",
+          "Vitamine B6 : pois chiches, dinde, banane (régule l'humeur)",
+          "Calcium : yaourt, sardines, brocoli (atténue les douleurs SPM)",
+          "Tryptophane : œufs, dinde, graines de courge (favorise la sérotonine)",
+          "Tisanes apaisantes : camomille, mélisse, verveine",
+        ],
+        avoid: [
+          "Sucre raffiné — amplifie l'irritabilité et les fringales",
+          "Sel en excès — accentue les ballonnements",
+          "Café après 14h — perturbe le sommeil déjà fragile",
+          "Alcool — accentue la fatigue et les sautes d'humeur",
+          "Aliments ultra-transformés — pauvres en magnésium et B6",
+        ],
+      },
     },
   },
 };

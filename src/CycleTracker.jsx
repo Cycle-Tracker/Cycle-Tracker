@@ -567,6 +567,12 @@ export default function CycleTracker() {
         selfAvoid: Array.isArray(localized.selfAvoid)
           ? localized.selfAvoid
           : [],
+        food: {
+          eat: Array.isArray(localized.food?.eat) ? localized.food.eat : [],
+          avoid: Array.isArray(localized.food?.avoid)
+            ? localized.food.avoid
+            : [],
+        },
       };
     });
   }, [durations, t, userTags]);

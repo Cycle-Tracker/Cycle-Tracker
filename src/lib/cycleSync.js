@@ -49,7 +49,13 @@ export function generateCode() {
 
 export function normalizeCode(input) {
   if (typeof input !== "string") return "";
-  return input.trim().toUpperCase().replace(/\s+/g, "");
+  // Strip everything that isn't a letter or digit, then auto-insert the dash
+  // between the word and the 4 digits so users can type "rose4872" or
+  // "ROSE 4872" or "rose-4872" interchangeably.
+  const cleaned = input.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = cleaned.match(/^([A-Z]+)(\d{1,4})$/);
+  if (m) return `${m[1]}-${m[2]}`;
+  return cleaned;
 }
 
 export function isValidCodeShape(code) {
