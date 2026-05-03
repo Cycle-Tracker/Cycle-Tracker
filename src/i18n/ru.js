@@ -32,6 +32,7 @@ const ru = {
     },
     periodTodayLabel: "Месячные идут",
     tabTips: "Советы",
+    tabFood: "Питание",
     tabAll: "Все фазы",
     canDoTitle: "Что можно сделать",
     avoidTitle: "Избегать",

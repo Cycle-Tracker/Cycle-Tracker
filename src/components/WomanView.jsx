@@ -130,6 +130,7 @@ export default function WomanView({
       <div className="tabs-row">
         {[
           { key: "now", label: t.ui.tabTips },
+          { key: "food", label: t.ui.tabFood },
           { key: "all", label: t.ui.tabAll },
         ].map((tab) => (
           <button
@@ -170,7 +171,11 @@ export default function WomanView({
               </div>
             ))}
           </div>
+        </div>
+      )}
 
+      {activeTab === "food" && (
+        <div>
           {currentPhase.food?.eat?.length > 0 && (
             <div className="tips-card food-card">
               <div
@@ -201,6 +206,17 @@ export default function WomanView({
                   {item}
                 </div>
               ))}
+            </div>
+          )}
+
+          {(!currentPhase.food?.eat?.length &&
+            !currentPhase.food?.avoid?.length) && (
+            <div className="coming-soon-card" style={{ marginTop: 8 }}>
+              <div className="coming-soon-icon" aria-hidden="true">🍽️</div>
+              <div className="coming-soon-title">
+                {t.ui.womanFoodTitle}
+              </div>
+              <p className="coming-soon-body">—</p>
             </div>
           )}
         </div>

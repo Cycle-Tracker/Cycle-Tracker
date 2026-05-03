@@ -141,6 +141,7 @@ export default function ManView({
       <div className="tabs-row">
         {[
           { key: "now", label: t.ui.manTabNow ?? t.ui.tabTips },
+          { key: "food", label: t.ui.tabFood },
           { key: "all", label: t.ui.manTabAll ?? t.ui.tabAll },
         ].map((tab) => (
           <button
@@ -181,7 +182,11 @@ export default function ManView({
               </div>
             ))}
           </div>
+        </>
+      )}
 
+      {activeTab === "food" && (
+        <>
           {currentPhase.food?.eat?.length > 0 && (
             <div className="tips-card food-card">
               <div

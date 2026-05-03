@@ -25,6 +25,7 @@ const fr = {
     periodInDays: (n) => `${n} ${n === 1 ? "jour" : "jours"}`,
     periodTodayLabel: "Règles en cours",
     tabTips: "Conseils",
+    tabFood: "Aliments",
     tabAll: "Toutes les phases",
     canDoTitle: "Ce que tu peux faire",
     avoidTitle: "À éviter",
