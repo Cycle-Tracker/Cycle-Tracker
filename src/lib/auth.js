@@ -123,6 +123,40 @@ export async function findCycleForUser(userId) {
 }
 
 /**
+ * Detach the user from EVERY cycle they're linked to (both as owner and as
+ * partner). Used when the user wants a clean slate — e.g. when they
+ * disconnect from a shared cycle, so a stale link can't snap them back to
+ * a wrong code on the next page load.
+ *
+ * Optionally pass `exceptCode` to keep one cycle linked (useful when
+ * switching from one code to another: unlink everything else).
+ */
+export async function unlinkAllCyclesForUser(userId, { exceptCode } = {}) {
+  if (!isSupabaseConfigured || !userId) return;
+  try {
+    // Owner side
+    let q1 = supabase
+      .from("cycles")
+      .update({ owner_id: null })
+      .eq("owner_id", userId);
+    if (exceptCode) q1 = q1.neq("code", exceptCode);
+    const { error: e1 } = await q1;
+    if (e1) console.warn("unlinkAllCyclesForUser (owner) failed:", e1);
+
+    // Partner side
+    let q2 = supabase
+      .from("cycles")
+      .update({ partner_id: null })
+      .eq("partner_id", userId);
+    if (exceptCode) q2 = q2.neq("code", exceptCode);
+    const { error: e2 } = await q2;
+    if (e2) console.warn("unlinkAllCyclesForUser (partner) failed:", e2);
+  } catch (err) {
+    console.warn("unlinkAllCyclesForUser threw:", err);
+  }
+}
+
+/**
  * Delete the current user's account.
  *
  * Supabase JS doesn't expose a client-side delete for the logged-in user

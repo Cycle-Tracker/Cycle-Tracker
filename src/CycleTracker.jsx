@@ -41,6 +41,7 @@ import {
   linkCycleToUser,
   onAuthStateChange,
   signOut,
+  unlinkAllCyclesForUser,
 } from "./lib/auth";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
@@ -776,10 +777,19 @@ export default function CycleTracker() {
     setShowDisconnectModal(true);
   }
 
-  function confirmDisconnect() {
+  async function confirmDisconnect() {
     setShowDisconnectModal(false);
     setSharedCode(null);
     setPartnerName("");
+    // Also unlink the account from EVERY cycle it's attached to in Supabase,
+    // otherwise findCycleForUser() will silently re-attach the user to a stale
+    // link on the next reload and they'll feel "stuck" on a code they don't
+    // want to be on. Best-effort — never blocks the local disconnect.
+    if (session?.user?.id) {
+      unlinkAllCyclesForUser(session.user.id).catch((err) => {
+        console.warn("Disconnect cleanup failed:", err);
+      });
+    }
   }
 
   async function handleJoinFromSettings(row) {
@@ -801,8 +811,16 @@ export default function CycleTracker() {
       }
     }
 
-    // If the user is logged in, link the cycle to their account too
+    // If the user is logged in, link the cycle to their account too — and
+    // detach any OTHER cycles they were previously linked to, so the next
+    // reload can't auto-restore an old code on top of the one they just
+    // chose to join.
     if (session?.user?.id) {
+      try {
+        await unlinkAllCyclesForUser(session.user.id, { exceptCode: row.code });
+      } catch (err) {
+        console.warn("Unlink old cycles before join failed:", err);
+      }
       linkCycleToUser({ code: row.code, userId: session.user.id, role });
     }
   }
