@@ -3704,16 +3704,33 @@ input[type="range"]::-moz-range-thumb {
 
 /* Energy range */
 
+.journal-field-energy {
+  gap: 10px;
+}
+
+.journal-energy-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .journal-range {
   width: 100%;
-  margin: 4px 0 0;
+  height: 8px;
+  border-radius: 999px;
+  margin: 6px 0 4px;
+  /* Background is set via inline style with a gradient that follows the value;
+     this is just a fallback if the inline style is somehow stripped. */
+  background: rgba(60, 60, 67, 0.12);
 }
 
 .journal-range-val {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: #e85a8c;
-  align-self: flex-end;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
 }
 
 /* Editor actions */

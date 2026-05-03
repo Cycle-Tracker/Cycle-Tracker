@@ -241,20 +241,34 @@ function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew }) {
         </div>
       </div>
 
-      <label className="journal-field">
-        <span className="journal-field-label">{t.ui.journalEnergyLabel}</span>
-        <input
-          type="range"
-          min="0"
-          max="5"
-          step="1"
-          className="journal-range"
-          value={draft.energy}
-          onChange={(e) =>
-            setDraft({ ...draft, energy: Number(e.target.value) })
-          }
-        />
-        <span className="journal-range-val">{draft.energy}/5</span>
+      <label className="journal-field journal-field-energy">
+        <div className="journal-energy-head">
+          <span className="journal-field-label">
+            {t.ui.journalEnergyLabel}
+          </span>
+          <span className="journal-range-val">{draft.energy}/5</span>
+        </div>
+        {(() => {
+          const fp = (draft.energy / 5) * 100;
+          // Same trick as the duration sliders: align gradient stop with thumb center.
+          const fillStop = `calc(${fp}% + ${(11 - 0.22 * fp).toFixed(2)}px)`;
+          return (
+            <input
+              type="range"
+              min="0"
+              max="5"
+              step="1"
+              className="journal-range"
+              value={draft.energy}
+              onChange={(e) =>
+                setDraft({ ...draft, energy: Number(e.target.value) })
+              }
+              style={{
+                background: `linear-gradient(to right, #e85a8c 0%, #e85a8c ${fillStop}, rgba(60,60,67,0.12) ${fillStop}, rgba(60,60,67,0.12) 100%)`,
+              }}
+            />
+          );
+        })()}
       </label>
 
       <label className="journal-field">
