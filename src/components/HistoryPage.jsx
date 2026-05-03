@@ -1,7 +1,48 @@
-import { useMemo } from "react";
+import { Component, useMemo } from "react";
 import { useLanguage } from "../i18n";
 import { normalizeDate, todayIso } from "../utils/cycleUtils";
 import { addDays, diffDays, isoOf } from "../utils/cyclePredict";
+
+/**
+ * Local error boundary so a render error inside the History page falls back
+ * to a readable message instead of a blank white screen.
+ */
+class HistoryErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  componentDidCatch(error, info) {
+    // eslint-disable-next-line no-console
+    console.error("HistoryPage crashed:", error, info);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="page-shell history-page">
+          <div className="page-header-simple">
+            <h1 className="page-title">Historique</h1>
+          </div>
+          <div className="page-body">
+            <div className="coming-soon-card" style={{ marginTop: 16 }}>
+              <div className="coming-soon-icon" aria-hidden="true">⚠️</div>
+              <div className="coming-soon-title">
+                Impossible d'afficher l'historique
+              </div>
+              <p className="coming-soon-body">
+                {String(this.state.error?.message || this.state.error)}
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /**
  * History tab — shows the list of past period starts, computes basic stats,
@@ -12,7 +53,15 @@ import { addDays, diffDays, isoOf } from "../utils/cyclePredict";
  *  - currentStartDate: most recent period start (string)
  *  - durations: cycle durations
  */
-export default function HistoryPage({
+export default function HistoryPage(props) {
+  return (
+    <HistoryErrorBoundary>
+      <HistoryPageInner {...props} />
+    </HistoryErrorBoundary>
+  );
+}
+
+function HistoryPageInner({
   periodsLog = [],
   currentStartDate,
   durations,
@@ -38,10 +87,16 @@ export default function HistoryPage({
 
   const avgCycleLength = useMemo(() => {
     if (cycleLengths.length === 0) {
-      return durations ? durations.reduce((s, n) => s + n, 0) : 28;
+      const fromDurations =
+        Array.isArray(durations) && durations.length > 0
+          ? durations.reduce((s, n) => s + (Number(n) || 0), 0)
+          : 0;
+      // Always fall back to a sane default so the predict loop terminates.
+      return fromDurations > 0 ? fromDurations : 28;
     }
     const sum = cycleLengths.reduce((s, c) => s + c.length, 0);
-    return Math.round(sum / cycleLengths.length);
+    const avg = Math.round(sum / cycleLengths.length);
+    return avg > 0 ? avg : 28;
   }, [cycleLengths, durations]);
 
   const periodLength = durations?.[0] ?? 5;
@@ -49,13 +104,15 @@ export default function HistoryPage({
   // Predict next 3 period starts based on the latest known start + avgCycleLength.
   const nextThree = useMemo(() => {
     if (!currentStartDate) return [];
+    const step = avgCycleLength > 0 ? avgCycleLength : 28;
     const today = normalizeDate(new Date());
     const start = normalizeDate(currentStartDate);
 
     const result = [];
     let d = start;
-    while (result.length < 3) {
-      d = addDays(d, avgCycleLength);
+    // Hard cap iterations so a bad date/duration never causes an infinite loop.
+    for (let i = 0; i < 60 && result.length < 3; i++) {
+      d = addDays(d, step);
       if (d.getTime() > today.getTime()) result.push(isoOf(d));
     }
     return result;
