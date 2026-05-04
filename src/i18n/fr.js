@@ -374,6 +374,16 @@ const fr = {
     journalMood_stressed: "Stressée",
     journalMood_love: "Amoureuse",
 
+    // Man-side journal — about her, not him
+    journalManMoodLabel: "Comment tu la sens aujourd'hui",
+    journalManAttentionLabel: "Une attention que tu as eue pour elle",
+    journalManAttentionPlaceholder:
+      "Un câlin, un thé, un moment ensemble, lui avoir simplement demandé comment elle va…",
+    journalManNotePlaceholder:
+      "Une observation, ce que tu as ressenti, un mot doux que tu veux qu'elle voie…",
+    journalManObservedTag: "🫶 Observé",
+    journalManAttentionTag: "💝 Attention",
+
     // History
     historyTotalCycles: "Cycles enregistrés",
     historyAvgLength: "Cycle moyen",

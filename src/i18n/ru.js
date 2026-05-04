@@ -388,6 +388,16 @@ const ru = {
     journalMood_stressed: "В стрессе",
     journalMood_love: "Влюблённая",
 
+    // Man-side journal — about her, not him
+    journalManMoodLabel: "Как она сегодня по твоим ощущениям",
+    journalManAttentionLabel: "Знак внимания, который ты ей оказал",
+    journalManAttentionPlaceholder:
+      "Объятие, чай, совместный момент, просто спросил как она…",
+    journalManNotePlaceholder:
+      "Наблюдение, что ты почувствовал, доброе слово которое она увидит…",
+    journalManObservedTag: "🫶 Наблюдение",
+    journalManAttentionTag: "💝 Внимание",
+
     // History
     historyTotalCycles: "Записанных циклов",
     historyAvgLength: "Средний цикл",

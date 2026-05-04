@@ -374,6 +374,16 @@ const en = {
     journalMood_stressed: "Stressed",
     journalMood_love: "In love",
 
+    // Man-side journal — about her, not him
+    journalManMoodLabel: "How is she feeling today",
+    journalManAttentionLabel: "An attention you offered her",
+    journalManAttentionPlaceholder:
+      "A hug, a tea, a moment together, simply asking how she's doing…",
+    journalManNotePlaceholder:
+      "An observation, how you felt, a kind word you want her to see…",
+    journalManObservedTag: "🫶 Observed",
+    journalManAttentionTag: "💝 Attention",
+
     // History
     historyTotalCycles: "Logged cycles",
     historyAvgLength: "Avg cycle",

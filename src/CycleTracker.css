@@ -3608,6 +3608,34 @@ input[type="range"]::-moz-range-thumb {
   white-space: pre-wrap;
 }
 
+.journal-item-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: #b83b63;
+  letter-spacing: 0.01em;
+}
+
+.journal-item-attention {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  background: rgba(230, 90, 140, 0.08);
+  border-left: 3px solid rgba(230, 90, 140, 0.45);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.journal-item-attention-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #b83b63;
+  margin-right: 4px;
+}
+
 .journal-item-actions {
   display: flex;
   gap: 8px;

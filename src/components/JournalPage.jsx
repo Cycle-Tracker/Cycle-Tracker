@@ -39,11 +39,15 @@ export default function JournalPage({
   const [draft, setDraft] = useState(emptyDraft());
 
   function emptyDraft() {
+    // Same shape for both roles — but the man side ignores `energy`,
+    // re-uses `mood` to mean "what I observed of her", and uses
+    // `attention` instead of letting the note carry that meaning.
     return {
       date: todayIso(),
       mood: "calm",
       energy: 3,
       note: "",
+      attention: "",
     };
   }
 
@@ -58,6 +62,7 @@ export default function JournalPage({
       mood: entry.mood || "calm",
       energy: entry.energy ?? 3,
       note: entry.note || "",
+      attention: entry.attention || "",
     });
     setEditing(entry.id);
   }
@@ -143,6 +148,7 @@ export default function JournalPage({
             onCancel={cancel}
             t={t}
             isNew={editing === "new"}
+            role={role}
           />
         )}
       </div>
@@ -165,6 +171,7 @@ function JournalItem({
   const authorName = isMine
     ? myName || t.ui.journalAuthorMe
     : entry.author || partnerName || t.ui.partnerFallback;
+  const isManEntry = entry.role === "man";
 
   return (
     <li className={`journal-item ${isMine ? "mine" : "partner"}`}>
@@ -173,16 +180,35 @@ function JournalItem({
           {mood?.emoji || "🌷"}
         </span>
         <div className="journal-item-meta">
-          <div className="journal-item-author">{authorName}</div>
+          <div className="journal-item-author">
+            {authorName}
+            {isManEntry && (
+              <span className="journal-item-tag">
+                {" "}
+                · {t.ui.journalManObservedTag}
+              </span>
+            )}
+          </div>
           <div className="journal-item-date">{dateLabel}</div>
         </div>
-        <div className="journal-item-energy" title={t.ui.energyLabel}>
-          {"●".repeat(Math.max(0, Math.min(5, entry.energy ?? 0)))}
-          <span className="journal-item-energy-rest">
-            {"○".repeat(Math.max(0, 5 - (entry.energy ?? 0)))}
-          </span>
-        </div>
+        {!isManEntry && (
+          <div className="journal-item-energy" title={t.ui.energyLabel}>
+            {"●".repeat(Math.max(0, Math.min(5, entry.energy ?? 0)))}
+            <span className="journal-item-energy-rest">
+              {"○".repeat(Math.max(0, 5 - (entry.energy ?? 0)))}
+            </span>
+          </div>
+        )}
       </div>
+
+      {isManEntry && entry.attention && (
+        <p className="journal-item-attention">
+          <span className="journal-item-attention-tag">
+            {t.ui.journalManAttentionTag}
+          </span>{" "}
+          {entry.attention}
+        </p>
+      )}
 
       {entry.note && <p className="journal-item-note">{entry.note}</p>}
 
@@ -204,7 +230,8 @@ function JournalItem({
   );
 }
 
-function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew }) {
+function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew, role }) {
+  const isMan = role === "man";
   return (
     <div className="journal-editor">
       <h2 className="journal-editor-title">
@@ -222,7 +249,9 @@ function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew }) {
       </label>
 
       <div className="journal-field">
-        <span className="journal-field-label">{t.ui.journalMoodLabel}</span>
+        <span className="journal-field-label">
+          {isMan ? t.ui.journalManMoodLabel : t.ui.journalMoodLabel}
+        </span>
         <div className="journal-mood-row">
           {MOOD_OPTIONS.map((m) => (
             <button
@@ -241,35 +270,53 @@ function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew }) {
         </div>
       </div>
 
-      <label className="journal-field journal-field-energy">
-        <div className="journal-energy-head">
+      {!isMan && (
+        <label className="journal-field journal-field-energy">
+          <div className="journal-energy-head">
+            <span className="journal-field-label">
+              {t.ui.journalEnergyLabel}
+            </span>
+            <span className="journal-range-val">{draft.energy}/5</span>
+          </div>
+          {(() => {
+            const fp = (draft.energy / 5) * 100;
+            // Same trick as the duration sliders: align gradient stop with thumb center.
+            const fillStop = `calc(${fp}% + ${(11 - 0.22 * fp).toFixed(2)}px)`;
+            return (
+              <input
+                type="range"
+                min="0"
+                max="5"
+                step="1"
+                className="journal-range"
+                value={draft.energy}
+                onChange={(e) =>
+                  setDraft({ ...draft, energy: Number(e.target.value) })
+                }
+                style={{
+                  background: `linear-gradient(to right, #e85a8c 0%, #e85a8c ${fillStop}, rgba(60,60,67,0.12) ${fillStop}, rgba(60,60,67,0.12) 100%)`,
+                }}
+              />
+            );
+          })()}
+        </label>
+      )}
+
+      {isMan && (
+        <label className="journal-field">
           <span className="journal-field-label">
-            {t.ui.journalEnergyLabel}
+            {t.ui.journalManAttentionLabel}
           </span>
-          <span className="journal-range-val">{draft.energy}/5</span>
-        </div>
-        {(() => {
-          const fp = (draft.energy / 5) * 100;
-          // Same trick as the duration sliders: align gradient stop with thumb center.
-          const fillStop = `calc(${fp}% + ${(11 - 0.22 * fp).toFixed(2)}px)`;
-          return (
-            <input
-              type="range"
-              min="0"
-              max="5"
-              step="1"
-              className="journal-range"
-              value={draft.energy}
-              onChange={(e) =>
-                setDraft({ ...draft, energy: Number(e.target.value) })
-              }
-              style={{
-                background: `linear-gradient(to right, #e85a8c 0%, #e85a8c ${fillStop}, rgba(60,60,67,0.12) ${fillStop}, rgba(60,60,67,0.12) 100%)`,
-              }}
-            />
-          );
-        })()}
-      </label>
+          <textarea
+            className="journal-textarea"
+            rows={3}
+            value={draft.attention}
+            maxLength={300}
+            onChange={(e) => setDraft({ ...draft, attention: e.target.value })}
+            placeholder={t.ui.journalManAttentionPlaceholder}
+          />
+        </label>
+      )}
 
       <label className="journal-field">
         <span className="journal-field-label">{t.ui.journalNoteLabel}</span>
@@ -279,7 +326,9 @@ function JournalEditor({ draft, setDraft, onSave, onCancel, t, isNew }) {
           value={draft.note}
           maxLength={500}
           onChange={(e) => setDraft({ ...draft, note: e.target.value })}
-          placeholder={t.ui.journalNotePlaceholder}
+          placeholder={
+            isMan ? t.ui.journalManNotePlaceholder : t.ui.journalNotePlaceholder
+          }
         />
       </label>
 
