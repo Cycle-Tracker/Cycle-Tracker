@@ -326,6 +326,12 @@ textarea {
 
 input[type="date"] {
   width: 100%;
+  /* iOS Safari has a default min-width on date inputs that can push past
+     the parent's content width. Constrain it explicitly so the field
+     never overflows the card. */
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   margin-top: 10px;
   border: 1px solid rgba(60, 60, 67, 0.12);
   border-radius: 16px;
@@ -333,6 +339,7 @@ input[type="date"] {
   background: rgba(255, 255, 255, 0.9);
   color: var(--text);
   outline: none;
+  font: inherit;
   /* iOS Safari centers <input type="date"> by default; align the value
      to the left so it matches the other text inputs in the form. */
   text-align: left;

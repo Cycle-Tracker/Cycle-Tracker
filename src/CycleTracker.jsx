@@ -421,20 +421,24 @@ export default function CycleTracker() {
       // their own language independently.
 
       // Name mapping depends on which side of the couple we are on.
+      // For the partner's name we always sync (even to empty) so a stale
+      // local value can't shadow what the cycle row actually says — that
+      // was causing the share badge to display "my own name" when the
+      // partner hadn't set theirs yet.
       if (role === "woman") {
         if (typeof row.woman_name === "string" && row.woman_name) {
           setMyName(row.woman_name);
         }
-        if (typeof row.man_name === "string" && row.man_name) {
-          setPartnerName(row.man_name);
-        }
+        setPartnerName(
+          typeof row.man_name === "string" ? row.man_name : ""
+        );
       } else {
         if (typeof row.man_name === "string" && row.man_name) {
           setMyName(row.man_name);
         }
-        if (typeof row.woman_name === "string" && row.woman_name) {
-          setPartnerName(row.woman_name);
-        }
+        setPartnerName(
+          typeof row.woman_name === "string" ? row.woman_name : ""
+        );
       }
 
       if (row.questionnaire && typeof row.questionnaire === "object") {
