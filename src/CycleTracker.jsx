@@ -44,6 +44,10 @@ import {
   unlinkAllCyclesForUser,
 } from "./lib/auth";
 import {
+  getCurrentPushSubscription,
+  isPushConfigured,
+  isPushSupported,
+  subscribeToPush,
   unsubscribeFromPush,
   updatePushSubscriptionCycle,
 } from "./utils/pushSubscriptions";
@@ -1000,6 +1004,48 @@ export default function CycleTracker() {
     if (!isOnboarded) return;
     fireNewNotifications(notifications);
   }, [notifications, isOnboarded]);
+
+  // If the OS notification permission is already granted but the user has
+  // never been subscribed to Web Push (e.g. permission was granted before
+  // we added push, or they accepted on a previous version), subscribe now.
+  // This is what lets notifications arrive when the app is closed.
+  useEffect(() => {
+    if (!isOnboarded || !sharedCode || !role) return;
+    if (!isPushSupported() || !isPushConfigured()) return;
+    if (typeof Notification === "undefined") return;
+    if (Notification.permission !== "granted") return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const existing = await getCurrentPushSubscription();
+        if (cancelled) return;
+        if (existing) {
+          // Already subscribed at the browser level — make sure the row
+          // on Supabase points to the current cycle.
+          updatePushSubscriptionCycle({
+            cycleCode: sharedCode,
+            role,
+            userId: session?.user?.id ?? null,
+          }).catch(() => {});
+          return;
+        }
+        const result = await subscribeToPush({
+          cycleCode: sharedCode,
+          role,
+          userId: session?.user?.id ?? null,
+        });
+        if (!result.ok) {
+          console.warn("Auto subscribeToPush:", result.reason);
+        }
+      } catch (err) {
+        console.warn("Auto subscribeToPush threw:", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOnboarded, sharedCode, role, session?.user?.id]);
 
   // ------------- Render: auth gate -------------
   // If Supabase is configured, we want users to log in (or explicitly skip)
