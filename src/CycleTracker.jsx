@@ -43,6 +43,10 @@ import {
   signOut,
   unlinkAllCyclesForUser,
 } from "./lib/auth";
+import {
+  unsubscribeFromPush,
+  updatePushSubscriptionCycle,
+} from "./utils/pushSubscriptions";
 
 const DEFAULT_DURATIONS = PHASE_META.map((item) => item.defaultDays);
 
@@ -790,6 +794,11 @@ export default function CycleTracker() {
         console.warn("Disconnect cleanup failed:", err);
       });
     }
+    // Drop the Web Push subscription too so we don't keep getting notifs
+    // for a cycle we're not on anymore.
+    unsubscribeFromPush().catch((err) => {
+      console.warn("unsubscribeFromPush failed:", err);
+    });
   }
 
   async function handleJoinFromSettings(row) {
@@ -823,6 +832,16 @@ export default function CycleTracker() {
       }
       linkCycleToUser({ code: row.code, userId: session.user.id, role });
     }
+
+    // Re-route any existing push subscription on this device to the new
+    // cycle code, so notifications follow the user.
+    updatePushSubscriptionCycle({
+      cycleCode: row.code,
+      role,
+      userId: session?.user?.id ?? null,
+    }).catch((err) => {
+      console.warn("updatePushSubscriptionCycle failed:", err);
+    });
   }
 
   async function handleEnableSharingFromSettings() {
@@ -1032,7 +1051,11 @@ export default function CycleTracker() {
   const homePage = (
     <>
       <InstallPrompt />
-      <NotifPrompt />
+      <NotifPrompt
+        sharedCode={sharedCode}
+        role={role}
+        userId={session?.user?.id ?? null}
+      />
       <div className="tracker-header">
         <div className="tracker-spacer" />
 

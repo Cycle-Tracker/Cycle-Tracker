@@ -7,6 +7,11 @@ import {
   requestBrowserNotificationPermission,
   setOsNotificationsEnabled,
 } from "../utils/browserNotifications";
+import {
+  isPushSupported,
+  isPushConfigured,
+  subscribeToPush,
+} from "../utils/pushSubscriptions";
 
 const LS_DISMISSED_KEY = "cycle-notif-prompt-dismissed";
 const RESHOW_AFTER_MS = 14 * 24 * 60 * 60 * 1000; // 14 days
@@ -36,7 +41,7 @@ function isRecentlyDismissed() {
  *
  * Mirrors the pattern used by InstallPrompt for consistency.
  */
-export default function NotifPrompt() {
+export default function NotifPrompt({ sharedCode = null, role = null, userId = null } = {}) {
   const { t } = useLanguage();
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -68,6 +73,20 @@ export default function NotifPrompt() {
       const result = await requestBrowserNotificationPermission();
       if (result === "granted") {
         setOsNotificationsEnabled(true);
+        // Best-effort: also subscribe to Web Push so notifications can be
+        // delivered when the app is closed. Requires a configured VAPID
+        // key and an active shared cycle. Non-blocking — if any of these
+        // are missing, the in-app notifs still work.
+        if (
+          isPushSupported() &&
+          isPushConfigured() &&
+          sharedCode &&
+          role
+        ) {
+          subscribeToPush({ cycleCode: sharedCode, role, userId }).catch(
+            (err) => console.warn("subscribeToPush failed:", err)
+          );
+        }
       } else {
         // Denied or dismissed — don't pester again until the cooldown elapses.
         dismiss();
