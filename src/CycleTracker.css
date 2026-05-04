@@ -570,15 +570,23 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 700px) {
   .tracker-page {
-    padding: 18px 12px 30px;
+    padding: 8px 12px 20px;
   }
 
-  .tracker-title {
-    font-size: 28px;
+  /* Maximally compact header on mobile: the home-screen icon already
+     carries the app name so we drop the title and subtitle entirely.
+     The header becomes a single thin row with just the partner badge
+     on the left and the bell on the right. */
+  .tracker-title,
+  .tracker-subtitle {
+    display: none;
   }
 
   .tracker-header {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    margin-bottom: 8px;
+    gap: 8px;
+    min-height: 36px;
   }
 
   .tracker-header-actions {
@@ -586,9 +594,34 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .tracker-title-wrap {
-    order: -1;
-    flex: 1 1 100%;
-    margin-bottom: 8px;
+    order: 0;
+    flex: 1 1 auto;
+    margin-bottom: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tracker-spacer {
+    display: none;
+  }
+
+  .tracker-share-badge {
+    margin-top: 0;
+  }
+
+  /* The partner's name is already shown in the share badge, so the
+     "Salut Thomas" line is redundant on a small screen. */
+  .man-hello {
+    display: none;
+  }
+
+  /* Smaller bell so the header row is shorter overall. */
+  .bell-btn {
+    width: 36px;
+    height: 36px;
   }
 
   .current-phase-card {
