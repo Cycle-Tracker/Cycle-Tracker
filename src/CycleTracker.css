@@ -20,6 +20,10 @@ html,
 body,
 #root {
   min-height: 100%;
+  /* Lock horizontal scroll: any child that overflows by a few pixels
+     should be clipped, never cause the whole page to slide left/right. */
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
