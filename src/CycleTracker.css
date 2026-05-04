@@ -21,9 +21,12 @@ body,
 #root {
   min-height: 100%;
   /* Lock horizontal scroll: any child that overflows by a few pixels
-     should be clipped, never cause the whole page to slide left/right. */
+     should be clipped, never cause the whole page to slide left/right.
+     Use `clip` rather than `hidden` so we don't establish a scrolling
+     context (which on iOS subtly shifts viewport-width calculations
+     and can offset cards by a few pixels). */
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -2366,6 +2369,12 @@ input[type="range"]::-moz-range-thumb {
   padding: 18px 16px 24px;
   max-width: 720px;
   margin: 0 auto;
+  /* Make sure horizontal padding isn't eaten by safe-area on devices
+     where the inset isn't 0 in portrait (some iPhones). */
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .page-help {
@@ -3681,7 +3690,10 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-  margin-top: 8px;
+  margin: 8px auto 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .journal-editor-title {
