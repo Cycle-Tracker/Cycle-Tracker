@@ -61,9 +61,11 @@ webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-Deno.serve(async (_req) => {
+Deno.serve(async (req) => {
   try {
-    const result = await runOnce();
+    const url = new URL(req.url);
+    const isTest = url.searchParams.get("test") === "1";
+    const result = isTest ? await runTest() : await runOnce();
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -79,6 +81,56 @@ Deno.serve(async (_req) => {
     );
   }
 });
+
+/**
+ * Test mode (`?test=1`): pushes a single hard-coded notification to every
+ * subscription. Useful to validate end-to-end delivery (especially on iOS
+ * where the cycle-driven schedule may have nothing to say today).
+ */
+async function runTest() {
+  const { data: subs, error } = await supabase
+    .from("push_subscriptions")
+    .select("endpoint, p256dh, auth");
+  if (error) throw error;
+  if (!subs || subs.length === 0) {
+    return { ok: true, sent: 0, reason: "no-subscriptions", mode: "test" };
+  }
+
+  const payload = JSON.stringify({
+    title: "🌸 Cycle Tracker — test",
+    body: "Si tu vois cette notif l'app fermée, le push de bout en bout fonctionne.",
+    tag: "test-ping",
+    url: "/",
+  });
+
+  let sent = 0;
+  let failed = 0;
+  const stale: string[] = [];
+
+  for (const sub of subs as { endpoint: string; p256dh: string; auth: string }[]) {
+    try {
+      await webpush.sendNotification(
+        {
+          endpoint: sub.endpoint,
+          keys: { p256dh: sub.p256dh, auth: sub.auth },
+        },
+        payload
+      );
+      sent++;
+    } catch (err: any) {
+      failed++;
+      const status = err?.statusCode || err?.status;
+      if (status === 410 || status === 404) stale.push(sub.endpoint);
+      else console.warn("Test push failed:", sub.endpoint, status, err?.body || "");
+    }
+  }
+
+  if (stale.length) {
+    await supabase.from("push_subscriptions").delete().in("endpoint", stale);
+  }
+
+  return { ok: true, sent, failed, cleaned: stale.length, mode: "test" };
+}
 
 async function runOnce() {
   // 1. Fetch every cycle that has at least one push subscription.
