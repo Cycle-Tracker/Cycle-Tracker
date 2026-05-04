@@ -5,11 +5,12 @@
 -- This calls the function once a day at 09:00 UTC. Adjust the schedule
 -- and SUPABASE_URL placeholder before running.
 --
--- ⚠ EDIT THESE BEFORE RUNNING ⚠
---   <PROJECT_REF>          : your Supabase project ref (the subdomain)
+-- ⚠ EDIT THIS BEFORE RUNNING ⚠
 --   <SERVICE_ROLE_KEY>     : the service-role key (Settings → API → service_role)
 --                            We use it as a Bearer to bypass JWT, since the
 --                            function is deployed with --no-verify-jwt.
+--
+-- Project ref already set to `hitzunvefbgtfxivectd`.
 
 -- Make sure the extensions are enabled.
 create extension if not exists pg_cron with schema extensions;
@@ -28,7 +29,7 @@ select cron.schedule(
   '0 9 * * *',
   $$
   select net.http_post(
-    url := 'https://<PROJECT_REF>.functions.supabase.co/send-cycle-pushes',
+    url := 'https://hitzunvefbgtfxivectd.functions.supabase.co/send-cycle-pushes',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
