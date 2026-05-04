@@ -333,6 +333,13 @@ input[type="date"] {
   background: rgba(255, 255, 255, 0.9);
   color: var(--text);
   outline: none;
+  /* iOS Safari centers <input type="date"> by default; align the value
+     to the left so it matches the other text inputs in the form. */
+  text-align: left;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
 }
 
 input[type="range"] {
