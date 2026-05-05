@@ -3719,10 +3719,21 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .journal-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  /* `display: block` rather than flex — flex containers force a default
+     min-width: auto on children which lets <input type="date"> overflow
+     past the parent on iOS Safari (the date input has a non-trivial
+     min-content size). With block we just stack children naturally and
+     each input controls its own width via width: 100%. */
+  display: block;
   margin-bottom: 16px;
+  /* Constrain children so an iOS native input can never push past us. */
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.journal-field > .journal-field-label {
+  display: block;
+  margin-bottom: 8px;
 }
 
 .journal-field-label {
