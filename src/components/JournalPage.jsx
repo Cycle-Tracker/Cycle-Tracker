@@ -33,6 +33,9 @@ export default function JournalPage({
   onAdd,
   onUpdate,
   onDelete,
+  // When true, render only the inner content (no page-shell, no page
+  // header). Used when the Journal is hosted inside HistoryPage's tabs.
+  embedded = false,
 }) {
   const { t, lang } = useLanguage();
   const [editing, setEditing] = useState(null); // entry being edited or "new"
@@ -88,70 +91,78 @@ export default function JournalPage({
     return [...entries].sort((a, b) => (a.date < b.date ? 1 : -1));
   }, [entries]);
 
+  const inner = (
+    <>
+      {!editing && (
+        <>
+          <p className="page-help">{t.ui.journalPageHelp}</p>
+          <button
+            type="button"
+            className="journal-add-btn"
+            onClick={startNew}
+          >
+            ＋ {t.ui.journalAdd}
+          </button>
+
+          {sorted.length === 0 ? (
+            <div className="coming-soon-card" style={{ marginTop: 18 }}>
+              <div className="coming-soon-icon" aria-hidden="true">
+                📔
+              </div>
+              <div className="coming-soon-title">
+                {t.ui.journalEmptyTitle}
+              </div>
+              <p className="coming-soon-body">{t.ui.journalEmptyBody}</p>
+            </div>
+          ) : (
+            <ul className="journal-list">
+              {sorted.map((entry) => (
+                <JournalItem
+                  key={entry.id}
+                  entry={entry}
+                  isMine={entry.role === role}
+                  myName={myName}
+                  partnerName={partnerName}
+                  lang={lang}
+                  t={t}
+                  onEdit={() => startEdit(entry)}
+                  onDelete={() => {
+                    if (window.confirm(t.ui.journalDeleteConfirm)) {
+                      onDelete(entry.id);
+                    }
+                  }}
+                />
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+
+      {editing && (
+        <JournalEditor
+          draft={draft}
+          setDraft={setDraft}
+          onSave={save}
+          onCancel={cancel}
+          t={t}
+          isNew={editing === "new"}
+          role={role}
+        />
+      )}
+    </>
+  );
+
+  // When embedded inside another page (e.g. HistoryPage's tabs), skip
+  // the page-shell + header so we don't double-stack them.
+  if (embedded) return inner;
+
   return (
     <div className="page-shell journal-page">
       <div className="page-header-simple">
         <h1 className="page-title">{t.ui.tabJournal}</h1>
       </div>
 
-      <div className="page-body">
-        {!editing && (
-          <>
-            <p className="page-help">{t.ui.journalPageHelp}</p>
-            <button
-              type="button"
-              className="journal-add-btn"
-              onClick={startNew}
-            >
-              ＋ {t.ui.journalAdd}
-            </button>
-
-            {sorted.length === 0 ? (
-              <div className="coming-soon-card" style={{ marginTop: 18 }}>
-                <div className="coming-soon-icon" aria-hidden="true">
-                  📔
-                </div>
-                <div className="coming-soon-title">
-                  {t.ui.journalEmptyTitle}
-                </div>
-                <p className="coming-soon-body">{t.ui.journalEmptyBody}</p>
-              </div>
-            ) : (
-              <ul className="journal-list">
-                {sorted.map((entry) => (
-                  <JournalItem
-                    key={entry.id}
-                    entry={entry}
-                    isMine={entry.role === role}
-                    myName={myName}
-                    partnerName={partnerName}
-                    lang={lang}
-                    t={t}
-                    onEdit={() => startEdit(entry)}
-                    onDelete={() => {
-                      if (window.confirm(t.ui.journalDeleteConfirm)) {
-                        onDelete(entry.id);
-                      }
-                    }}
-                  />
-                ))}
-              </ul>
-            )}
-          </>
-        )}
-
-        {editing && (
-          <JournalEditor
-            draft={draft}
-            setDraft={setDraft}
-            onSave={save}
-            onCancel={cancel}
-            t={t}
-            isNew={editing === "new"}
-            role={role}
-          />
-        )}
-      </div>
+      <div className="page-body">{inner}</div>
     </div>
   );
 }

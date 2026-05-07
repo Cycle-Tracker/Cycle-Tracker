@@ -3520,6 +3520,80 @@ input[type="range"]::-moz-range-thumb {
   padding-bottom: 32px;
 }
 
+/* Inner tab rows (used on the Food page and the History page to switch
+   between sub-views like "Maintenant / Toutes les phases" or
+   "Cycles / Journal"). Reuses the existing .tab-btn styling. */
+.history-tabs-row,
+.food-tabs-row {
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto 18px;
+  background: rgba(118, 118, 128, 0.12);
+  border-radius: 16px;
+  padding: 4px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Food page — phase blocks for the "all phases" view */
+.food-all-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.food-phase-block {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.food-phase-block.is-current {
+  box-shadow: 0 6px 20px rgba(232, 90, 140, 0.12);
+}
+
+.food-phase-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.food-phase-emoji {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.food-phase-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.food-phase-empty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
 .journal-add-btn {
   width: 100%;
   margin-top: 8px;

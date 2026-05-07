@@ -1,7 +1,8 @@
-import { Component, useMemo } from "react";
+import { Component, useMemo, useState } from "react";
 import { useLanguage } from "../i18n";
 import { normalizeDate, todayIso } from "../utils/cycleUtils";
 import { addDays, diffDays, isoOf } from "../utils/cyclePredict";
+import JournalPage from "./JournalPage";
 
 /**
  * Local error boundary so a render error inside the History page falls back
@@ -65,8 +66,17 @@ function HistoryPageInner({
   periodsLog = [],
   currentStartDate,
   durations,
+  // Journal props (passed through when the inner Journal tab is shown)
+  journalEntries,
+  journalRole,
+  journalMyName,
+  journalPartnerName,
+  onJournalAdd,
+  onJournalUpdate,
+  onJournalDelete,
 }) {
   const { t, lang } = useLanguage();
+  const [tab, setTab] = useState("cycles");
 
   // Combine the logged history with the currently active start (if not already in log).
   const allStarts = useMemo(() => {
@@ -131,10 +141,46 @@ function HistoryPageInner({
       </div>
 
       <div className="page-body">
-        <p className="page-help">{t.ui.historyPageHelp}</p>
+        <div className="history-tabs-row" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "cycles"}
+            className={`tab-btn ${tab === "cycles" ? "active" : ""}`}
+            onClick={() => setTab("cycles")}
+          >
+            {t.ui.historyTabCycles ?? t.ui.tabHistory}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "journal"}
+            className={`tab-btn ${tab === "journal" ? "active" : ""}`}
+            onClick={() => setTab("journal")}
+          >
+            {t.ui.tabJournal}
+          </button>
+        </div>
 
-        {/* Stats grid */}
-        <div className="stats-grid">
+        {tab === "journal" && (
+          <JournalPage
+            entries={journalEntries}
+            role={journalRole}
+            myName={journalMyName}
+            partnerName={journalPartnerName}
+            onAdd={onJournalAdd}
+            onUpdate={onJournalUpdate}
+            onDelete={onJournalDelete}
+            embedded
+          />
+        )}
+
+        {tab === "cycles" && (
+          <>
+            <p className="page-help">{t.ui.historyPageHelp}</p>
+
+            {/* Stats grid */}
+            <div className="stats-grid">
           <StatCard
             value={String(allStarts.length)}
             label={t.ui.historyTotalCycles}
@@ -213,6 +259,8 @@ function HistoryPageInner({
                 </li>
               ))}
             </ul>
+          </>
+        )}
           </>
         )}
       </div>

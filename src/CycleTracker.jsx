@@ -24,6 +24,7 @@ import BottomNav from "./components/BottomNav";
 import CalendarPage from "./components/CalendarPage";
 import JournalPage from "./components/JournalPage";
 import HistoryPage from "./components/HistoryPage";
+import FoodPage from "./components/FoodPage";
 import { computeNotifications } from "./utils/notifications";
 import { fireNewNotifications } from "./utils/browserNotifications";
 import { useLanguage } from "./i18n";
@@ -1238,16 +1239,12 @@ export default function CycleTracker() {
         onLogPeriodStart={logPeriodAtDate}
       />
     );
-  } else if (mainTab === "journal") {
+  } else if (mainTab === "food") {
     currentPage = (
-      <JournalPage
-        entries={journalEntries}
+      <FoodPage
+        phases={phases}
+        currentPhase={currentPhase}
         role={role}
-        myName={myName}
-        partnerName={partnerName}
-        onAdd={addJournalEntry}
-        onUpdate={updateJournalEntry}
-        onDelete={deleteJournalEntry}
       />
     );
   } else if (mainTab === "history") {
@@ -1256,6 +1253,13 @@ export default function CycleTracker() {
         periodsLog={periodsLog}
         currentStartDate={startDate}
         durations={durations}
+        journalEntries={journalEntries}
+        journalRole={role}
+        journalMyName={myName}
+        journalPartnerName={partnerName}
+        onJournalAdd={addJournalEntry}
+        onJournalUpdate={updateJournalEntry}
+        onJournalDelete={deleteJournalEntry}
       />
     );
   } else if (mainTab === "settings") {
