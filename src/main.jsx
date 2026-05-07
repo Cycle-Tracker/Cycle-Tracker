@@ -4,6 +4,12 @@ import App from "./App.jsx";
 import "./index.css";
 import { registerServiceWorker } from "./utils/pushSubscriptions";
 
+// Tell the boot-fallback in index.html that React started successfully,
+// so the recovery page doesn't replace the live app after 6s.
+if (typeof window !== "undefined") {
+  window.__APP_BOOTED__ = true;
+}
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />

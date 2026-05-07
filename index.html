@@ -29,6 +29,120 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Last-resort fallback. If the JS bundle fails to load or parse, React
+      never mounts and #root stays empty. After 6 seconds we replace the
+      empty page with recovery instructions, including a button that
+      unregisters the service worker and reloads.
+    -->
+    <template id="boot-fallback-template">
+      <div
+        style="min-height:100vh;padding:32px 20px;background:linear-gradient(180deg,#fbfbfd 0%,#f2f2f7 100%);color:#1c1c1e;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;"
+      >
+        <div
+          style="width:100%;max-width:520px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.65);border-radius:22px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.06);margin-top:24px;"
+        >
+          <div style="font-size:44px;line-height:1;margin-bottom:8px;">🌸</div>
+          <h1
+            style="margin:0 0 8px;font-size:22px;font-weight:700;letter-spacing:-.02em;"
+          >
+            L'app n'a pas réussi à se charger
+          </h1>
+          <p
+            style="margin:0 0 20px;font-size:15px;line-height:1.5;color:rgba(60,60,67,.78);"
+          >
+            C'est presque toujours du cache. Essaie d'abord de recharger en
+            virant les anciennes données stockées par ton appareil.
+          </p>
+          <button
+            id="boot-fallback-reload"
+            type="button"
+            style="width:100%;padding:14px 18px;border:none;border-radius:14px;background:linear-gradient(135deg,#e85a8c 0%,#d94a7a 100%);color:#fff;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(230,90,140,.28);margin-bottom:18px;"
+          >
+            Recharger l'app
+          </button>
+          <h2
+            style="margin:16px 0 8px;font-size:14px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:rgba(60,60,67,.6);"
+          >
+            Si le bouton ne suffit pas
+          </h2>
+          <ol
+            style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.55;color:#1c1c1e;"
+          >
+            <li style="margin-bottom:8px;">
+              Sur iPhone : appuie longtemps sur l'icône Cycle Tracker de
+              l'écran d'accueil → <b>Supprimer l'app</b> →
+              <b>Supprimer de l'écran d'accueil</b>.
+            </li>
+            <li style="margin-bottom:8px;">
+              Réglages iPhone → Safari → Avancé → <b>Données de site</b> →
+              cherche
+              <code
+                style="background:rgba(0,0,0,.04);padding:1px 6px;border-radius:6px;font-size:13px;"
+                >cycle-tracker-okj8.vercel.app</code
+              >
+              → glisse vers la gauche → <b>Supprimer</b>.
+            </li>
+            <li style="margin-bottom:8px;">
+              Force-quitte Safari (sélecteur d'apps → swipe up sur la carte
+              Safari).
+            </li>
+            <li style="margin-bottom:8px;">
+              Réouvre Safari →
+              <code
+                style="background:rgba(0,0,0,.04);padding:1px 6px;border-radius:6px;font-size:13px;"
+                >cycle-tracker-okj8.vercel.app</code
+              >
+              → bouton Partager → <b>Sur l'écran d'accueil</b>.
+            </li>
+            <li>Ouvre la PWA depuis la nouvelle icône.</li>
+          </ol>
+        </div>
+      </div>
+    </template>
+
+    <script>
+      (function () {
+        // Tag the document as "booted" once React mounts so we know the
+        // boot succeeded and can cancel the fallback. main.jsx flips this.
+        window.__APP_BOOTED__ = false;
+        var TIMEOUT_MS = 6000;
+        setTimeout(function () {
+          if (window.__APP_BOOTED__) return;
+          var root = document.getElementById("root");
+          // If React already rendered something, leave it alone.
+          if (root && root.children && root.children.length > 0) return;
+          var tpl = document.getElementById("boot-fallback-template");
+          if (!root || !tpl) return;
+          root.appendChild(tpl.content.cloneNode(true));
+          var btn = document.getElementById("boot-fallback-reload");
+          if (btn) {
+            btn.addEventListener("click", function () {
+              try {
+                if ("serviceWorker" in navigator) {
+                  navigator.serviceWorker
+                    .getRegistrations()
+                    .then(function (regs) {
+                      return Promise.all(
+                        regs.map(function (r) {
+                          return r.unregister();
+                        })
+                      );
+                    })
+                    .finally(function () {
+                      window.location.reload(true);
+                    });
+                  return;
+                }
+              } catch (e) {}
+              window.location.reload();
+            });
+          }
+        }, TIMEOUT_MS);
+      })();
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
