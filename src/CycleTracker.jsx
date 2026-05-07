@@ -446,10 +446,27 @@ export default function CycleTracker() {
         setQuestionnaire(row.questionnaire);
       }
 
-      // Journal entries (shared between partners). Only override local state
-      // if the server actually provides an array — otherwise keep what we have.
+      // Journal entries (shared between partners). MERGE rather than
+      // replace, so a stale realtime echo (with an older snapshot of the
+      // array) can't wipe out an entry the user just added locally that
+      // is still in flight to the server.
+      //
+      // Strategy: union by entry id, preferring the LOCAL version when
+      // both sides have the same id (so a pending edit isn't reverted).
+      // The trade-off is that a freshly-deleted entry can briefly
+      // re-appear from a stale echo — it'll be deleted again on the
+      // next push.
       if (Array.isArray(row.journal_entries)) {
-        setJournalEntries(row.journal_entries);
+        setJournalEntries((prev) => {
+          const byId = new Map();
+          for (const e of row.journal_entries) {
+            if (e && e.id) byId.set(e.id, e);
+          }
+          for (const e of prev) {
+            if (e && e.id) byId.set(e.id, e); // local wins on conflict
+          }
+          return Array.from(byId.values());
+        });
       }
 
       // Period history log (shared between partners).
