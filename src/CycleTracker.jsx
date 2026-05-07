@@ -522,21 +522,23 @@ export default function CycleTracker() {
 
       ignoreNextRemoteUpdate.current = true;
       updateSharedCycle(sharedCode, patch).catch((err) => {
-        // If the columns don't exist yet (Thomas hasn't run the migration),
-        // strip them and retry once silently. The app keeps working locally.
-        if (
-          err?.message?.includes("journal_entries") ||
-          err?.message?.includes("periods_log") ||
-          err?.code === "PGRST204"
-        ) {
+        // Always log the full error so we can see why a write failed —
+        // before, we silently fell back to "drop journal_entries +
+        // periods_log and retry" on too-broad heuristics, which masked
+        // RLS errors and made entries appear/disappear.
+        console.error("Push to Supabase failed:", err);
+
+        // ONLY fall back to the no-extra-columns retry when the schema
+        // actually says the column doesn't exist (PGRST204). Other
+        // errors (RLS, network, conflict) shouldn't strip the columns.
+        if (err?.code === "PGRST204") {
           delete patch.journal_entries;
           delete patch.periods_log;
+          ignoreNextRemoteUpdate.current = true;
           updateSharedCycle(sharedCode, patch).catch((err2) => {
-            console.error("Push to Supabase failed:", err2);
+            console.error("Push to Supabase (fallback) failed:", err2);
           });
-          return;
         }
-        console.error("Push to Supabase failed:", err);
       });
     }, 400);
 
