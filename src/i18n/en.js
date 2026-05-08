@@ -358,6 +358,9 @@ const en = {
 
     // Journal
     journalAdd: "Add an entry",
+    journalNotifTitle: (name) =>
+      name ? `📔 ${name} added an entry` : "📔 New journal entry",
+    journalNotifBodyFallback: "Check the Journal in the app.",
     journalAddTitle: "New entry",
     journalEditTitle: "Edit entry",
     journalEdit: "Edit",

@@ -358,6 +358,9 @@ const fr = {
 
     // Journal
     journalAdd: "Ajouter une entrée",
+    journalNotifTitle: (name) =>
+      name ? `📔 ${name} a ajouté une entrée` : "📔 Nouvelle entrée au journal",
+    journalNotifBodyFallback: "Va voir dans Journal sur l'app.",
     journalAddTitle: "Nouvelle entrée",
     journalEditTitle: "Modifier l'entrée",
     journalEdit: "Modifier",

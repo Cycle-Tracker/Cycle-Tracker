@@ -372,6 +372,9 @@ const ru = {
 
     // Journal
     journalAdd: "Добавить запись",
+    journalNotifTitle: (name) =>
+      name ? `📔 ${name} добавил(а) запись` : "📔 Новая запись в дневнике",
+    journalNotifBodyFallback: "Открой Журнал в приложении.",
     journalAddTitle: "Новая запись",
     journalEditTitle: "Изменить запись",
     journalEdit: "Изменить",

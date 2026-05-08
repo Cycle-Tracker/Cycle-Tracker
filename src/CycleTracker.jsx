@@ -26,7 +26,10 @@ import JournalPage from "./components/JournalPage";
 import HistoryPage from "./components/HistoryPage";
 import FoodPage from "./components/FoodPage";
 import { computeNotifications } from "./utils/notifications";
-import { fireNewNotifications } from "./utils/browserNotifications";
+import {
+  fireNewNotifications,
+  showOsNotification,
+} from "./utils/browserNotifications";
 import { useLanguage } from "./i18n";
 import { isSupabaseConfigured } from "./lib/supabase";
 import {
@@ -211,6 +214,12 @@ export default function CycleTracker() {
   // Ref we use to ignore our own writes when the realtime subscription
   // echoes them back to us.
   const ignoreNextRemoteUpdate = useRef(false);
+
+  // First applyRemoteRow call after a fresh load applies the FULL existing
+  // journal_entries array as "new" — we don't want to fire a notification
+  // for every entry on app boot. Flip this to false once the initial sync
+  // is done so subsequent applies are treated as deltas.
+  const journalSyncInitialized = useRef(false);
 
   // ------------- Persist locally -------------
 
@@ -456,8 +465,43 @@ export default function CycleTracker() {
       // The trade-off is that a freshly-deleted entry can briefly
       // re-appear from a stale echo — it'll be deleted again on the
       // next push.
+      //
+      // Side effect: detect entries that are new-from-the-partner since
+      // last sync, and fire an OS notification for each. We only do this
+      // AFTER the initial sync (otherwise every entry would notify on
+      // app boot) and only for entries authored by the OTHER role.
       if (Array.isArray(row.journal_entries)) {
         setJournalEntries((prev) => {
+          const prevIds = new Set(prev.map((e) => e?.id).filter(Boolean));
+
+          // Detect newcomers from the partner, but only after first sync.
+          if (journalSyncInitialized.current) {
+            for (const e of row.journal_entries) {
+              if (!e || !e.id) continue;
+              if (prevIds.has(e.id)) continue;
+              // Only the partner's entries — not echoes of our own writes.
+              if (!e.role || e.role === role) continue;
+              const author =
+                e.author ||
+                (role === "woman" ? row.man_name : row.woman_name) ||
+                "";
+              showOsNotification({
+                id: `journal-${e.id}`,
+                title:
+                  typeof t.ui.journalNotifTitle === "function"
+                    ? t.ui.journalNotifTitle(author)
+                    : author
+                    ? `📔 ${author}`
+                    : "📔",
+                body:
+                  e.note ||
+                  e.attention ||
+                  t.ui.journalNotifBodyFallback ||
+                  "",
+              });
+            }
+          }
+
           const byId = new Map();
           for (const e of row.journal_entries) {
             if (e && e.id) byId.set(e.id, e);
@@ -467,6 +511,8 @@ export default function CycleTracker() {
           }
           return Array.from(byId.values());
         });
+        // Mark first sync complete so future applies are treated as deltas.
+        journalSyncInitialized.current = true;
       }
 
       // Period history log (shared between partners).
@@ -478,13 +524,18 @@ export default function CycleTracker() {
         );
       }
     },
-    [role]
+    [role, t]
   );
 
   // ------------- Realtime subscription -------------
 
   useEffect(() => {
     if (!sharedCode || !isSupabaseConfigured) return undefined;
+
+    // Fresh subscription: treat the next applyRemoteRow as the initial
+    // sync (no journal notifications fired). Subsequent applies are
+    // treated as partner-driven deltas and may fire notifications.
+    journalSyncInitialized.current = false;
 
     let cancelled = false;
     fetchSharedCycle(sharedCode)
