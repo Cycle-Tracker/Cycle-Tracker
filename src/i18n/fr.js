@@ -30,6 +30,8 @@ const fr = {
     foodTabNow: "Maintenant",
     foodTabAll: "Toutes les phases",
     foodAppetiteLabel: "Appétit",
+    calendarShowDetails: "Voir le détail",
+    calendarHideDetails: "Masquer le détail",
     historyTabCycles: "Cycles",
     canDoTitle: "Ce que tu peux faire",
     avoidTitle: "À éviter",

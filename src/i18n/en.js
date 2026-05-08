@@ -30,6 +30,8 @@ const en = {
     foodTabNow: "Now",
     foodTabAll: "All phases",
     foodAppetiteLabel: "Appetite",
+    calendarShowDetails: "Show details",
+    calendarHideDetails: "Hide details",
     historyTabCycles: "Cycles",
     canDoTitle: "What you can do",
     avoidTitle: "Avoid",

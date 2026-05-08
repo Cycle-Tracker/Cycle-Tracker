@@ -3,19 +3,21 @@ import { useLanguage } from "../i18n";
 /**
  * Sticky bottom navigation bar with 5 tabs.
  *
- * Order (left → right): history | calendar | home | food | settings.
- * Journal is no longer a top-level tab — it's an inner tab of the
- * history page.
+ * Order (left → right): journal | calendar | home | food | settings.
+ * The History page no longer exists as a top-level tab — its essential
+ * stats are now displayed at the top of the Calendar page, and the
+ * detailed cycle list / predictions are in a collapsible block below
+ * the calendar.
  *
  * Props:
- *  - active: "history" | "calendar" | "home" | "food" | "settings"
+ *  - active: "journal" | "calendar" | "home" | "food" | "settings"
  *  - onSelect(tabId)
  */
 export default function BottomNav({ active, onSelect }) {
   const { t } = useLanguage();
 
   const tabs = [
-    { id: "history", label: t.ui.tabHistory, icon: "📊" },
+    { id: "journal", label: t.ui.tabJournal, icon: "📔" },
     { id: "calendar", label: t.ui.tabCalendar, icon: "📅" },
     { id: "home", label: t.ui.tabHome, icon: "🏠" },
     { id: "food", label: t.ui.tabFood, icon: "🍽️" },

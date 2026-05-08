@@ -1261,6 +1261,7 @@ export default function CycleTracker() {
         startDate={startDate}
         durations={durations}
         role={role}
+        periodsLog={periodsLog}
         onLogPeriodStart={logPeriodAtDate}
       />
     );
@@ -1272,19 +1273,16 @@ export default function CycleTracker() {
         role={role}
       />
     );
-  } else if (mainTab === "history") {
+  } else if (mainTab === "journal") {
     currentPage = (
-      <HistoryPage
-        periodsLog={periodsLog}
-        currentStartDate={startDate}
-        durations={durations}
-        journalEntries={journalEntries}
-        journalRole={role}
-        journalMyName={myName}
-        journalPartnerName={partnerName}
-        onJournalAdd={addJournalEntry}
-        onJournalUpdate={updateJournalEntry}
-        onJournalDelete={deleteJournalEntry}
+      <JournalPage
+        entries={journalEntries}
+        role={role}
+        myName={myName}
+        partnerName={partnerName}
+        onAdd={addJournalEntry}
+        onUpdate={updateJournalEntry}
+        onDelete={deleteJournalEntry}
       />
     );
   } else if (mainTab === "settings") {

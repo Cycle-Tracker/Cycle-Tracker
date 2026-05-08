@@ -37,6 +37,8 @@ const ru = {
     foodTabNow: "Сейчас",
     foodTabAll: "Все фазы",
     foodAppetiteLabel: "Аппетит",
+    calendarShowDetails: "Показать детали",
+    calendarHideDetails: "Скрыть детали",
     historyTabCycles: "Циклы",
     canDoTitle: "Что можно сделать",
     avoidTitle: "Избегать",
