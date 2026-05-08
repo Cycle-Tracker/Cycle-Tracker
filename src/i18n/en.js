@@ -29,6 +29,7 @@ const en = {
     tabAll: "All phases",
     foodTabNow: "Now",
     foodTabAll: "All phases",
+    foodAppetiteLabel: "Appetite",
     historyTabCycles: "Cycles",
     canDoTitle: "What you can do",
     avoidTitle: "Avoid",
@@ -500,6 +501,11 @@ const en = {
         "Judging yourself for low energy",
       ],
       food: {
+        appetite: 3,
+        appetiteWoman:
+          "Moderate appetite. Cravings for warm comforting food are normal — your body needs to repair.",
+        appetiteMan:
+          "Moderate appetite. She may crave warm comforting food — that's physiological.",
         eat: [
           "Iron: red meat, lentils, spinach (replenishes blood loss)",
           "Vitamin C with iron: orange, kiwi, bell pepper (boosts absorption)",
@@ -547,6 +553,11 @@ const en = {
         "Ignoring fatigue if it shows up anyway",
       ],
       food: {
+        appetite: 2,
+        appetiteWoman:
+          "Lower-moderate appetite. Hunger is back to baseline, your body handles slow carbs well — good time for balanced meals without overdoing it.",
+        appetiteMan:
+          "Lower appetite than in luteal. Her body handles carbs better — balanced meals, no need for huge portions.",
         eat: [
           "Lean protein: eggs, chicken, tofu, white fish (steady energy)",
           "Cruciferous veggies: broccoli, kale, arugula (regulate estrogen)",
@@ -591,6 +602,11 @@ const en = {
         "Over-planning — your energy is still finite",
       ],
       food: {
+        appetite: 1,
+        appetiteWoman:
+          "Low appetite. The peak in estrogen naturally suppresses hunger — focus on hydration rather than forcing food.",
+        appetiteMan:
+          "Lowest appetite of the cycle. The estrogen peak suppresses hunger — no need to push portions.",
         eat: [
           "Antioxidants: berries, pomegranate, blueberries (cell protection)",
           "Healthy fats: avocado, walnuts, olive oil (hormone balance)",
@@ -645,6 +661,11 @@ const en = {
         "Comparing your mood to the start of the cycle",
       ],
       food: {
+        appetite: 5,
+        appetiteWoman:
+          "Highest appetite of the cycle, especially toward the end. Your basal metabolism rises 5-10% and progesterone drives real cravings (sweet, salty, fatty). Eating more is physiological — favor slow carbs and magnesium over fast sugar.",
+        appetiteMan:
+          "Highest hunger of the cycle. Her body burns 5-10% more calories and hormones cause real cravings — that's physiological, not lack of discipline. Stock up on slow carbs, dark chocolate, dried fruit.",
         eat: [
           "Magnesium: dark chocolate, almonds, cashews, banana (eases PMS)",
           "Complex carbs: sweet potato, brown rice, oats (curb cravings)",

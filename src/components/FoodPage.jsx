@@ -60,6 +60,7 @@ export default function FoodPage({ phases, currentPhase, role }) {
             phase={currentPhase}
             eatTitle={eatTitle}
             avoidTitle={avoidTitle}
+            role={role}
             t={t}
             highlightCurrent={false}
           />
@@ -73,6 +74,7 @@ export default function FoodPage({ phases, currentPhase, role }) {
                 phase={phase}
                 eatTitle={eatTitle}
                 avoidTitle={avoidTitle}
+                role={role}
                 t={t}
                 highlightCurrent={phase.id === currentPhase?.id}
                 showHeader
@@ -89,12 +91,18 @@ function PhaseFoodBlock({
   phase,
   eatTitle,
   avoidTitle,
+  role,
   t,
   highlightCurrent,
   showHeader,
 }) {
   const eat = phase.food?.eat ?? [];
   const avoid = phase.food?.avoid ?? [];
+  const appetite = phase.food?.appetite ?? null;
+  const appetiteText =
+    role === "man"
+      ? phase.food?.appetiteMan
+      : phase.food?.appetiteWoman;
   const isEmpty = eat.length === 0 && avoid.length === 0;
 
   return (
@@ -124,6 +132,43 @@ function PhaseFoodBlock({
             )}
           </h2>
         </header>
+      )}
+
+      {appetite !== null && appetiteText && (
+        <div
+          className="food-appetite-card"
+          style={{
+            borderColor: `${phase.color}40`,
+            background: `linear-gradient(135deg, ${phase.color}0F, rgba(255,255,255,0.85))`,
+          }}
+        >
+          <div className="food-appetite-head">
+            <span
+              className="food-appetite-title"
+              style={{ color: phase.accent }}
+            >
+              {t.ui.foodAppetiteLabel ?? "Appétit"}
+            </span>
+            <span
+              className="food-appetite-meter"
+              aria-label={`${appetite}/5`}
+              title={`${appetite}/5`}
+            >
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`food-appetite-dot ${
+                    i < appetite ? "filled" : ""
+                  }`}
+                  style={
+                    i < appetite ? { background: phase.accent } : undefined
+                  }
+                />
+              ))}
+            </span>
+          </div>
+          <p className="food-appetite-text">{appetiteText}</p>
+        </div>
       )}
 
       {isEmpty ? (

@@ -605,6 +605,12 @@ export default function CycleTracker() {
           avoid: Array.isArray(localized.food?.avoid)
             ? localized.food.avoid
             : [],
+          appetite:
+            typeof localized.food?.appetite === "number"
+              ? localized.food.appetite
+              : 3,
+          appetiteWoman: localized.food?.appetiteWoman ?? "",
+          appetiteMan: localized.food?.appetiteMan ?? "",
         },
       };
     });

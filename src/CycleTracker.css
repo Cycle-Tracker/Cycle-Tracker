@@ -3594,6 +3594,55 @@ input[type="range"]::-moz-range-thumb {
   text-align: center;
 }
 
+/* Appetite indicator card (top of each phase block in Food page) */
+
+.food-appetite-card {
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.food-appetite-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.food-appetite-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.food-appetite-meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.food-appetite-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(60, 60, 67, 0.16);
+  transition: background 0.2s ease;
+  display: inline-block;
+}
+
+.food-appetite-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 .journal-add-btn {
   width: 100%;
   margin-top: 8px;

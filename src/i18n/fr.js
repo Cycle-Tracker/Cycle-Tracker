@@ -29,6 +29,7 @@ const fr = {
     tabAll: "Toutes les phases",
     foodTabNow: "Maintenant",
     foodTabAll: "Toutes les phases",
+    foodAppetiteLabel: "Appétit",
     historyTabCycles: "Cycles",
     canDoTitle: "Ce que tu peux faire",
     avoidTitle: "À éviter",
@@ -500,6 +501,11 @@ const fr = {
         "Te juger pour ton manque d'énergie",
       ],
       food: {
+        appetite: 3,
+        appetiteWoman:
+          "Appétit modéré. Tu peux avoir des envies de chaud et réconfortant — c'est normal, le corps a besoin de réparer.",
+        appetiteMan:
+          "Appétit modéré. Elle peut avoir envie de plats chauds et réconfortants — c'est physiologique.",
         eat: [
           "Fer : viande rouge, lentilles, épinards, boudin (compense la perte de sang)",
           "Vitamine C avec le fer : orange, kiwi, poivron (booste l'absorption)",
@@ -547,6 +553,11 @@ const fr = {
         "Ignorer la fatigue si elle apparaît malgré tout",
       ],
       food: {
+        appetite: 2,
+        appetiteWoman:
+          "Appétit bas-modéré. La faim revient à la normale, le corps métabolise mieux les sucres lents — bon moment pour des repas équilibrés sans excès.",
+        appetiteMan:
+          "Appétit plutôt bas. Elle a moins faim qu'en lutéale, son corps gère mieux les glucides — repas équilibrés sans avoir besoin de portions énormes.",
         eat: [
           "Protéines maigres : œufs, poulet, tofu, poisson blanc (énergie stable)",
           "Légumes crucifères : brocoli, chou, roquette (régulent les œstrogènes)",
@@ -591,6 +602,11 @@ const fr = {
         "Surplaning — ton énergie reste finie",
       ],
       food: {
+        appetite: 1,
+        appetiteWoman:
+          "Appétit bas. C'est la phase où tu auras naturellement le moins faim (le pic d'œstrogènes coupe la faim). Pense à bien t'hydrater plutôt que forcer à manger.",
+        appetiteMan:
+          "Appétit faible. C'est le moment du cycle où elle a le moins faim — les œstrogènes au pic réduisent l'appétit. Pas la peine d'insister sur les portions.",
         eat: [
           "Antioxydants : baies, grenade, myrtilles (protection cellulaire)",
           "Bonnes graisses : avocat, noix, huile d'olive (équilibre hormonal)",
@@ -645,6 +661,11 @@ const fr = {
         "Comparer ton humeur à celle du début de cycle",
       ],
       food: {
+        appetite: 5,
+        appetiteWoman:
+          "Appétit haut, surtout en fin de phase. Ton métabolisme basal augmente de 5-10% et la progestérone amplifie les fringales (sucré, salé, gras). Mange plus, c'est physio — privilégie juste les sucres lents et le magnésium plutôt que le sucre rapide.",
+        appetiteMan:
+          "Appétit le plus haut du cycle. Son corps brûle 5-10% de calories en plus, et les hormones déclenchent de vraies fringales — c'est physiologique, pas du laisser-aller. Anticipe : sucres lents, chocolat noir, fruits secs à portée de main.",
         eat: [
           "Magnésium : chocolat noir, amandes, cajou, banane (apaise le SPM)",
           "Glucides complexes : patate douce, riz complet, flocons d'avoine (anti-fringales)",
